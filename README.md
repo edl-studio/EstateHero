@@ -195,3 +195,4 @@ These features are planned for future iterations.
 ## Contributing
 
 We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our development process and how to submit pull requests.
+# EstateHero
