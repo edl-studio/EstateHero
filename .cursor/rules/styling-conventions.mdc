@@ -1,0 +1,479 @@
+---
+title: Styling Conventions
+description: Tailwind CSS and shadcn CSS variable patterns
+tags: [styling, tailwind, css-variables, tokens]
+---
+
+# Styling Conventions
+
+Rules for styling components with Tailwind CSS and shadcn CSS variables.
+
+## CSS Variables (Tokens)
+
+### shadcn CSS Variable System
+
+We use shadcn/ui's CSS variable system. All CSS variables are defined in `src/styles/globals.css`.
+
+```css
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  
+  --radius: 0.5rem;
+}
+```
+
+### Available CSS Variables
+
+| Variable | Purpose | Usage Example |
+|----------|---------|---------------|
+| `--background` | Page/card backgrounds | `bg-background` |
+| `--foreground` | Primary text | `text-foreground` |
+| `--primary` | Primary actions | `bg-primary` |
+| `--primary-foreground` | Text on primary | `text-primary-foreground` |
+| `--secondary` | Secondary actions | `bg-secondary` |
+| `--secondary-foreground` | Text on secondary | `text-secondary-foreground` |
+| `--muted` | Subtle backgrounds | `bg-muted` |
+| `--muted-foreground` | Supporting text | `text-muted-foreground` |
+| `--accent` | Hover/focus states | `bg-accent` |
+| `--accent-foreground` | Text on accent | `text-accent-foreground` |
+| `--destructive` | Destructive actions | `bg-destructive` |
+| `--destructive-foreground` | Text on destructive | `text-destructive-foreground` |
+| `--border` | Component borders | `border-border` |
+| `--input` | Input borders | `border-input` |
+| `--ring` | Focus rings | `ring-ring` |
+| `--radius` | Border radius | `rounded-[--radius]` |
+
+## Never Hardcode Values
+
+### Colors
+
+```tsx
+// ❌ WRONG - Hardcoded colors
+className="bg-blue-600 text-white"
+className="bg-gray-100 text-gray-900"
+className="border-slate-300"
+
+// ✅ CORRECT - CSS variables
+className="bg-primary text-primary-foreground"
+className="bg-muted text-foreground"
+className="border-border"
+```
+
+### Spacing
+
+```tsx
+// ❌ WRONG - Arbitrary values without reason
+className="px-[23px] py-[17px]"
+className="gap-[15px]"
+
+// ✅ CORRECT - Tailwind scale
+className="px-4 py-2"      // 16px, 8px
+className="gap-4"          // 16px
+className="space-y-6"      // 24px
+```
+
+### Border Radius
+
+```tsx
+// ❌ WRONG - Hardcoded radius
+className="rounded-md"
+className="rounded-lg"
+
+// ✅ CORRECT - Radius token
+className="rounded-[--radius]"
+```
+
+## Tailwind CSS Variable Classes
+
+Tailwind automatically creates utility classes for shadcn CSS variables:
+
+### Background Colors
+
+```tsx
+bg-background
+bg-foreground
+bg-primary
+bg-secondary
+bg-muted
+bg-accent
+bg-destructive
+```
+
+### Text Colors
+
+```tsx
+text-foreground
+text-primary
+text-primary-foreground
+text-secondary-foreground
+text-muted-foreground
+text-accent-foreground
+text-destructive-foreground
+```
+
+### Borders
+
+```tsx
+border-border
+border-input
+```
+
+### Focus Rings
+
+```tsx
+ring-ring
+ring-offset-background
+```
+
+## Opacity Modifiers
+
+Use Tailwind's opacity modifier for hover/active/disabled states:
+
+```tsx
+// Hover states
+className="bg-primary hover:bg-primary/90"
+className="bg-secondary hover:bg-secondary/80"
+
+// Active states
+className="bg-accent active:bg-accent/90"
+
+// Disabled states
+className="disabled:opacity-50"
+className="disabled:bg-muted/50"
+```
+
+## Color Usage Patterns
+
+### Button Variants
+
+```tsx
+const buttonVariants = cva("base-classes", {
+  variants: {
+    variant: {
+      primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      ghost: "hover:bg-accent hover:text-accent-foreground",
+      outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+      destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+    },
+  },
+});
+```
+
+### Input Styles
+
+```tsx
+className="border border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-ring"
+```
+
+### Card Styles
+
+```tsx
+className="bg-background border border-border rounded-[--radius]"
+```
+
+## Class Ordering
+
+Follow this order for Tailwind classes:
+
+1. **Layout**: `flex`, `grid`, `block`, `inline-flex`
+2. **Positioning**: `relative`, `absolute`, `fixed`
+3. **Display**: `hidden`, `inline`, `flex`
+4. **Sizing**: `w-*`, `h-*`, `max-w-*`, `min-h-*`
+5. **Spacing**: `m-*`, `p-*`, `space-*`, `gap-*`
+6. **Typography**: `text-*`, `font-*`, `leading-*`
+7. **Colors**: `bg-*`, `text-*`, `border-*`
+8. **Borders**: `border`, `border-*`, `rounded-*`
+9. **Effects**: `shadow-*`, `opacity-*`
+10. **Transitions**: `transition-*`, `duration-*`
+11. **States**: `hover:*`, `focus:*`, `active:*`, `disabled:*`
+
+```tsx
+// ✅ GOOD - Properly ordered
+className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium bg-primary text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+
+// ❌ BAD - Random order
+className="bg-primary hover:bg-primary/90 inline-flex text-primary-foreground px-4 disabled:opacity-50 rounded-md"
+```
+
+## Using cva with CSS Variables
+
+### Basic Pattern
+
+```tsx
+import { cva, type VariantProps } from "class-variance-authority";
+
+const componentVariants = cva(
+  // Base classes - always applied
+  "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+  {
+    variants: {
+      variant: {
+        default: "bg-background text-foreground",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        outline: "border border-input bg-background hover:bg-accent",
+      },
+      size: {
+        sm: "h-9 px-3 text-sm",
+        md: "h-10 px-4 py-2",
+        lg: "h-11 px-8",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "md",
+    },
+  }
+);
+```
+
+### With Compound Variants
+
+```tsx
+const variants = cva("base-classes", {
+  variants: {
+    variant: {
+      primary: "bg-primary",
+      outline: "border border-input",
+    },
+    size: {
+      sm: "text-sm",
+      lg: "text-lg",
+    },
+  },
+  compoundVariants: [
+    {
+      variant: "outline",
+      size: "sm",
+      className: "border-2", // Special case: small outline gets thicker border
+    },
+  ],
+});
+```
+
+## The cn() Utility
+
+Always use the `cn()` utility for merging classNames:
+
+```tsx
+import { cn } from "@/lib/utils";
+
+// ✅ CORRECT - Uses cn() for merging
+<div className={cn(baseVariants({ variant }), className)} />
+
+// ❌ WRONG - Manual concatenation
+<div className={`${baseVariants({ variant })} ${className}`} />
+```
+
+### cn() Implementation
+
+```tsx
+// src/lib/utils.ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+### cn() Usage Examples
+
+```tsx
+// Merge variants with custom className
+<Button className={cn("custom-class", className)} />
+
+// Conditional classes
+<div className={cn("base-class", isActive && "active-class")} />
+
+// Array of classes
+<div className={cn(["class-1", "class-2", condition && "class-3"])} />
+```
+
+## Focus States
+
+### Focus Visible Pattern
+
+Use `focus-visible` for keyboard-only focus indicators:
+
+```tsx
+// ✅ CORRECT - Only shows on keyboard focus
+className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+
+// ❌ WRONG - Shows on mouse click too
+className="focus:outline-none focus:ring-2 focus:ring-ring"
+```
+
+### Standard Focus Ring
+
+```tsx
+// Standard pattern for all interactive elements
+className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+```
+
+## Responsive Design (Post-v1)
+
+v1 is desktop-only, but structure CSS for future responsive breakpoints:
+
+```tsx
+// Future pattern (not in v1)
+className="flex flex-col md:flex-row gap-4 md:gap-6"
+```
+
+## State Variants
+
+### Hover States
+
+```tsx
+hover:bg-primary/90
+hover:text-foreground
+hover:border-border
+```
+
+### Active States
+
+```tsx
+active:scale-95
+active:bg-primary/80
+```
+
+### Disabled States
+
+```tsx
+disabled:pointer-events-none
+disabled:opacity-50
+disabled:cursor-not-allowed
+```
+
+### Focus States
+
+```tsx
+focus-visible:outline-none
+focus-visible:ring-2
+focus-visible:ring-ring
+focus-visible:ring-offset-2
+```
+
+## Component-Specific Patterns
+
+### Input Focus
+
+```tsx
+className="border-input focus-visible:ring-2 focus-visible:ring-ring"
+```
+
+### Button Hover
+
+```tsx
+className="bg-primary hover:bg-primary/90 transition-colors"
+```
+
+### Card Border
+
+```tsx
+className="border border-border rounded-[--radius] bg-background"
+```
+
+### Tab Active State
+
+```tsx
+className={cn(
+  "border-b-2",
+  isActive ? "border-primary text-foreground" : "border-transparent text-muted-foreground"
+)}
+```
+
+## Transitions
+
+### Standard Transition
+
+```tsx
+className="transition-colors duration-200"
+```
+
+### Multiple Properties
+
+```tsx
+className="transition-all duration-200"
+```
+
+### Custom Timing
+
+```tsx
+className="transition-colors duration-150 ease-in-out"
+```
+
+## Common Mistakes
+
+### Mistake: Hardcoding Blue
+
+```tsx
+// ❌ WRONG
+className="bg-blue-600 text-white hover:bg-blue-700"
+
+// ✅ CORRECT
+className="bg-primary text-primary-foreground hover:bg-primary/90"
+```
+
+### Mistake: Using focus Instead of focus-visible
+
+```tsx
+// ❌ WRONG - Shows on click
+className="focus:ring-2"
+
+// ✅ CORRECT - Only keyboard
+className="focus-visible:ring-2"
+```
+
+### Mistake: Not Using cn()
+
+```tsx
+// ❌ WRONG - Classes conflict
+className={`${buttonVariants({ variant })} ${className}`}
+
+// ✅ CORRECT - Properly merged
+className={cn(buttonVariants({ variant }), className)}
+```
+
+### Mistake: Arbitrary Values for Colors
+
+```tsx
+// ❌ WRONG
+className="bg-[#3b82f6]"
+
+// ✅ CORRECT
+className="bg-primary"
+```
+
+## Must Follow
+
+1. ✅ Never hardcode colors - always use CSS variables
+2. ✅ Always use `cn()` for className merging
+3. ✅ Use `focus-visible` for keyboard-only focus
+4. ✅ Use opacity modifiers for hover/active states (e.g., `/90`, `/80`)
+5. ✅ Use `--radius` token for border radius
+6. ✅ Follow class ordering conventions
+7. ✅ Use semantic color names (primary, not blue)
+8. ✅ Add `transition-colors` for smooth state changes

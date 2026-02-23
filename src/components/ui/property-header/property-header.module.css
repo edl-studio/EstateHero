@@ -1,0 +1,118 @@
+/* PropertyHeader - Property details page header */
+.propertyHeader {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 1312px;
+  padding: 32px;
+  align-items: flex-start;
+  gap: 40px;
+
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Flashing grid background - 6×3 blocks (540×270px), accent colour for squares.
+   z-index above content so in the grid area we hit this layer first; pointer-events: none
+   so hit testing descends to the grid (child with pointer-events: auto). */
+.gridWrapper {
+  --color-flashing-grid-square: var(--color-accent);
+  z-index: 2;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 540px;
+  height: 270px;
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-base) 0;
+}
+
+/* Grid root must receive pointer events so hover/trail works when we descend from gridWrapper */
+.flashingGrid {
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+/* Image on top of grid (above fade): 396×396px, top-aligned, 32px from right, pointer-events: none */
+.gridImage {
+  position: absolute;
+  top: 0;
+  right: 32px;
+  width: 396px;
+  height: 396px;
+  object-fit: contain;
+  pointer-events: none;
+  display: block;
+}
+
+.gridFade {
+  position: absolute;
+  inset: 0;
+}
+
+/* Content - Main content container (above grid). pointer-events: none so grid receives hover; interactive blocks get auto */
+.content {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+/* Heading - Top section with meta label and heading */
+.heading {
+  pointer-events: auto;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Meta Label - Small uppercase label */
+.metaLabel {
+  color: var(--color-content-muted);
+  text-transform: uppercase;
+  /* Typography: ui-mono-14 */
+}
+
+/* Heading Text - Main heading */
+.headingText {
+  color: var(--color-content-primary);
+  margin: 0;
+  /* Typography: body-sans-medium-32 */
+}
+
+/* Metadata - Container for metadata items and actions */
+.metadata {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  align-self: stretch;
+}
+
+/* Meta Stack - Container for metadata items */
+.metaStack {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  align-self: stretch;
+}
+
+/* Actions - Container for action buttons */
+.actions {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}

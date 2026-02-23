@@ -1,0 +1,119 @@
+/* ============================================
+   BASE TRIGGER
+   ============================================ */
+.trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  transition: var(--transition-default);
+  cursor: pointer;
+  outline: none;
+}
+
+.trigger:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-ring);
+  outline-offset: 2px;
+}
+
+.trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ============================================
+   VARIANT: HOME
+   Compact on mobile (48px), large on desktop (76px)
+   ============================================ */
+.home {
+  height: 48px;
+  padding: 0 var(--spacing-lg);
+  gap: var(--spacing-md);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  .home {
+    height: 76px;
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-base) var(--radius-base) 0 0;
+    border: none;
+  }
+}
+
+/* ============================================
+   VARIANT: HEADER
+   Compact search trigger for header navigation
+   ============================================ */
+.header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+  max-width: 450px;
+}
+
+.leadingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-content-secondary);
+}
+
+.trailingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-content-secondary);
+}
+
+.rightSlot {
+  display: flex;
+  flex-shrink: 0;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================
+   TEXT CONTENT
+   ============================================ */
+.text {
+  flex: 1;
+  text-align: left;
+}
+
+.textHome {
+  color: var(--color-content-secondary);
+  /* Typography: ui-sans-regular-16 */
+}
+
+.textHeader {
+  text-transform: uppercase;
+  color: var(--color-content-secondary);
+  /* Typography: ui-mono-13 */
+}
+
+/* ============================================
+   KEYBOARD BADGE (for header variant)
+   ============================================ */
+.keyboardBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px var(--spacing-md);
+  border-radius: var(--radius-2xl);
+  background-color: var(--color-badge-bg);
+  color: var(--color-content-tertiary);
+  text-align: center;
+  /* Typography: add ui-sans-medium-14 to the badge element (e.g. rightSlot) */
+}

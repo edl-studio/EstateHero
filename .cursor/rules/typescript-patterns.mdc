@@ -1,0 +1,596 @@
+---
+title: TypeScript Patterns
+description: TypeScript best practices for component development
+tags: [typescript, types, interfaces, generics]
+---
+
+# TypeScript Patterns
+
+TypeScript conventions and patterns for EstateHero components.
+
+## Component Prop Types
+
+### Standard Interface Pattern
+
+```tsx
+import { cva, type VariantProps } from "class-variance-authority";
+
+const componentVariants = cva("base", {
+  variants: {
+    variant: { default: "classes" },
+    size: { default: "classes" },
+  },
+});
+
+export interface ComponentProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof componentVariants> {
+  /** JSDoc description for prop */
+  customProp?: string;
+}
+```
+
+### Extending HTML Element Props
+
+Always extend the appropriate HTML element props:
+
+```tsx
+// Button
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
+
+// Input
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement>,
+    VariantProps<typeof inputVariants> {}
+
+// Div-based component
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+// Anchor-based component
+export interface LinkProps
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {}
+```
+
+### Base UI Component Props
+
+When using Base UI components:
+
+```tsx
+import { Button as BaseButton } from "@base-ui-components/react/Button";
+
+export interface ButtonProps
+  extends React.ComponentPropsWithoutRef<typeof BaseButton>,
+    VariantProps<typeof buttonVariants> {}
+```
+
+## Variant Prop Types
+
+### With cva
+
+```tsx
+import { type VariantProps } from "class-variance-authority";
+
+const variants = cva("base", {
+  variants: {
+    variant: {
+      default: "classes",
+      primary: "classes",
+      secondary: "classes",
+    },
+    size: {
+      sm: "classes",
+      md: "classes",
+      lg: "classes",
+    },
+  },
+});
+
+// Automatically typed from cva definition
+export interface ComponentProps extends VariantProps<typeof variants> {}
+
+// Results in:
+// {
+//   variant?: "default" | "primary" | "secondary"
+//   size?: "sm" | "md" | "lg"
+// }
+```
+
+### Manual Variant Types
+
+For components without cva:
+
+```tsx
+export interface ComponentProps {
+  variant?: "default" | "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
+}
+```
+
+### With Default Values
+
+```tsx
+export interface ComponentProps {
+  /** Button variant */
+  variant?: "default" | "primary" | "secondary";
+  /** Button size */
+  size?: "sm" | "md" | "lg";
+}
+
+export const Component: React.FC<ComponentProps> = ({
+  variant = "default",
+  size = "md",
+  ...props
+}) => {
+  // ...
+};
+```
+
+## Ref Forwarding Types
+
+### Standard Pattern
+
+```tsx
+export const Component = React.forwardRef<HTMLDivElement, ComponentProps>(
+  (props, ref) => {
+    return <div ref={ref} {...props} />;
+  }
+);
+
+Component.displayName = "Component";
+```
+
+### With Base UI
+
+```tsx
+import { Button as BaseButton } from "@base-ui-components/react/Button";
+
+export const Button = React.forwardRef<
+  React.ElementRef<typeof BaseButton>,
+  ButtonProps
+>((props, ref) => {
+  return <BaseButton ref={ref} {...props} />;
+});
+
+Button.displayName = "Button";
+```
+
+### Ref Type Extraction
+
+```tsx
+// Get the element type from a component
+type ButtonElement = React.ElementRef<typeof Button>;
+
+// Get props type from a component
+type ButtonProps = React.ComponentPropsWithoutRef<typeof Button>;
+```
+
+## Children and Composition Types
+
+### Children Prop
+
+```tsx
+export interface ComponentProps {
+  children: React.ReactNode;
+}
+
+// Optional children
+export interface ComponentProps {
+  children?: React.ReactNode;
+}
+
+// Specific children type
+export interface ComponentProps {
+  children: string; // Only strings
+}
+
+// Function children (render prop)
+export interface ComponentProps {
+  children: (props: { value: string }) => React.ReactNode;
+}
+```
+
+### Slot Props
+
+```tsx
+export interface ComponentProps {
+  /** Icon to display before content */
+  icon?: React.ReactNode;
+  /** Icon to display after content */
+  trailingIcon?: React.ReactNode;
+  /** Main content */
+  children: React.ReactNode;
+}
+```
+
+### Component as Prop
+
+```tsx
+export interface ComponentProps {
+  /** Custom icon component */
+  IconComponent?: React.ComponentType<{ className?: string }>;
+}
+
+// Usage
+<Component IconComponent={SearchIcon} />
+```
+
+## Discriminated Unions
+
+### For Variant-Specific Props
+
+```tsx
+type ButtonProps =
+  | {
+      variant: "link";
+      href: string; // Required for link variant
+      onClick?: never;
+    }
+  | {
+      variant?: "primary" | "secondary" | "ghost";
+      href?: never;
+      onClick?: () => void;
+    };
+
+export const Button: React.FC<ButtonProps> = (props) => {
+  if (props.variant === "link") {
+    return <a href={props.href}>{/* ... */}</a>;
+  }
+  return <button onClick={props.onClick}>{/* ... */}</button>;
+};
+```
+
+### For State-Dependent Props
+
+```tsx
+type InputProps =
+  | {
+      isLoading: true;
+      value?: never; // Can't have value when loading
+      onChange?: never;
+    }
+  | {
+      isLoading?: false;
+      value: string;
+      onChange: (value: string) => void;
+    };
+```
+
+## Generic Components
+
+### Polymorphic As Prop
+
+```tsx
+export interface ComponentProps<T extends React.ElementType = "div"> {
+  as?: T;
+}
+
+export const Component = <T extends React.ElementType = "div">({
+  as,
+  ...props
+}: ComponentProps<T> & Omit<React.ComponentPropsWithoutRef<T>, keyof ComponentProps<T>>) => {
+  const Component = as || "div";
+  return <Component {...props} />;
+};
+
+// Usage
+<Component>Renders as div</Component>
+<Component as="span">Renders as span</Component>
+<Component as="a" href="/link">Renders as anchor</Component>
+```
+
+### Generic Value Type
+
+```tsx
+export interface SelectProps<T = string> {
+  value: T;
+  onChange: (value: T) => void;
+  options: Array<{ value: T; label: string }>;
+}
+
+export const Select = <T,>({ value, onChange, options }: SelectProps<T>) => {
+  // ...
+};
+
+// Usage
+<Select<string> value="a" onChange={setValue} options={stringOptions} />
+<Select<number> value={1} onChange={setValue} options={numberOptions} />
+```
+
+## Event Handler Types
+
+### Standard Event Handlers
+
+```tsx
+export interface ComponentProps {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
+}
+```
+
+### Custom Event Handlers
+
+```tsx
+export interface ComponentProps {
+  // Simple callback
+  onValueChange?: (value: string) => void;
+  
+  // With event data
+  onSelect?: (value: string, event: React.MouseEvent) => void;
+  
+  // Async handler
+  onSubmit?: (data: FormData) => Promise<void>;
+}
+```
+
+### Event Handler Implementation
+
+```tsx
+export const Component: React.FC<ComponentProps> = ({
+  onValueChange,
+  ...props
+}) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onValueChange?.(e.target.value);
+  };
+  
+  return <input onChange={handleChange} {...props} />;
+};
+```
+
+## JSDoc Comments
+
+### Component Documentation
+
+```tsx
+/**
+ * Primary button component for user actions.
+ * 
+ * @example
+ * ```tsx
+ * <Button variant="primary" size="lg">
+ *   Click me
+ * </Button>
+ * ```
+ */
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => {
+    return <button ref={ref} {...props} />;
+  }
+);
+```
+
+### Prop Documentation
+
+```tsx
+export interface ButtonProps {
+  /**
+   * The visual style variant of the button.
+   * @default "primary"
+   */
+  variant?: "primary" | "secondary" | "ghost" | "outline";
+  
+  /**
+   * The size of the button.
+   * @default "md"
+   */
+  size?: "sm" | "md" | "lg";
+  
+  /**
+   * Whether the button is in a loading state.
+   * When true, the button is disabled and shows a loading indicator.
+   */
+  isLoading?: boolean;
+  
+  /**
+   * Icon to display before the button text.
+   */
+  icon?: React.ReactNode;
+}
+```
+
+## Type Guards
+
+### Custom Type Guards
+
+```tsx
+function isButton(element: React.ReactNode): element is React.ReactElement<ButtonProps> {
+  return React.isValidElement(element) && element.type === Button;
+}
+
+// Usage
+if (isButton(child)) {
+  // TypeScript knows child is a Button element
+  console.log(child.props.variant);
+}
+```
+
+### Checking Prop Types
+
+```tsx
+export interface ComponentProps {
+  value?: string | number;
+}
+
+export const Component: React.FC<ComponentProps> = ({ value }) => {
+  if (typeof value === "string") {
+    // TypeScript knows value is string here
+    return <div>{value.toUpperCase()}</div>;
+  }
+  
+  if (typeof value === "number") {
+    // TypeScript knows value is number here
+    return <div>{value.toFixed(2)}</div>;
+  }
+  
+  return null;
+};
+```
+
+## Utility Types
+
+### Pick and Omit
+
+```tsx
+// Reuse existing interface with some props
+export interface ButtonProps extends Pick<React.ButtonHTMLAttributes<HTMLButtonElement>, 
+  "onClick" | "disabled" | "type"> {
+  variant?: "primary" | "secondary";
+}
+
+// Exclude specific props
+export interface CustomButtonProps extends Omit<ButtonProps, "variant"> {
+  variant?: "custom1" | "custom2";
+}
+```
+
+### Partial and Required
+
+```tsx
+// Make all props optional
+export interface OptionalProps extends Partial<ComponentProps> {}
+
+// Make all props required
+export interface RequiredProps extends Required<ComponentProps> {}
+
+// Make specific props required
+export interface PartiallyRequiredProps extends ComponentProps {
+  variant: Required<ComponentProps>["variant"];
+}
+```
+
+## Controlled vs Uncontrolled
+
+### Type Pattern
+
+```tsx
+export interface InputProps {
+  // Controlled
+  value?: string;
+  onChange?: (value: string) => void;
+  
+  // Uncontrolled
+  defaultValue?: string;
+}
+
+export const Input: React.FC<InputProps> = ({
+  value: controlledValue,
+  defaultValue,
+  onChange,
+  ...props
+}) => {
+  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue ?? "");
+  
+  const isControlled = controlledValue !== undefined;
+  const value = isControlled ? controlledValue : uncontrolledValue;
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    if (!isControlled) {
+      setUncontrolledValue(newValue);
+    }
+    onChange?.(newValue);
+  };
+  
+  return <input value={value} onChange={handleChange} {...props} />;
+};
+```
+
+## Type Assertions
+
+### Avoid 'as' When Possible
+
+```tsx
+// ❌ BAD - Unnecessary assertion
+const value = props.value as string;
+
+// ✅ GOOD - Type guard
+if (typeof props.value === "string") {
+  const value = props.value; // Typed as string
+}
+```
+
+### Const Assertions
+
+```tsx
+// For literal types
+const SIZES = ["sm", "md", "lg"] as const;
+type Size = typeof SIZES[number]; // "sm" | "md" | "lg"
+
+// For object literals
+const CONFIG = {
+  variant: "primary",
+  size: "md",
+} as const;
+```
+
+## Common Mistakes
+
+### Mistake: Using 'any'
+
+```tsx
+// ❌ WRONG
+export interface ComponentProps {
+  value: any;
+  onChange: (value: any) => void;
+}
+
+// ✅ CORRECT
+export interface ComponentProps<T = string> {
+  value: T;
+  onChange: (value: T) => void;
+}
+```
+
+### Mistake: Not Extending HTML Attributes
+
+```tsx
+// ❌ WRONG - Missing HTML attributes
+export interface ButtonProps {
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
+// ✅ CORRECT - Extends HTML attributes
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+```
+
+### Mistake: Incorrect Ref Types
+
+```tsx
+// ❌ WRONG - Wrong ref type
+export const Component = React.forwardRef<HTMLElement, ComponentProps>
+
+// ✅ CORRECT - Specific element type
+export const Component = React.forwardRef<HTMLDivElement, ComponentProps>
+```
+
+### Mistake: Not Using VariantProps
+
+```tsx
+// ❌ WRONG - Manual variant typing
+const variants = cva("base", { variants: { size: { sm: "", md: "" } } });
+export interface Props {
+  size?: "sm" | "md";
+}
+
+// ✅ CORRECT - Use VariantProps
+export interface Props extends VariantProps<typeof variants> {}
+```
+
+## Must Follow
+
+1. ✅ Always use TypeScript - no JavaScript files
+2. ✅ Never use `any` type - use proper types or `unknown`
+3. ✅ Always extend HTML element props for component props
+4. ✅ Use `VariantProps<typeof variants>` for cva variants
+5. ✅ Always type event handlers correctly
+6. ✅ Use JSDoc comments for component and prop documentation
+7. ✅ Forward refs with correct element types
+8. ✅ Set `displayName` on all forwarded ref components
+9. ✅ Use discriminated unions for variant-specific props
+10. ✅ Prefer type guards over type assertions

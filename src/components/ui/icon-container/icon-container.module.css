@@ -1,0 +1,40 @@
+/* ============================================
+   BASE ICON CONTAINER
+   ============================================ */
+.iconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+  height: 2.5rem; /* 40px */
+  width: 2.5rem; /* 40px */
+}
+
+/* ============================================
+   COLOR VARIANTS
+   ============================================ */
+
+.default {
+  background-color: var(--color-neutral);
+  color: var(--color-neutral-dark);
+}
+
+.green {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.blue {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent-hover);
+}
+
+.orange {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.teal {
+  background-color: var(--color-teal-light);
+  color: var(--color-teal-dark);
+}

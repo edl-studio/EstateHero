@@ -1,0 +1,615 @@
+---
+title: Project Setup Conventions
+description: Project-wide conventions for imports, file organization, and configuration
+tags: [setup, imports, organization, configuration]
+---
+
+# Project Setup Conventions
+
+Project-wide conventions for EstateHero component library.
+
+## Import Order
+
+Follow this strict import order in all files:
+
+```tsx
+// 1. React
+import * as React from "react";
+import { useState, useEffect } from "react";
+
+// 2. Base UI components
+import { Button as BaseButton } from "@base-ui-components/react/Button";
+import { Input as BaseInput } from "@base-ui-components/react/Input";
+
+// 3. Third-party libraries
+import { cva, type VariantProps } from "class-variance-authority";
+import { clsx } from "clsx";
+
+// 4. Local components (absolute imports)
+import { IconContainer } from "@/components/ui/icon-container";
+import { Badge } from "@/components/ui/badge";
+
+// 5. Utils
+import { cn } from "@/lib/utils";
+
+// 6. Types (if separate file)
+import type { ComponentProps } from "./types";
+
+// 7. Styles (if any)
+import "./custom-styles.css";
+```
+
+### Import Grouping
+
+- Separate groups with blank lines
+- Sort alphabetically within groups
+- Use absolute imports for internal modules
+
+## File Naming Conventions
+
+### Components
+
+```
+kebab-case for files and folders
+PascalCase for component names
+```
+
+Examples:
+- Folder: `icon-container/`
+- Component file: `icon-container.tsx`
+- Component name: `IconContainer`
+- Story file: `icon-container.stories.tsx`
+- Types file: `icon-container.types.ts` (if needed)
+
+### Other Files
+
+```
+kebab-case for utility files
+PascalCase for component/class files
+lowercase for config files
+```
+
+Examples:
+- `utils.ts`
+- `cn.ts`
+- `tailwind.config.ts`
+- `globals.css`
+- `.eslintrc.json`
+
+## Folder Organization
+
+### Component Structure
+
+```
+src/components/ui/component-name/
+├── component-name.tsx          # Component implementation
+├── component-name.stories.tsx  # Storybook stories
+└── index.ts                    # Barrel export (optional)
+```
+
+### Project Structure
+
+```
+EstateHero/
+├── .cursor/
+│   └── rules/                  # Cursor AI rules
+├── .storybook/                 # Storybook config
+├── docs/                       # Documentation
+│   ├── COMPONENT_GUIDE.md
+│   └── PRD.md
+├── public/                     # Static assets
+├── src/
+│   ├── components/
+│   │   └── ui/                 # UI components
+│   │       ├── button/
+│   │       ├── input/
+│   │       ├── badge/
+│   │       ├── icon-container/
+│   │       ├── tabs/
+│   │       ├── table-cell/
+│   │       ├── card/
+│   │       ├── modal/
+│   │       └── empty-state/
+│   ├── lib/                    # Utility functions
+│   │   └── utils.ts
+│   └── styles/                 # Global styles
+│       └── globals.css
+├── .eslintrc.json
+├── .gitignore
+├── CONTRIBUTING.md
+├── README.md
+├── package.json
+├── tailwind.config.ts
+└── tsconfig.json
+```
+
+## Path Aliases
+
+Configure path aliases in `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/styles/*": ["./src/styles/*"]
+    }
+  }
+}
+```
+
+### Using Path Aliases
+
+```tsx
+// ✅ GOOD - Absolute imports with alias
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import "@/styles/globals.css";
+
+// ❌ BAD - Relative imports
+import { Button } from "../../components/ui/button";
+import { cn } from "../../../lib/utils";
+import "../../../styles/globals.css";
+```
+
+## CSS Variable Usage
+
+### globals.css Structure
+
+```css
+/* src/styles/globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn CSS variables */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    
+    /* ... more variables ... */
+    
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+```
+
+### Importing Globals
+
+```tsx
+// In main.tsx or App.tsx
+import "@/styles/globals.css";
+```
+
+## Component Exports
+
+### Barrel Exports
+
+Create `index.ts` in each component folder:
+
+```tsx
+// src/components/ui/button/index.ts
+export { Button, type ButtonProps } from "./button";
+
+// src/components/ui/icon-container/index.ts
+export { 
+  IconContainer, 
+  type IconContainerProps 
+} from "./icon-container";
+```
+
+### Central Export (Optional)
+
+```tsx
+// src/components/ui/index.ts
+export { Button, type ButtonProps } from "./button";
+export { Input, type InputProps } from "./input";
+export { Badge, type BadgeProps } from "./badge";
+// ... more exports
+```
+
+Usage:
+
+```tsx
+// With barrel exports
+import { Button } from "@/components/ui/button";
+
+// With central export
+import { Button, Input, Badge } from "@/components/ui";
+```
+
+## Utility Functions
+
+### cn() Helper
+
+```tsx
+// src/lib/utils.ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+### Usage
+
+```tsx
+import { cn } from "@/lib/utils";
+
+// Merge classes
+<div className={cn("base-class", className)} />
+
+// Conditional classes
+<div className={cn("base", isActive && "active")} />
+
+// Array of classes
+<div className={cn(["class-1", "class-2", condition && "class-3"])} />
+```
+
+## Configuration Files
+
+### tailwind.config.ts
+
+```typescript
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: ["class"],
+  content: [
+    "./src/**/*.{ts,tsx}",
+    "./.storybook/**/*.{ts,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
+```
+
+### tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
+```
+
+### .eslintrc.json
+
+```json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:storybook/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "@typescript-eslint/no-explicit-any": "error"
+  }
+}
+```
+
+## Git Conventions
+
+### .gitignore
+
+```
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+storybook-static/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+
+# Misc
+*.log
+```
+
+### Branch Naming
+
+```
+feat/component-name
+fix/issue-description
+refactor/what-changed
+docs/topic
+chore/task
+```
+
+Examples:
+- `feat/button`
+- `feat/icon-container`
+- `fix/input-focus-state`
+- `refactor/card-composition`
+- `docs/component-guide`
+
+### Commit Messages
+
+Use conventional commits:
+
+```
+type(scope): description
+
+[optional body]
+
+[optional footer]
+```
+
+Types:
+- `feat`: New feature
+- `fix`: Bug fix
+- `refactor`: Code refactoring
+- `docs`: Documentation
+- `style`: Code style (formatting)
+- `test`: Tests
+- `chore`: Build/tooling
+
+Examples:
+```
+feat(button): add primary and secondary variants
+
+- Implement Base UI Button wrapper
+- Add cva variant management
+- Create Storybook stories
+
+Closes #123
+```
+
+## Package.json Scripts
+
+### Standard Scripts
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+## Dependencies
+
+### Core Dependencies
+
+```json
+{
+  "dependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@base-ui-components/react": "^0.0.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.0",
+    "eslint-plugin-storybook": "^0.8.0",
+    "postcss": "^8.4.0",
+    "storybook": "^8.0.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.1.0"
+  }
+}
+```
+
+## Environment Setup
+
+### Required Tools
+
+- Node.js 18+
+- npm or yarn
+- Git
+- VS Code or Cursor (recommended)
+
+### VS Code Extensions (Recommended)
+
+```json
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "storybook.vscode-storybook"
+  ]
+}
+```
+
+## Code Style
+
+### Formatting
+
+- **Indentation**: 2 spaces
+- **Quotes**: Double quotes for JSX, single for JavaScript
+- **Semicolons**: Required
+- **Trailing commas**: Always
+
+### Line Length
+
+- Prefer 80-100 characters
+- Break long lines logically
+- Use Prettier for auto-formatting
+
+### Naming Conventions Summary
+
+| Type | Convention | Example |
+|------|-----------|---------|
+| Components | PascalCase | `IconContainer` |
+| Component files | kebab-case | `icon-container.tsx` |
+| Folders | kebab-case | `icon-container/` |
+| Functions | camelCase | `handleClick` |
+| Variables | camelCase | `isLoading` |
+| Constants | UPPER_SNAKE_CASE | `MAX_LENGTH` |
+| Types/Interfaces | PascalCase | `ButtonProps` |
+| CSS classes | kebab-case | `btn-primary` |
+
+## Performance
+
+### Code Splitting
+
+```tsx
+// Lazy load components not in initial bundle
+const Modal = React.lazy(() => import("@/components/ui/modal"));
+
+// Usage
+<React.Suspense fallback={<Loading />}>
+  <Modal />
+</React.Suspense>
+```
+
+### Memoization
+
+```tsx
+// Memoize expensive calculations
+const result = React.useMemo(() => expensiveFunction(), [deps]);
+
+// Memoize callbacks
+const handleClick = React.useCallback(() => {
+  // handler
+}, [deps]);
+
+// Memoize components
+const MemoizedComponent = React.memo(Component);
+```
+
+## Must Follow
+
+1. ✅ Follow strict import order: React → Base UI → Third-party → Local → Utils → Styles
+2. ✅ Use kebab-case for files/folders, PascalCase for components
+3. ✅ Use absolute imports with `@/` alias
+4. ✅ Always use `cn()` for className merging
+5. ✅ Configure path aliases in tsconfig.json
+6. ✅ Keep CSS variables in globals.css
+7. ✅ Use conventional commit messages
+8. ✅ Follow branch naming conventions
+9. ✅ Create barrel exports (index.ts) for components
+10. ✅ Co-locate component files (component + stories in same folder)

@@ -1,0 +1,129 @@
+/* Keep th as table-cell so table row layout works; padding/border on th. border-box so height is total. */
+/* Inset box-shadow so borders don't add to layout */
+.th {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 160px;
+  padding: 0;
+  border: none;
+  box-shadow: inset -1px 0 0 var(--color-border);
+  vertical-align: middle;
+}
+
+/* No left border on the first (leftmost) header cell; all others get a left border. */
+.th:first-child {
+  box-shadow: none;
+}
+
+/* No left border on the last (rightmost) header cell. */
+.th:last-child {
+  box-shadow: none;
+}
+
+/* First header cell: rounded left corners (top-left 8px, bottom-left 8px). Last: top-right 8px only. Single cell: all corners. */
+.th:first-child .root {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.th:last-child .root {
+  border-radius: 0 var(--radius-md) 0 0;
+}
+
+.th:first-child:last-child .root {
+  border-radius: var(--radius-md);
+}
+
+/* Inner bar: flex layout. Typography: use .ui-mono-13 in component. */
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-md);
+  min-height: 44px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+/* Mobile stacked layout (< 768px): outer gets height 44px via inline style; inner .root fills it */
+@media (max-width: 767px) {
+  :global(.mobile-table-header) .root {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+}
+
+/* Light theme: light grey background, dark text and icons */
+.themeLight .root {
+  background-color: var(--color-surface);
+  color: var(--color-content-primary);
+}
+
+.themeLight .iconSlot {
+  color: var(--color-content-muted);
+}
+
+/* Dark theme: dark background, white text and icons */
+.themeDark .root {
+  background-color: var(--color-surface-inverse);
+  color: var(--color-content-white);
+}
+
+.themeDark .iconSlot {
+  color: var(--color-content-white);
+}
+
+.label {
+  flex-shrink: 0;
+}
+
+.iconSlot {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Push sort icon to the end when label/tooltip are present */
+.sortIconSlot {
+  margin-left: auto;
+}
+
+/* Sorted state (asc/desc): 14×14px slot, 4px corners. Light: accent icon; dark: white slot, content-primary icon. */
+.sortIconSlotActive {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+/* table-header-default.ascending / .descending */
+.themeLight .sortIconSlotActive {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+/* table-header-black.ascending / .descending */
+.themeDark .sortIconSlotActive {
+  background-color: var(--color-content-white);
+  color: var(--color-content-primary);
+}
+
+/* Mobile stacked layout: first header (MARKET) gets top-left 8px only; bottom-left must be 0 (desktop first cell is the blank label column, hidden on mobile). */
+.th.roundTopLeftOnly .root,
+.th[data-round-top-left-only] .root {
+  border-radius: var(--radius-md) 0 0 0 !important;
+}
+
+/* Header content alignment */
+.alignCenter .root {
+  justify-content: center;
+  text-align: center;
+}
+
+.alignRight .root {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.alignRight .sortIconSlot {
+  margin-left: 0;
+}

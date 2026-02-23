@@ -1,0 +1,45 @@
+/* ============================================
+   AVATAR ROOT
+   ============================================ */
+.root {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+}
+
+/* Size Variants */
+.rootSm {
+  height: 2rem; /* 32px */
+  width: 2rem;
+}
+
+.rootMd {
+  height: 2.5rem; /* 40px */
+  width: 2.5rem;
+}
+
+/* ============================================
+   AVATAR IMAGE
+   ============================================ */
+.image {
+  aspect-ratio: 1 / 1;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   AVATAR FALLBACK
+   ============================================ */
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-surface-accent);
+  color: var(--color-content-secondary);
+  /* Typography from text utility: ui-sans-medium-12 (sm) | ui-sans-medium-14 (md) */
+}

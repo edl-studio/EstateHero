@@ -1,0 +1,419 @@
+---
+title: Component Development Patterns
+description: Core patterns for building EstateHero components
+tags: [components, react, base-ui, patterns]
+---
+
+# Component Development Patterns
+
+Rules and patterns for building components in the EstateHero library.
+
+## Base UI Primitive Usage
+
+### Always Use Base UI When Available
+
+For these component types, ALWAYS start from Base UI:
+
+- **Button** → `@base-ui-components/react/Button`
+- **Input** → `@base-ui-components/react/Input`
+- **Tabs** → `@base-ui-components/react/Tabs`
+- **Dialog/Modal** → `@base-ui-components/react/Dialog`
+
+```tsx
+// ✅ CORRECT - Uses Base UI
+import { Button as BaseButton } from "@base-ui-components/react/Button";
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => {
+    return <BaseButton ref={ref} {...props} />;
+  }
+);
+
+// ❌ WRONG - Reimplements from scratch
+export const Button = ({ onClick, children }) => {
+  return <button onClick={onClick}>{children}</button>;
+};
+```
+
+### Base UI Integration Pattern
+
+```tsx
+import * as React from "react";
+import { BaseUIComponent } from "@base-ui-components/react/Component";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const variants = cva("base-classes", { /* variants */ });
+
+export interface Props
+  extends React.ComponentPropsWithoutRef<typeof BaseUIComponent>,
+    VariantProps<typeof variants> {}
+
+export const Component = React.forwardRef<
+  React.ElementRef<typeof BaseUIComponent>,
+  Props
+>(({ className, variant, size, ...props }, ref) => {
+  return (
+    <BaseUIComponent
+      ref={ref}
+      className={cn(variants({ variant, size, className }))}
+      {...props}
+    />
+  );
+});
+
+Component.displayName = "Component";
+```
+
+## Component File Structure
+
+### Standard Structure
+
+Each component lives in its own folder with this structure:
+
+```
+component-name/
+├── component-name.tsx      # Component implementation
+└── component-name.stories.tsx  # Storybook stories
+```
+
+### File Naming
+
+- **Folders**: `kebab-case` (e.g., `icon-container/`, `table-cell/`)
+- **Files**: `kebab-case` (e.g., `icon-container.tsx`, `button.stories.tsx`)
+- **Components**: `PascalCase` (e.g., `IconContainer`, `TableCell`)
+
+## Export Patterns
+
+### Component Exports
+
+```tsx
+// component.tsx
+
+// Export interface for props
+export interface ComponentProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Prop description */
+  variant?: "default" | "primary";
+}
+
+// Export main component
+export const Component = React.forwardRef<HTMLDivElement, ComponentProps>(
+  (props, ref) => {
+    return <div ref={ref} {...props} />;
+  }
+);
+
+Component.displayName = "Component";
+
+// Export sub-components if any
+export const ComponentHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
+  return <div {...props} />;
+};
+
+export const ComponentContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
+  return <div {...props} />;
+};
+```
+
+### Barrel Exports (index.ts)
+
+Create `index.ts` to re-export for cleaner imports:
+
+```tsx
+// src/components/ui/button/index.ts
+export { Button, type ButtonProps } from "./button";
+```
+
+Usage:
+
+```tsx
+// ✅ GOOD - Clean import
+import { Button } from "@/components/ui/button";
+
+// ❌ BAD - Direct file import
+import { Button } from "@/components/ui/button/button";
+```
+
+## Props Interface Design
+
+### Standard Pattern
+
+```tsx
+import { cva, type VariantProps } from "class-variance-authority";
+
+const componentVariants = cva("base", {
+  variants: {
+    variant: { default: "classes" },
+    size: { default: "classes" },
+  },
+});
+
+export interface ComponentProps
+  extends React.HTMLAttributes<HTMLElement>,
+    VariantProps<typeof componentVariants> {
+  /** Use JSDoc for prop descriptions */
+  customProp?: string;
+}
+```
+
+### Prop Naming Conventions
+
+```tsx
+// ✅ CORRECT - Boolean props with 'is' prefix
+isLoading?: boolean;
+isDisabled?: boolean;
+isActive?: boolean;
+
+// ❌ WRONG - No prefix
+loading?: boolean;
+disabled?: boolean;
+active?: boolean;
+
+// ✅ CORRECT - Event handlers with 'on' prefix
+onClick?: () => void;
+onValueChange?: (value: string) => void;
+
+// ✅ CORRECT - Content props
+icon?: React.ReactNode;
+children?: React.ReactNode;
+```
+
+### Required vs Optional Props
+
+```tsx
+export interface ComponentProps {
+  // Required props (no ?)
+  id: string;
+  title: string;
+  
+  // Optional props (with ?)
+  description?: string;
+  icon?: React.ReactNode;
+  
+  // Optional with default in defaultVariants
+  variant?: "default" | "primary";
+  size?: "sm" | "md" | "lg";
+}
+```
+
+## Composition Patterns
+
+### Compound Components
+
+Build complex components from simpler ones:
+
+```tsx
+// Card that composes Tabs
+export const Card: React.FC<CardProps> = ({ children, ...props }) => {
+  return (
+    <div className="card-base-classes" {...props}>
+      {children}
+    </div>
+  );
+};
+
+export const CardHeader: React.FC<CardHeaderProps> = ({ children, ...props }) => {
+  return (
+    <div className="card-header-classes" {...props}>
+      {children}
+    </div>
+  );
+};
+
+export const CardContent: React.FC<CardContentProps> = ({ children, ...props }) => {
+  return (
+    <div className="card-content-classes" {...props}>
+      {children}
+    </div>
+  );
+};
+
+// Usage - composition
+<Card>
+  <CardHeader>
+    <Tabs>
+      <TabsList>
+        <TabsTrigger>Tab 1</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  </CardHeader>
+  <CardContent>
+    Content here
+  </CardContent>
+</Card>
+```
+
+### Composition Over Props
+
+```tsx
+// ✅ GOOD - Composition
+<Button>
+  <Icon />
+  Click me
+</Button>
+
+// ❌ BAD - Too many props
+<Button 
+  icon={<Icon />} 
+  iconPosition="left"
+  iconSize="md"
+  iconColor="blue"
+>
+  Click me
+</Button>
+```
+
+### Slot Pattern
+
+```tsx
+export interface ComponentProps {
+  // Slot for custom content
+  leadingIcon?: React.ReactNode;
+  trailingIcon?: React.ReactNode;
+  children: React.ReactNode;
+}
+
+export const Component: React.FC<ComponentProps> = ({
+  leadingIcon,
+  trailingIcon,
+  children,
+}) => {
+  return (
+    <div>
+      {leadingIcon && <span className="leading-slot">{leadingIcon}</span>}
+      {children}
+      {trailingIcon && <span className="trailing-slot">{trailingIcon}</span>}
+    </div>
+  );
+};
+```
+
+## Ref Forwarding
+
+### Always Forward Refs
+
+```tsx
+// ✅ CORRECT - Forwards ref
+export const Component = React.forwardRef<HTMLDivElement, ComponentProps>(
+  (props, ref) => {
+    return <div ref={ref} {...props} />;
+  }
+);
+
+Component.displayName = "Component";
+
+// ❌ WRONG - No ref forwarding
+export const Component: React.FC<ComponentProps> = (props) => {
+  return <div {...props} />;
+};
+```
+
+### Ref with Base UI
+
+```tsx
+import { Button as BaseButton } from "@base-ui-components/react/Button";
+
+export const Button = React.forwardRef<
+  React.ElementRef<typeof BaseButton>,
+  ButtonProps
+>((props, ref) => {
+  return <BaseButton ref={ref} {...props} />;
+});
+```
+
+## Component Build Order
+
+Build components in dependency order:
+
+### Phase 1: Primitives (No Dependencies)
+1. Button
+2. Input
+3. Badge
+4. Icon Container
+5. Tabs
+
+### Phase 2: Compound Components
+6. Table Cell (requires Icon Container)
+7. Card (requires Tabs)
+8. Empty State (standalone)
+9. Modal (requires Input, Table Cell, Empty State)
+
+## Common Patterns
+
+### Icon Handling
+
+```tsx
+export interface ComponentProps {
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}
+
+export const Component: React.FC<ComponentProps> = ({ icon, children }) => {
+  return (
+    <div>
+      {icon && <span className="mr-2">{icon}</span>}
+      {children}
+    </div>
+  );
+};
+
+// Usage
+<Component icon={<SearchIcon />}>Search</Component>
+```
+
+### Loading States
+
+```tsx
+export interface ComponentProps {
+  isLoading?: boolean;
+  children: React.ReactNode;
+}
+
+export const Component: React.FC<ComponentProps> = ({ 
+  isLoading, 
+  children,
+  ...props 
+}) => {
+  return (
+    <button disabled={isLoading} aria-busy={isLoading} {...props}>
+      {isLoading ? "Loading..." : children}
+    </button>
+  );
+};
+```
+
+### Disabled States
+
+```tsx
+const componentVariants = cva("base-classes", {
+  variants: {
+    variant: { default: "classes" },
+  },
+  // Add disabled styles to base classes
+  "disabled:pointer-events-none disabled:opacity-50"
+});
+
+export const Component = React.forwardRef<HTMLButtonElement, ComponentProps>(
+  ({ disabled, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        disabled={disabled}
+        aria-disabled={disabled}
+        {...props}
+      />
+    );
+  }
+);
+```
+
+## Must Follow
+
+1. ✅ Always use Base UI primitives when available
+2. ✅ Always forward refs with `React.forwardRef`
+3. ✅ Always set `displayName` on components
+4. ✅ Always extend appropriate HTML element props
+5. ✅ Always use TypeScript - no `any` types
+6. ✅ Prefer composition over complex prop APIs
+7. ✅ Use semantic prop names (not presentational)
+8. ✅ Build in dependency order (primitives first)

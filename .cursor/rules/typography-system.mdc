@@ -1,0 +1,524 @@
+---
+title: Typography System
+description: Font families, sizes, weights, and usage patterns for EstateHero
+tags: [typography, fonts, text-styling]
+---
+
+# Typography System
+
+Complete typography guidelines for EstateHero component library.
+
+## Font Families
+
+### Current Setup (IBM Plex - Placeholder)
+
+```typescript
+fontFamily: {
+  sans: ['IBM Plex Sans', 'system-ui', '-apple-system', 'sans-serif'],
+  serif: ['IBM Plex Serif', 'Georgia', 'serif'],
+  mono: ['IBM Plex Mono', 'Courier New', 'monospace'],
+}
+```
+
+### Production Fonts (Future)
+
+When ready to switch to production fonts:
+
+```typescript
+fontFamily: {
+  sans: ['Elza Text', 'system-ui', '-apple-system', 'sans-serif'],
+  serif: ['Georgia', 'serif'],
+  mono: ['RM Mono TRIAL', 'Courier New', 'monospace'],
+}
+```
+
+## Font Family Usage
+
+### font-sans (Primary)
+
+**Used for:** Body text, UI components, buttons, labels, most text
+
+```tsx
+// ✅ CORRECT - Default, no need to specify
+<p className="text-base">Body text uses sans by default</p>
+
+// Explicit usage (rarely needed)
+<p className="font-sans">Explicit sans-serif</p>
+```
+
+### font-serif (Decorative)
+
+**Used for:** Decorative headings, hero text, emphasis
+
+```tsx
+// ✅ CORRECT - For decorative headings
+<h1 className="font-serif text-4xl">Hero Heading</h1>
+<h2 className="font-serif text-2xl">Section Title</h2>
+```
+
+### font-mono (Technical)
+
+**Used for:** Code blocks, technical data, monospace content
+
+```tsx
+// ✅ CORRECT - Code and technical content
+<code className="font-mono text-sm">const value = true;</code>
+<pre className="font-mono text-xs">API Response</pre>
+```
+
+## Font Weights
+
+### Available Weights
+
+| Weight | Value | Tailwind Class | Usage |
+|--------|-------|----------------|-------|
+| Regular | 400 | `font-normal` | Body text, default |
+| Medium | 500 | `font-medium` | Buttons, labels, emphasis |
+| Semibold | 600 | `font-semibold` | Subheadings, strong emphasis |
+| Bold | 700 | `font-bold` | Headings, important text |
+
+### Weight Usage Patterns
+
+```tsx
+// Body text - Regular (400)
+<p className="font-normal">Standard body text</p>
+
+// Buttons - Medium (500)
+<button className="font-medium">Click me</button>
+
+// Subheadings - Semibold (600)
+<h3 className="font-semibold">Section Title</h3>
+
+// Main headings - Bold (700)
+<h1 className="font-bold">Page Title</h1>
+```
+
+## Font Sizes & Line Heights
+
+### Size Scale
+
+| Name | Class | Size | Line Height | Usage |
+|------|-------|------|-------------|-------|
+| Extra Small | `text-xs` | 0.75rem (12px) | 1rem (16px) | Captions, helper text |
+| Small | `text-sm` | 0.875rem (14px) | 1.25rem (20px) | Small body, buttons |
+| Base | `text-base` | 1rem (16px) | 1.5rem (24px) | Default body text |
+| Large | `text-lg` | 1.125rem (18px) | 1.75rem (28px) | Large body, intro text |
+| XL | `text-xl` | 1.25rem (20px) | 1.75rem (28px) | H4 headings |
+| 2XL | `text-2xl` | 1.5rem (24px) | 2rem (32px) | H3 headings |
+| 3XL | `text-3xl` | 1.875rem (30px) | 2.25rem (36px) | H2 headings |
+| 4XL | `text-4xl` | 2.25rem (36px) | 2.5rem (40px) | H1 headings |
+| 5XL | `text-5xl` | 3rem (48px) | 1 | Hero text |
+| 6XL | `text-6xl` | 3.75rem (60px) | 1 | Large hero text |
+
+## Typography Patterns
+
+### Headings
+
+```tsx
+// H1 - Page title
+<h1 className="text-4xl font-bold text-foreground">
+  Page Title
+</h1>
+
+// H2 - Section heading
+<h2 className="text-3xl font-bold text-foreground">
+  Section Heading
+</h2>
+
+// H3 - Subsection heading
+<h3 className="text-2xl font-semibold text-foreground">
+  Subsection Heading
+</h3>
+
+// H4 - Minor heading
+<h4 className="text-xl font-semibold text-foreground">
+  Minor Heading
+</h4>
+
+// Decorative heading (with serif)
+<h1 className="font-serif text-5xl font-bold text-foreground">
+  Hero Title
+</h1>
+```
+
+### Body Text
+
+```tsx
+// Standard body
+<p className="text-base text-foreground">
+  Standard paragraph text
+</p>
+
+// Large body (intro text)
+<p className="text-lg text-foreground">
+  Introduction or lead paragraph
+</p>
+
+// Small body
+<p className="text-sm text-foreground">
+  Secondary information
+</p>
+
+// Caption text
+<p className="text-xs text-muted-foreground">
+  Caption or helper text
+</p>
+```
+
+### Labels & UI Text
+
+```tsx
+// Form label
+<label className="text-sm font-medium text-foreground">
+  Label Text
+</label>
+
+// Button text
+<button className="text-sm font-medium">
+  Button Text
+</button>
+
+// Helper text
+<span className="text-xs text-muted-foreground">
+  Helper text or hint
+</span>
+
+// Error message
+<span className="text-sm text-destructive">
+  Error message
+</span>
+```
+
+### Links
+
+```tsx
+// Standard link
+<a className="text-base text-primary underline hover:text-primary/90">
+  Link Text
+</a>
+
+// Inline link
+<p className="text-base">
+  This is a paragraph with an{" "}
+  <a className="text-primary underline hover:text-primary/90">
+    inline link
+  </a>
+  .
+</p>
+
+// Button-style link
+<a className="text-sm font-medium text-primary hover:text-primary/90">
+  Navigation Link
+</a>
+```
+
+### Code & Technical
+
+```tsx
+// Inline code
+<code className="font-mono text-sm bg-muted px-1.5 py-0.5 rounded">
+  inline code
+</code>
+
+// Code block
+<pre className="font-mono text-xs bg-muted p-4 rounded-md overflow-x-auto">
+  <code>const example = true;</code>
+</pre>
+
+// Technical data
+<span className="font-mono text-sm text-muted-foreground">
+  #FF5733
+</span>
+```
+
+## Component Typography Patterns
+
+### Button
+
+```tsx
+// All buttons use text-sm font-medium
+const buttonVariants = cva(
+  "text-sm font-medium ...",
+  // variants...
+);
+```
+
+### Input
+
+```tsx
+// Input text
+<input className="text-base font-normal placeholder:text-muted-foreground" />
+
+// Input label
+<label className="text-sm font-medium text-foreground">Label</label>
+
+// Input helper text
+<p className="text-xs text-muted-foreground">Helper text</p>
+```
+
+### Badge
+
+```tsx
+// Badge text (future component)
+<span className="text-xs font-medium">
+  Badge Text
+</span>
+```
+
+### Card
+
+```tsx
+// Card title
+<h3 className="text-lg font-semibold text-foreground">
+  Card Title
+</h3>
+
+// Card description
+<p className="text-sm text-muted-foreground">
+  Card description text
+</p>
+```
+
+### Table
+
+```tsx
+// Table header
+<th className="text-sm font-semibold text-foreground">
+  Column Header
+</th>
+
+// Table cell
+<td className="text-sm text-foreground">
+  Cell content
+</td>
+```
+
+### Modal
+
+```tsx
+// Modal title
+<h2 className="text-xl font-semibold text-foreground">
+  Modal Title
+</h2>
+
+// Modal description
+<p className="text-sm text-muted-foreground">
+  Modal description
+</p>
+```
+
+## Text Colors
+
+Always use semantic color tokens:
+
+```tsx
+// ✅ CORRECT - Semantic colors
+text-foreground        // Primary text
+text-muted-foreground  // Secondary text
+text-primary           // Brand/accent text
+text-destructive       // Error text
+
+// ❌ WRONG - Hardcoded colors
+text-gray-900
+text-blue-600
+text-red-500
+```
+
+## Line Clamping
+
+For truncating text:
+
+```tsx
+// Single line
+<p className="text-base truncate">
+  Very long text that will be truncated...
+</p>
+
+// Multiple lines
+<p className="text-base line-clamp-2">
+  Long text that will be clamped to 2 lines...
+</p>
+
+<p className="text-base line-clamp-3">
+  Long text that will be clamped to 3 lines...
+</p>
+```
+
+## Text Alignment
+
+```tsx
+// Left (default)
+<p className="text-left">Left aligned</p>
+
+// Center
+<p className="text-center">Center aligned</p>
+
+// Right
+<p className="text-right">Right aligned</p>
+```
+
+## Text Transform
+
+```tsx
+// Uppercase
+<span className="uppercase text-xs font-medium tracking-wider">
+  Label
+</span>
+
+// Lowercase
+<span className="lowercase">lowercase text</span>
+
+// Capitalize
+<span className="capitalize">capitalize each word</span>
+```
+
+## Letter Spacing
+
+```tsx
+// Tight (for large headings)
+<h1 className="text-4xl tracking-tight">
+  Heading
+</h1>
+
+// Wide (for small caps/labels)
+<span className="text-xs uppercase tracking-wider">
+  Label
+</span>
+```
+
+## Responsive Typography (Post-v1)
+
+Future pattern for responsive text:
+
+```tsx
+// Not in v1, but structure for future
+<h1 className="text-2xl md:text-3xl lg:text-4xl">
+  Responsive Heading
+</h1>
+```
+
+## Common Patterns
+
+### Section Header
+
+```tsx
+<div className="space-y-2">
+  <h2 className="text-2xl font-semibold text-foreground">
+    Section Title
+  </h2>
+  <p className="text-sm text-muted-foreground">
+    Section description or subtitle
+  </p>
+</div>
+```
+
+### Card Content
+
+```tsx
+<div className="space-y-2">
+  <h3 className="text-lg font-semibold text-foreground">
+    Card Title
+  </h3>
+  <p className="text-sm text-muted-foreground">
+    Card description with supporting details
+  </p>
+</div>
+```
+
+### Form Field
+
+```tsx
+<div className="space-y-1.5">
+  <label className="text-sm font-medium text-foreground">
+    Field Label
+  </label>
+  <input className="text-base" />
+  <p className="text-xs text-muted-foreground">
+    Helper text
+  </p>
+</div>
+```
+
+### Empty State
+
+```tsx
+<div className="space-y-2 text-center">
+  <h3 className="text-lg font-semibold text-foreground">
+    No Results Found
+  </h3>
+  <p className="text-sm text-muted-foreground">
+    Try adjusting your search
+  </p>
+</div>
+```
+
+## Font Loading
+
+### Current Setup (NPM Packages)
+
+Fonts are imported in `main.tsx` and `.storybook/preview.ts`:
+
+```typescript
+// IBM Plex Sans
+import "@fontsource/ibm-plex-sans/400.css";  // Regular
+import "@fontsource/ibm-plex-sans/500.css";  // Medium
+import "@fontsource/ibm-plex-sans/600.css";  // Semibold
+import "@fontsource/ibm-plex-sans/700.css";  // Bold
+
+// IBM Plex Serif
+import "@fontsource/ibm-plex-serif/400.css";
+import "@fontsource/ibm-plex-serif/600.css";
+import "@fontsource/ibm-plex-serif/700.css";
+
+// IBM Plex Mono
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
+import "@fontsource/ibm-plex-mono/600.css";
+```
+
+### Future Setup (Custom Fonts)
+
+When switching to production fonts:
+
+1. Place font files in `public/fonts/`
+2. Add `@font-face` declarations to `globals.css`
+3. Update `tailwind.config.ts` font families
+
+## Accessibility
+
+### Font Size Minimums
+
+- ✅ Never go below `text-xs` (12px) for readable text
+- ✅ Use `text-sm` (14px) minimum for body content
+- ✅ Use `text-base` (16px) for primary content
+
+### Color Contrast
+
+- ✅ Ensure 4.5:1 contrast for normal text
+- ✅ Ensure 3:1 contrast for large text (18px+)
+- ✅ Use `text-foreground` for primary content
+- ✅ Use `text-muted-foreground` for secondary content
+
+### Line Length
+
+- ✅ Keep line length 45-75 characters for optimal readability
+- ✅ Use `max-w-prose` (65ch) for long-form content
+
+```tsx
+<article className="max-w-prose">
+  <p className="text-base">Long-form content...</p>
+</article>
+```
+
+## Must Follow
+
+1. ✅ Use `font-sans` (default) for UI and body text
+2. ✅ Use `font-serif` for decorative headings only
+3. ✅ Use `font-mono` for code and technical content
+4. ✅ Never hardcode font families beyond sans/serif/mono
+5. ✅ Always pair font size with appropriate line height
+6. ✅ Use semantic color tokens (text-foreground, text-muted-foreground)
+7. ✅ Use font-medium (500) for buttons and labels
+8. ✅ Use font-semibold (600) for subheadings
+9. ✅ Use font-bold (700) for main headings
+10. ✅ Maintain 12px minimum font size for readability

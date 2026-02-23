@@ -1,0 +1,82 @@
+/* ============================================
+   METADATA ITEM - BASE
+   ============================================ */
+.metadataItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* ============================================
+   META LABEL
+   ============================================ */
+.metaLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem; /* 6px */
+  color: var(--color-content-secondary);
+  text-transform: uppercase;
+  /* Typography: ui-mono-14 */
+}
+
+.helpIcon {
+  display: inline-flex;
+  width: var(--text-sm);
+  height: var(--text-sm);
+  aspect-ratio: 1/1;
+  color: #9CA3AF; /* tailwind gray-400 */
+}
+
+/* ============================================
+   DATA GROUP
+   ============================================ */
+.dataGroup {
+  display: flex;
+  height: 32px;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.iconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1/1;
+  color: #10B981; /* tailwind green-500 */
+}
+
+.dataContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.dataValue {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  color: var(--color-content-primary);
+  text-transform: uppercase;
+  /* Typography: ui-mono-24 */
+}
+
+.dataUnit {
+  color: var(--color-content-secondary);
+  text-transform: uppercase;
+  /* Typography: ui-mono-24 */
+}
+
+.badgeContainer {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ============================================
+   BUTTON VARIANT
+   ============================================ */
+.buttonContainer {
+  display: inline-flex;
+  width: fit-content;
+}

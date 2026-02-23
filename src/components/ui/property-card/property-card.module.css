@@ -1,0 +1,98 @@
+/* ============================================
+   PROPERTY CARD ROOT
+   ============================================ */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* ============================================
+   PROPERTY CARD IMAGE (optional)
+   ============================================ */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background-color: var(--color-surface-dark);
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-muted);
+  /* Typography: ui-mono-13 */
+}
+
+/* ============================================
+   PROPERTY CARD CONTENT
+   ============================================ */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+}
+
+/* Address: primary heading */
+.address {
+  color: var(--color-content-primary);
+  /* Typography set in component */
+}
+
+/* Badges row: type + status pills */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+/* First badge: only the icon uses accent color; border and label keep outline default */
+.badgeResidential > span:first-child {
+  color: var(--color-content-accent);
+}
+
+/* Price block: main price + currency + change */
+.priceRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+}
+
+.mainPrice {
+  color: var(--color-content-primary);
+  /* Typography: ui-mono-semibold-24 or similar */
+}
+
+.currency {
+  color: var(--color-content-secondary);
+  /* Typography: ui-sans-regular-14 */
+}
+
+.priceChange {
+  /* Badge with success/positive variant - styled in component */
+}
+
+/* Unit price (e.g. DKK / M²) */
+.unitPrice {
+  color: var(--color-content-secondary);
+  /* Typography: ui-sans-regular-14 */
+}

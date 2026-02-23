@@ -1,0 +1,801 @@
+---
+title: Storybook Conventions
+description: Story writing standards and documentation patterns
+tags: [storybook, documentation, stories, testing]
+---
+
+# Storybook Conventions
+
+Standards for writing Storybook stories and documenting components.
+
+## Story File Structure
+
+### Basic Template
+
+```tsx
+import type { Meta, StoryObj } from "@storybook/react";
+import { Component } from "./component";
+
+const meta: Meta<typeof Component> = {
+  title: "UI/Component",
+  component: Component,
+  tags: ["autodocs"],
+  argTypes: {
+    // Control definitions
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof Component>;
+
+// Stories
+export const Default: Story = {
+  args: {},
+};
+```
+
+### File Naming
+
+- **Story files**: `component-name.stories.tsx`
+- **Co-located**: Same folder as component
+- **Example**: `button/button.stories.tsx`
+
+## Meta Configuration
+
+### Standard Meta
+
+```tsx
+const meta: Meta<typeof Button> = {
+  title: "UI/Button",
+  component: Button,
+  tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+  },
+};
+```
+
+### Title Conventions
+
+Use hierarchical titles with forward slashes:
+
+```tsx
+// Primitives
+title: "UI/Button"
+title: "UI/Input"
+title: "UI/Badge"
+
+// Compound components
+title: "UI/Card"
+title: "UI/Modal"
+
+// By category
+title: "Primitives/Button"
+title: "Compound/Card"
+```
+
+### Tags
+
+```tsx
+tags: ["autodocs"]  // Enables auto-generated documentation
+```
+
+### Parameters
+
+```tsx
+parameters: {
+  layout: "centered",     // Centers component in canvas
+  // OR
+  layout: "fullscreen",   // Full width/height
+  // OR
+  layout: "padded",       // Default padding
+  
+  docs: {
+    description: {
+      component: "Primary button component for user actions.",
+    },
+  },
+}
+```
+
+## ArgTypes
+
+### Control Types
+
+```tsx
+argTypes: {
+  // Select dropdown
+  variant: {
+    control: "select",
+    options: ["primary", "secondary", "ghost", "outline"],
+    description: "Button variant style",
+  },
+  
+  // Radio buttons
+  size: {
+    control: "radio",
+    options: ["sm", "md", "lg"],
+    description: "Button size",
+  },
+  
+  // Boolean toggle
+  disabled: {
+    control: "boolean",
+    description: "Disabled state",
+  },
+  
+  // Text input
+  children: {
+    control: "text",
+    description: "Button text content",
+  },
+  
+  // Number input
+  maxLength: {
+    control: "number",
+    description: "Maximum character length",
+  },
+  
+  // Color picker
+  color: {
+    control: "color",
+    description: "Custom color",
+  },
+  
+  // Disable control
+  onClick: {
+    control: false,
+    description: "Click handler",
+  },
+}
+```
+
+### ArgType Options
+
+```tsx
+argTypes: {
+  variant: {
+    control: "select",
+    options: ["primary", "secondary"],
+    description: "The visual style variant",
+    table: {
+      type: { summary: "string" },
+      defaultValue: { summary: "primary" },
+    },
+  },
+}
+```
+
+## Story Templates
+
+### One Story Per Variant
+
+```tsx
+export const Primary: Story = {
+  args: {
+    variant: "primary",
+    children: "Primary Button",
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    variant: "secondary",
+    children: "Secondary Button",
+  },
+};
+
+export const Ghost: Story = {
+  args: {
+    variant: "ghost",
+    children: "Ghost Button",
+  },
+};
+
+export const Outline: Story = {
+  args: {
+    variant: "outline",
+    children: "Outline Button",
+  },
+};
+```
+
+### Showcase Story
+
+Show all variants together:
+
+```tsx
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex gap-4">
+      <Button variant="primary">Primary</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="outline">Outline</Button>
+    </div>
+  ),
+};
+```
+
+### Sizes Story
+
+```tsx
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex gap-4 items-center">
+      <Button size="sm">Small</Button>
+      <Button size="md">Medium</Button>
+      <Button size="lg">Large</Button>
+    </div>
+  ),
+};
+```
+
+### States Story
+
+```tsx
+export const States: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <Button>Default</Button>
+      <Button className="hover:bg-primary/90">Hover (simulated)</Button>
+      <Button disabled>Disabled</Button>
+      <Button isLoading>Loading</Button>
+    </div>
+  ),
+};
+```
+
+### With Icons
+
+```tsx
+export const WithIcon: Story = {
+  render: () => (
+    <div className="flex gap-4">
+      <Button icon={<SearchIcon />}>Search</Button>
+      <Button icon={<PlusIcon />}>Add</Button>
+    </div>
+  ),
+};
+
+export const IconOnly: Story = {
+  args: {
+    variant: "ghost",
+    children: <XIcon />,
+    "aria-label": "Close",
+  },
+};
+```
+
+### Interactive Playground
+
+```tsx
+export const Playground: Story = {
+  args: {
+    variant: "primary",
+    size: "md",
+    children: "Playground Button",
+    disabled: false,
+  },
+};
+```
+
+## Render Functions
+
+### Custom Rendering
+
+```tsx
+export const CustomExample: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-4">
+      <Component {...args} />
+      <p className="text-sm text-muted-foreground">
+        This is a custom render example
+      </p>
+    </div>
+  ),
+  args: {
+    variant: "primary",
+  },
+};
+```
+
+### With State
+
+```tsx
+export const WithState: Story = {
+  render: (args) => {
+    const [value, setValue] = React.useState("");
+    
+    return (
+      <Input
+        {...args}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    );
+  },
+  args: {
+    placeholder: "Type something...",
+  },
+};
+```
+
+### Composition Example
+
+```tsx
+export const CompositionExample: Story = {
+  render: () => (
+    <Card>
+      <CardHeader>
+        <Tabs defaultValue="tab1">
+          <TabsList>
+            <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+            <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </CardHeader>
+      <CardContent>
+        <p>Content goes here</p>
+      </CardContent>
+    </Card>
+  ),
+};
+```
+
+## Documentation
+
+### Component Description
+
+```tsx
+const meta: Meta<typeof Button> = {
+  title: "UI/Button",
+  component: Button,
+  tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: `
+Primary button component for user actions. Built on Base UI Button primitive with full keyboard accessibility.
+
+## Features
+- Multiple variants (primary, secondary, ghost, outline)
+- Three sizes (sm, md, lg)
+- Loading states
+- Icon support
+- Full keyboard navigation
+        `,
+      },
+    },
+  },
+};
+```
+
+### Story Description
+
+```tsx
+export const Primary: Story = {
+  args: {
+    variant: "primary",
+    children: "Primary Button",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "The primary button variant used for main actions.",
+      },
+    },
+  },
+};
+```
+
+### Usage Examples
+
+```tsx
+const meta: Meta<typeof Button> = {
+  // ...
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Usage
+
+\`\`\`tsx
+import { Button } from "@/components/ui/button";
+
+function App() {
+  return (
+    <Button variant="primary" size="md">
+      Click me
+    </Button>
+  );
+}
+\`\`\`
+        `,
+      },
+    },
+  },
+};
+```
+
+## Decorators
+
+### Add Padding
+
+```tsx
+const meta: Meta<typeof Component> = {
+  // ...
+  decorators: [
+    (Story) => (
+      <div className="p-8">
+        <Story />
+      </div>
+    ),
+  ],
+};
+```
+
+### Dark Background
+
+```tsx
+export const OnDark: Story = {
+  args: {
+    variant: "primary",
+  },
+  decorators: [
+    (Story) => (
+      <div className="bg-gray-900 p-8">
+        <Story />
+      </div>
+    ),
+  ],
+};
+```
+
+### With Context
+
+```tsx
+const meta: Meta<typeof Component> = {
+  // ...
+  decorators: [
+    (Story) => (
+      <SomeProvider>
+        <Story />
+      </SomeProvider>
+    ),
+  ],
+};
+```
+
+## Story Organization
+
+### Required Stories for Each Component
+
+Every component must have:
+
+1. **Default story** - Basic usage
+2. **All variant stories** - One per variant
+3. **All sizes story** - Show all sizes together
+4. **States story** - Default, hover, disabled, etc.
+5. **Playground story** - Interactive controls
+
+### Button Example
+
+```tsx
+export const Primary: Story = { /* ... */ };
+export const Secondary: Story = { /* ... */ };
+export const Ghost: Story = { /* ... */ };
+export const Outline: Story = { /* ... */ };
+
+export const Sizes: Story = { /* ... */ };
+export const States: Story = { /* ... */ };
+export const WithIcon: Story = { /* ... */ };
+
+export const Playground: Story = { /* ... */ };
+```
+
+### Input Example
+
+```tsx
+export const Default: Story = { /* ... */ };
+export const WithLeadingIcon: Story = { /* ... */ };
+export const WithTrailingIcon: Story = { /* ... */ };
+
+export const Sizes: Story = { /* ... */ };
+export const States: Story = { /* ... */ };
+export const Controlled: Story = { /* ... */ };
+
+export const Playground: Story = { /* ... */ };
+```
+
+### Icon Container Example
+
+```tsx
+export const Default: Story = { /* ... */ };
+
+// Semantic colors
+export const Success: Story = { /* ... */ };
+export const Error: Story = { /* ... */ };
+export const Warning: Story = { /* ... */ };
+export const Info: Story = { /* ... */ };
+
+// Neutral colors
+export const NeutralVariants: Story = { /* ... */ };
+
+// Categorical colors
+export const CategoricalVariants: Story = { /* ... */ };
+
+export const AllColors: Story = { /* ... */ };
+export const Playground: Story = { /* ... */ };
+```
+
+## Actions
+
+### Event Logging
+
+```tsx
+import { fn } from "@storybook/test";
+
+const meta: Meta<typeof Button> = {
+  // ...
+  args: {
+    onClick: fn(), // Logs clicks in Actions panel
+  },
+};
+
+// Or per story
+export const Primary: Story = {
+  args: {
+    onClick: fn(),
+  },
+};
+```
+
+### Custom Action Labels
+
+```tsx
+import { action } from "@storybook/addon-actions";
+
+export const WithActions: Story = {
+  args: {
+    onClick: action("button-clicked"),
+    onFocus: action("button-focused"),
+    onBlur: action("button-blurred"),
+  },
+};
+```
+
+## Testing in Storybook
+
+### Visual Testing Checklist
+
+For each story, verify:
+
+- ✅ Matches Figma design
+- ✅ Spacing and sizing correct
+- ✅ Colors use CSS variables
+- ✅ Typography matches
+- ✅ Interactive states work
+
+### Interaction Testing
+
+```tsx
+import { userEvent, within } from "@storybook/testing-library";
+import { expect } from "@storybook/jest";
+
+export const WithInteraction: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    
+    const button = canvas.getByRole("button");
+    await userEvent.click(button);
+    
+    expect(button).toHaveClass("bg-primary");
+  },
+};
+```
+
+## Real Content
+
+### Use Realistic Data
+
+```tsx
+// ❌ BAD - Lorem ipsum and fake data
+export const Example: Story = {
+  args: {
+    title: "Lorem ipsum",
+    description: "Lorem ipsum dolor sit amet",
+  },
+};
+
+// ✅ GOOD - Realistic content
+export const Example: Story = {
+  args: {
+    title: "123 Main Street",
+    description: "3 bed, 2 bath • 1,850 sq ft • Built in 2020",
+  },
+};
+```
+
+### Multiple Examples
+
+```tsx
+export const Examples: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <TableCell
+        icon={<HomeIcon />}
+        text="Single Family Home"
+        supportingText="Traditional"
+      />
+      <TableCell
+        icon={<BuildingIcon />}
+        text="Condominium"
+        supportingText="High-rise"
+      />
+      <TableCell
+        icon={<LandIcon />}
+        text="Vacant Land"
+        supportingText="Residential"
+      />
+    </div>
+  ),
+};
+```
+
+## Common Patterns
+
+### Loading States
+
+```tsx
+export const Loading: Story = {
+  args: {
+    isLoading: true,
+    children: "Loading...",
+  },
+};
+```
+
+### Error States
+
+```tsx
+export const Error: Story = {
+  args: {
+    variant: "destructive",
+    children: "Error: Failed to load",
+  },
+};
+```
+
+### Empty States
+
+```tsx
+export const Empty: Story = {
+  render: () => (
+    <EmptyState
+      illustration={<SearchIcon className="h-30 w-30" />}
+      title="No results found"
+      description="Try adjusting your search terms"
+    />
+  ),
+};
+```
+
+### Long Content
+
+```tsx
+export const LongText: Story = {
+  args: {
+    children: "This is a very long button text that might wrap to multiple lines",
+  },
+};
+```
+
+## Accessibility Testing
+
+### ARIA Attributes
+
+```tsx
+export const AccessibleButton: Story = {
+  args: {
+    "aria-label": "Close modal",
+    children: <XIcon />,
+  },
+};
+```
+
+### Keyboard Navigation
+
+Document keyboard support in story description:
+
+```tsx
+export const Default: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Keyboard support:**
+- \`Tab\`: Focus the button
+- \`Enter\` or \`Space\`: Activate the button
+        `,
+      },
+    },
+  },
+};
+```
+
+## Common Mistakes
+
+### Mistake: No Playground Story
+
+```tsx
+// ❌ BAD - No interactive playground
+export const Primary: Story = { args: { variant: "primary" } };
+export const Secondary: Story = { args: { variant: "secondary" } };
+
+// ✅ GOOD - Includes playground
+export const Primary: Story = { /* ... */ };
+export const Secondary: Story = { /* ... */ };
+export const Playground: Story = { 
+  args: { variant: "primary", size: "md" }
+};
+```
+
+### Mistake: Missing ArgTypes
+
+```tsx
+// ❌ BAD - No control descriptions
+argTypes: {
+  variant: {
+    control: "select",
+    options: ["primary", "secondary"],
+  },
+}
+
+// ✅ GOOD - Includes descriptions
+argTypes: {
+  variant: {
+    control: "select",
+    options: ["primary", "secondary"],
+    description: "The visual style variant of the button",
+  },
+}
+```
+
+### Mistake: Not Using Realistic Content
+
+```tsx
+// ❌ BAD
+children: "Button"
+text: "Test"
+
+// ✅ GOOD
+children: "Search properties"
+text: "Single Family Home"
+```
+
+### Mistake: Missing State Stories
+
+```tsx
+// ❌ BAD - Only default state
+export const Default: Story = { /* ... */ };
+
+// ✅ GOOD - Shows all states
+export const Default: Story = { /* ... */ };
+export const Disabled: Story = { /* ... */ };
+export const Loading: Story = { /* ... */ };
+export const WithIcon: Story = { /* ... */ };
+```
+
+## Must Follow
+
+1. ✅ Create one story per variant
+2. ✅ Include "AllVariants" showcase story
+3. ✅ Include "Sizes" story if component has sizes
+4. ✅ Include "Playground" story with all controls
+5. ✅ Use realistic content, not lorem ipsum
+6. ✅ Add descriptions to argTypes
+7. ✅ Document keyboard support
+8. ✅ Test all interactive states
+9. ✅ Use `tags: ["autodocs"]` for auto-documentation
+10. ✅ Co-locate story files with components

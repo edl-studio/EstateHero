@@ -1,0 +1,44 @@
+/* ============================================
+   HOME PAGE BADGE – gradient border (fake border)
+   Linear top→bottom: white 37% → transparent
+   ============================================ */
+.badgeWrapper {
+  display: inline-flex;
+  padding: 1px;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.37) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--radius-2xl) - 1px);
+  background-color: var(--color-surface);
+  color: var(--color-content-primary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  gap: var(--spacing-sm);
+  text-transform: uppercase;
+  /* Typography: ui-mono-13 */
+}
+
+@media (max-width: 767px) {
+  .badge {
+    background-color: var(--color-surface-dark);
+  }
+}
+
+/* ============================================
+   ICON CONTAINER
+   ============================================ */
+.iconContainer {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--text-2xs);
+  height: var(--text-2xs);
+}

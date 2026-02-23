@@ -1,0 +1,49 @@
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: var(--transition-default);
+}
+
+.item-default {
+  background-color: var(--color-card);
+}
+
+/* Zebra striping - nth-child handles the alternating backgrounds */
+.item-zebra:nth-child(odd) {
+  background-color: var(--color-card);
+}
+
+.item-zebra:nth-child(even) {
+  background-color: var(--color-surface);
+}
+
+.item-hoverable {
+  cursor: pointer;
+}
+
+.item-hoverable:hover {
+  background-color: var(--color-control-hover);
+}
+
+/* Mobile: show only first text, truncate it; hide last 2 columns (e.g. units, area) */
+@media (max-width: 767px) {
+  .item {
+    min-width: 0;
+  }
+
+  .item > *:nth-last-child(-n + 2) {
+    display: none;
+  }
+
+  /* First text column (second child after icon) truncates when long */
+  .item > *:nth-child(2) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

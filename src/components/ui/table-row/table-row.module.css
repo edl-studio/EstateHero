@@ -1,0 +1,22 @@
+/* Base row: no extra layout; borders come from cells or globals. */
+.row {
+  /* Row is transparent; TableCell/TableHeader provide borders. */
+}
+
+/* Summary/total row: distinct height and background so cells inherit context. */
+.rowSummary {
+  /* Slightly elevated background so the row reads as "footer/summary". */
+  background-color: var(--color-surface);
+}
+
+/* Summary row cells get consistent height; TableCell uses this context. */
+.rowSummary td {
+  /* Height can be set here so TableCell doesn't need a summary variant. */
+  min-height: 48px;
+}
+
+@media (min-width: 768px) {
+  .rowSummary td {
+    height: 56px;
+  }
+}

@@ -1,0 +1,163 @@
+/* Base cell: padding, min-width, fill. Inset box-shadow for borders. */
+.cell {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 160px;
+  padding: var(--spacing-md) var(--spacing-md);
+  vertical-align: middle;
+  box-shadow: inset -1px 0 0 var(--color-border), inset 0 -1px 0 var(--color-border);
+}
+
+.cell:last-child {
+  box-shadow: inset 0 -1px 0 var(--color-border);
+}
+
+@media (min-width: 768px) {
+  .cell {
+    height: 64px;
+  }
+}
+
+/* Summary row: row controls height via TableRow; cell inherits. */
+:global([data-row-variant="summary"]) .cell {
+  height: auto;
+  min-height: 48px;
+}
+
+@media (min-width: 768px) {
+  :global([data-row-variant="summary"]) .cell {
+    height: 56px;
+  }
+}
+
+/* Header cell (when used as th) */
+.cellHeader {
+  background-color: var(--color-surface-elevated, var(--color-surface-dark));
+  text-align: left;
+}
+
+/* Alignment */
+.cellAlignCenter {
+  text-align: center;
+}
+
+.cellAlignRight {
+  text-align: right;
+}
+
+/* Content wrapper: single block for default; flex when prefix/suffix exist. */
+.content {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  font-family: var(--font-sans);
+  font-weight: var(--font-normal);
+  font-size: var(--text-base);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-content-primary);
+  min-width: 0;
+}
+
+.contentNoSlot {
+  display: block;
+}
+
+.contentWithSlots {
+  justify-content: flex-start;
+}
+
+.contentWithSlots .contentMain {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.contentSuffix {
+  flex-shrink: 0;
+  color: var(--color-content-secondary);
+}
+
+.contentPrefix {
+  flex-shrink: 0;
+  color: var(--color-content-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tone: emphasis for text */
+.toneMuted .content,
+.toneMuted .contentMain {
+  color: var(--color-content-secondary);
+}
+
+.toneStrong .content,
+.toneStrong .contentMain {
+  font-weight: var(--font-medium);
+  color: var(--color-content-primary);
+}
+
+/* Label-style content (recipe: label column with tooltip) */
+.contentLabel {
+  font-family: var(--font-mono);
+  font-weight: var(--font-normal);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-content-primary);
+  text-transform: uppercase;
+}
+
+/* Header content (when asHeader) */
+.contentHeader {
+  font-family: var(--font-mono);
+  font-weight: var(--font-normal);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-content-secondary);
+  text-transform: uppercase;
+}
+
+/* Center/right alignment: content follows */
+.cellAlignCenter .content,
+.cellAlignCenter .contentWithSlots {
+  justify-content: center;
+}
+
+.cellAlignRight .content,
+.cellAlignRight .contentWithSlots {
+  justify-content: flex-end;
+}
+
+/* Full-width content (e.g. input in cell) */
+.contentFull {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.contentFull.content {
+  display: block;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile overrides (from globals or existing) */
+@media (max-width: 767px) {
+  :global(.mobile-table-label-cell).cell {
+    height: 40px !important;
+  }
+
+  :global(.mobile-table-data-cell).cell {
+    height: 48px !important;
+    min-height: 48px;
+    max-height: 48px;
+    padding-top: 11.5px;
+    padding-bottom: 11.5px;
+  }
+}

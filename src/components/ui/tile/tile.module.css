@@ -1,0 +1,39 @@
+/* ============================================
+   TILE ROOT
+   ============================================ */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  padding: 1.25rem; /* 20px */
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   TILE HEADER
+   ============================================ */
+.header {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.75rem; /* 12px */
+}
+
+/* ============================================
+   TILE TITLE
+   ============================================ */
+.title {
+  text-transform: uppercase;
+  color: var(--color-content-secondary);
+  /* Typography: ui-mono-13 */
+}
+
+/* ============================================
+   TILE CONTENT
+   ============================================ */
+.content {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem; /* 16px */
+}

@@ -1,0 +1,441 @@
+/* ============================================
+   BASE INPUT
+   ============================================ */
+.input {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--radius-md);
+  color: var(--color-content-primary);
+  transition: var(--transition-default);
+  /* Typography: ui-sans-regular-16 (fontVariant=sans) | ui-mono-20 (fontVariant=mono) */
+}
+
+.input::placeholder {
+  color: var(--color-content-muted);
+  font-weight: var(--font-normal);
+  line-height: 1.2;
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.input::-webkit-file-upload-button {
+  border: 0;
+  background-color: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  /* Match input size – pseudo-element, no text class */
+}
+
+/* Right-aligned text (e.g. numeric inputs in tables) */
+.inputAlignRight {
+  text-align: right;
+}
+
+/* ============================================
+   VARIANT: DEFAULT
+   ============================================ */
+.variantDefault {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-input);
+}
+
+.variantDefault:focus-visible {
+  border-color: var(--color-input-border-accent);
+  box-shadow: 0 0 0 2px var(--color-ring);
+}
+
+/* ============================================
+   VARIANT: FLAT
+   ============================================ */
+.variantFlat {
+  border: 0;
+  background-color: transparent;
+}
+
+/* ============================================
+   SIZE: DEFAULT
+   ============================================ */
+.sizeDefault {
+  height: 2.5rem; /* 40px */
+  padding: 0.5rem 0.75rem; /* 8px 12px */
+}
+
+/* ============================================
+   SIZE: LARGE
+   ============================================ */
+.sizeLarge {
+  height: 3.5rem; /* 56px */
+  padding: 0.5rem 0.75rem; /* 8px 12px */
+}
+
+/* ============================================
+   SIZE: MOBILE (24px tall)
+   ============================================ */
+.sizeMobile {
+  height: 1.5rem; /* 24px */
+  padding: 0.25rem 0.5rem; /* 4px 8px */
+}
+
+/* ============================================
+   INPUT CONTAINER WITH ICONS
+   ============================================ */
+.inputContainer {
+  position: relative;
+  width: 100%;
+}
+
+/* ============================================
+   ICON POSITIONING
+   ============================================ */
+.leadingIcon {
+  position: absolute;
+  left: 0.75rem; /* 12px */
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-content-muted);
+  pointer-events: none;
+}
+
+.leadingIconLarge {
+  height: 1.25rem; /* 20px */
+  width: 1.25rem; /* 20px */
+}
+
+.leadingIconDefault {
+  height: 1rem; /* 16px */
+  width: 1rem; /* 16px */
+}
+
+.leadingIconMobile {
+  height: 0.875rem; /* 14px */
+  width: 0.875rem; /* 14px */
+}
+
+.trailingIcon {
+  position: absolute;
+  right: 0.75rem; /* 12px */
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-content-muted);
+  pointer-events: none;
+}
+
+.trailingIconLarge {
+  height: 1.25rem; /* 20px */
+  width: 1.25rem; /* 20px */
+}
+
+.trailingIconDefault {
+  height: 1rem; /* 16px */
+  width: 1rem; /* 16px */
+}
+
+.trailingIconMobile {
+  height: 0.875rem; /* 14px */
+  width: 0.875rem; /* 14px */
+}
+
+/* Mobile icon offsets (override default left/right for compact 24px input) */
+.leadingIconMobileOffset {
+  left: 0.5rem; /* 8px */
+}
+
+.trailingIconMobileOffset,
+.trailingIconButton.trailingIconMobileOffset {
+  right: 0.5rem; /* 8px */
+}
+
+/* Interactive trailing icon button */
+.trailingIconButton {
+  position: absolute;
+  right: 0.75rem; /* 12px */
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-content-muted);
+  transition: var(--transition-default);
+  border-radius: var(--radius-sm);
+}
+
+.trailingIconButton:hover {
+  color: var(--color-content-primary);
+}
+
+.trailingIconButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-ring);
+}
+
+/* ============================================
+   PADDING ADJUSTMENTS WITH ICONS
+   ============================================ */
+.hasLeadingIcon.sizeDefault {
+  padding-left: 2.5rem; /* 40px */
+}
+
+.hasLeadingIcon.sizeLarge {
+  padding-left: 2.75rem; /* 44px */
+}
+
+.hasLeadingIcon.sizeMobile {
+  padding-left: 1.75rem; /* 28px: 8px + 14px icon + 6px */
+}
+
+.hasTrailingIcon.sizeDefault {
+  padding-right: 2.5rem; /* 40px */
+}
+
+.hasTrailingIcon.sizeLarge {
+  padding-right: 2.75rem; /* 44px */
+}
+
+.hasTrailingIcon.sizeMobile {
+  padding-right: 1.75rem; /* 28px */
+}
+
+/* ============================================
+   METRIC (unit/label after value)
+   ============================================ */
+.metric {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-content-secondary);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.metricOnly {
+  right: 0.75rem; /* 12px */
+}
+
+.metricWithTrailingDefault {
+  right: 2.5rem; /* 40px – left of trailing icon/slot */
+}
+
+.metricWithTrailingLarge {
+  right: 2.75rem; /* 44px – left of trailing icon */
+}
+
+.metricWithTrailingMobile {
+  right: 1.75rem;
+}
+
+.metricWithTrailingSlot {
+  right: 4.5rem; /* left of trailing slot actions (used when no trailing slot) */
+}
+
+/* Metric + trailing slot: hide metric while editing (focus), position left when unfocused (set via inline style) */
+.metricInlineAfterValue {
+  right: auto;
+  /* left set by JS: paddingLeft + value width + 4px */
+}
+
+/* Metric + trailing slot, right-aligned: metric on right of value (right set by JS) */
+.metricInlineAfterValueRight {
+  left: auto;
+  /* right set by JS: 12px (0.75rem) */
+}
+
+.inputContainer:focus-within .metric.metricWithTrailingSlot {
+  visibility: hidden;
+}
+
+/* Hidden span used to measure value width for metric positioning */
+.metricMeasure {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  height: 0;
+  overflow: hidden;
+}
+
+.hasMetric.sizeDefault {
+  padding-right: 2.5rem; /* room for metric */
+}
+
+.hasMetric.sizeLarge {
+  padding-right: 2.75rem;
+}
+
+.hasMetric.sizeMobile {
+  padding-right: 1.75rem;
+}
+
+.hasMetricWithTrailing.sizeDefault {
+  padding-right: 5rem; /* metric + trailing */
+}
+
+.hasMetricWithTrailing.sizeLarge {
+  padding-right: 5.25rem;
+}
+
+.hasMetricWithTrailing.sizeMobile {
+  padding-right: 3.25rem;
+}
+
+/* ============================================
+   TRAILING SLOT CLIP (clips only the actions; focus ring stays visible)
+   ============================================ */
+.trailingSlotClip {
+  position: absolute;
+  right: 0.5rem;
+  top: 0;
+  height: 100%;
+  width: 4rem; /* enough for actions; clips slide-in */
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.inputContainer:focus-within .trailingSlotClip {
+  pointer-events: auto;
+}
+
+/* Trailing slot: slides in from right, clipped by trailingSlotClip */
+.trailingSlot {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 8px between clear and confirm */
+  transition:
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inputContainer:focus-within .trailingSlot {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Regular input padding when trailing slot is hidden (unfocused) */
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.sizeDefault,
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.sizeLarge,
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.sizeMobile {
+  padding-right: 0.75rem; /* same as regular input */
+  transition: padding-right 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Metric + trailing slot when unfocused: metric positioned 4px after value (left set by JS), minimal right padding */
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.hasMetricWithTrailing.sizeDefault,
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.hasMetricWithTrailing.sizeLarge,
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.hasMetricWithTrailing.sizeMobile {
+  padding-right: 0.75rem;
+  text-align: left;
+}
+
+/* When editing (focused), metric is hidden – no extra padding for metric */
+.inputContainer:focus-within .input.hasTrailingSlot.hasMetricWithTrailing.sizeDefault,
+.inputContainer:focus-within .input.hasTrailingSlot.hasMetricWithTrailing.sizeLarge,
+.inputContainer:focus-within .input.hasTrailingSlot.hasMetricWithTrailing.sizeMobile {
+  padding-right: 4.5rem;
+  text-align: left;
+}
+
+/* Right-aligned input with trailing slot + metric: right-align only when unfocused; when focused, keep left align + metric hidden + actions */
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.hasMetricWithTrailing.inputAlignRight.sizeDefault,
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.hasMetricWithTrailing.inputAlignRight.sizeLarge,
+.inputContainer:not(:focus-within) .input.hasTrailingSlot.hasMetricWithTrailing.inputAlignRight.sizeMobile {
+  text-align: right;
+}
+
+/* Expand padding when focused so actions have room */
+.inputContainer:focus-within .input.hasTrailingSlot.sizeDefault,
+.inputContainer:focus-within .input.hasTrailingSlot.sizeLarge,
+.inputContainer:focus-within .input.hasTrailingSlot.sizeMobile {
+  padding-right: 4.5rem; /* clear 20px + gap 8px + confirm ~28px + right margin 8px */
+}
+
+/* ============================================
+   TRAILING ACTIONS (Figma: clear square + confirm rect with badge)
+   ============================================ */
+.trailingActions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem; /* 4px */
+}
+
+.trailingActionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.25rem; /* 20px */
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-default);
+  flex-shrink: 0;
+}
+
+.trailingActionBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-ring);
+}
+
+/* Clear: same styling as secondary button (20×20) */
+.trailingActionBtnClear {
+  width: 1.25rem; /* 20px */
+  background-color: var(--color-control);
+  color: var(--color-content-primary);
+  border: 1px solid var(--color-border);
+}
+
+.trailingActionBtnClear:hover {
+  background-color: var(--color-control-hover);
+}
+
+/* Confirm: single blue rect, checkmark left + circular badge overlaid right (Figma) */
+.trailingActionBtnConfirm {
+  position: relative;
+  width: 1.25rem; /* 20×20 when no badge */
+  padding: 0;
+  background-color: var(--color-accent);
+  color: var(--color-content-white);
+}
+
+.trailingActionBtnConfirm:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* With badge: flex row so icon + badge sit side by side, no overlap */
+.trailingActionBtnConfirmWithBadge {
+  width: auto;
+  min-width: 1.25rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  gap: 0.25rem; /* 4px between icon and badge */
+}
+
+.trailingActionBtnConfirmIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Circular Enter shortcut badge, next to icon (no overlap) */
+.confirmShortcutBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem; /* 16px */
+  height: 0.75rem;  /* 12px */
+  padding: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-inverse);
+  color: var(--color-content-white);
+  flex-shrink: 0;
+}

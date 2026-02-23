@@ -1,0 +1,104 @@
+/* Global Header Component Styles */
+
+/* Base header styles */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 64px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: transparent;
+}
+
+/* Desktop sizing */
+@media (min-width: 768px) {
+  .header {
+    height: 88px;
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+/* Inner container with max-width constraint */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1312px;
+}
+
+/* Logo section */
+.logoSection {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.logoButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition-opacity);
+}
+
+.logoButton:hover {
+  opacity: 0.8;
+}
+
+.logoButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+  border-radius: 4px;
+}
+
+.logo {
+  width: 2.5rem; /* 40px on mobile */
+  height: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .logo {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+/* Logo SVG paths use foreground color */
+.logoPath {
+  fill: var(--color-content-primary);
+}
+
+/* Center section for search trigger */
+.centerSection {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding-left: var(--spacing-lg);
+  padding-right: var(--spacing-lg);
+}
+
+/* Avatar section */
+.avatarSection {
+  flex-shrink: 0;
+}
+
+/* Avatar: 40px on mobile, 48px on desktop */
+.avatar {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+@media (min-width: 768px) {
+  .avatar {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+}

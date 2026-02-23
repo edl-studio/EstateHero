@@ -1,0 +1,83 @@
+/* ============================================
+   BASE BADGE
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-2xl);
+  padding: 2px var(--spacing-sm);
+  gap: 4px;
+  /* Typography from text utility: ui-mono-12 | ui-sans-medium-12 */
+}
+
+/* Mono only: uppercase (text utility handles font/size/weight/line-height) */
+.badgeMono {
+  text-transform: uppercase;
+}
+
+/* ============================================
+   FILLED COLOR VARIANTS
+   ============================================ */
+.default {
+  background-color: var(--color-accent-light);
+  color: var(--color-content-accent-dark);
+}
+
+.success {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.warning {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.info {
+  background-color: var(--color-teal-light);
+  color: var(--color-teal-dark);
+}
+
+.neutral {
+  background-color: var(--color-neutral);
+  color: var(--color-neutral-dark);
+}
+
+/* ============================================
+   BORDERED VARIANTS
+   ============================================ */
+.positive {
+  border: 1px solid var(--color-success-light);
+  background-color: var(--color-card);
+  color: var(--color-success-dark);
+}
+
+.negative {
+  border: 1px solid var(--color-destructive-light);
+  background-color: var(--color-card);
+  color: var(--color-destructive);
+}
+
+.outline {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  color: var(--color-content-primary);
+}
+
+/* ============================================
+   ICON CONTAINER
+   ============================================ */
+.iconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.iconContainer svg {
+  width: 100%;
+  height: 100%;
+}
