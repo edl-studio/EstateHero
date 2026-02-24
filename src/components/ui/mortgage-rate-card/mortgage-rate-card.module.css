@@ -1,0 +1,107 @@
+/* ============================================
+   ROOT (Figma 1335-24458: same dimensions as ValueCard.illustration)
+   ============================================ */
+.root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 156px;
+  max-width: 304.5px;
+  padding: var(--spacing-lg);
+  flex: 1 0 0;
+  gap: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  box-shadow: var(--shadow-2xs);
+}
+
+/* ============================================
+   TOP ROW: illustration (left) + segmented tabs (right)
+   ============================================ */
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.segmentedTabs {
+  margin-left: auto;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.illustrationSlot {
+  width: 32px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.illustrationSlot img {
+  display: block;
+  width: 32px;
+  height: 40px;
+  object-fit: contain;
+  object-position: left top;
+}
+
+/* ============================================
+   LABEL + VALUE BLOCK (4px gap between label and value)
+   ============================================ */
+.labelValueBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   LABEL ROW
+   ============================================ */
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  flex-shrink: 0;
+  min-height: 1rem;
+}
+
+.label {
+  color: var(--color-content-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.labelWithTooltip {
+  cursor: pointer;
+}
+
+.infoIcon {
+  color: var(--color-content-muted);
+  flex-shrink: 0;
+}
+
+/* ============================================
+   VALUE ROW (meta information, no input)
+   ============================================ */
+.valueRow {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.value {
+  color: var(--color-content-primary);
+}
+
+.metric {
+  color: var(--color-content-secondary);
+  margin-left: var(--spacing-xs);
+}

@@ -24,6 +24,10 @@ import { FlashingGridPage } from "@/pages/flashing-grid";
 import { HomePage } from "@/pages/home";
 import { PropertyDetailsPage } from "@/pages/property-details";
 import { FinancialComparisonPage } from "@/pages/financial-comparison";
+import { CriticalRentPage } from "@/pages/critical-rent";
+import { TinglysningPage } from "@/pages/tinglysning";
+import { UnitsPage } from "@/pages/units";
+import { NeighborhoodPage } from "@/pages/neighborhood";
 import { TablePage } from "@/pages/table";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
@@ -37,6 +41,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/flashing-grid" element={<FlashingGridPage />} />
           <Route path="/property/:propertyId" element={<PropertyDetailsPage />} />
           <Route path="/property/:propertyId/financial-comparison" element={<FinancialComparisonPage />} />
+          <Route path="/property/:propertyId/critical-rent" element={<CriticalRentPage />} />
+          <Route path="/property/:propertyId/tinglysning" element={<TinglysningPage />} />
+          <Route path="/property/:propertyId/units" element={<UnitsPage />} />
+          <Route path="/property/:propertyId/neighborhood" element={<NeighborhoodPage />} />
           <Route path="/table" element={<TablePage />} />
         </Routes>
       </BrowserRouter>

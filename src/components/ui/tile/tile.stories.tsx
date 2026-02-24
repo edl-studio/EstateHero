@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Tile, TileHeader, TileTitle, TileContent } from "./tile";
+import { Tile, TileHeader, TileHeaderActions, TileTitle, TileContent } from "./tile";
+import { Button } from "@/components/ui/button";
 import { MetadataItem } from "@/components/ui/metadata-item";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icon";
@@ -18,7 +19,7 @@ Tile component for displaying grouped information in a card-like container with 
 ## Features
 - Clean, bordered card design with shadow
 - Separate header and content sections
-- Composable sub-components (TileHeader, TileTitle, TileContent)
+- Composable sub-components (TileHeader, TileHeaderActions, TileTitle, TileContent)
 - Works seamlessly with other UI components like MetadataItem
 - Consistent spacing and typography
 
@@ -32,6 +33,10 @@ function Example() {
     <Tile>
       <TileHeader>
         <TileTitle>Occupancy</TileTitle>
+        <TileHeaderActions>
+          <Button variant="outline" size="md">Action</Button>
+          <Button variant="outline" size="md">More</Button>
+        </TileHeaderActions>
       </TileHeader>
       <TileContent>
         {/* Your content here */}
@@ -59,6 +64,30 @@ export const Default: Story = {
       <TileContent>
         <p className="text-sm text-foreground">
           This property is currently occupied by the owner.
+        </p>
+      </TileContent>
+    </Tile>
+  ),
+};
+
+// Tile header with right-hand actions (2 inline buttons)
+export const WithHeaderActions: Story = {
+  render: () => (
+    <Tile className="w-[440px]">
+      <TileHeader>
+        <TileTitle>Rental income</TileTitle>
+        <TileHeaderActions>
+          <Button variant="outline" size="md">
+            Action
+          </Button>
+          <Button variant="outline" size="md">
+            More
+          </Button>
+        </TileHeaderActions>
+      </TileHeader>
+      <TileContent>
+        <p className="text-sm text-foreground">
+          Use TileHeaderActions for inline buttons on the right side of the header.
         </p>
       </TileContent>
     </Tile>

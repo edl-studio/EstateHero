@@ -1,2 +1,8 @@
-export { Tile, TileHeader, TileTitle, TileContent } from "./tile";
-export type { TileProps, TileHeaderProps, TileTitleProps, TileContentProps } from "./tile";
+export { Tile, TileHeader, TileHeaderActions, TileTitle, TileContent } from "./tile";
+export type {
+  TileProps,
+  TileHeaderProps,
+  TileHeaderActionsProps,
+  TileTitleProps,
+  TileContentProps,
+} from "./tile";

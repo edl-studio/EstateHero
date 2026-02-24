@@ -95,8 +95,41 @@
 }
 
 /* ============================================
+   VARIANT - INLINE (text-like, accent link style)
+   ============================================ */
+.inline {
+  background-color: transparent;
+  color: var(--color-content-accent);
+  box-shadow: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: unset;
+  height: 1.5rem; /* 24px */
+  gap: var(--spacing-xs);
+  white-space: nowrap;
+}
+
+.inline:hover:not(:disabled) {
+  color: var(--color-content-accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.inline:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-ring);
+}
+
+/* ============================================
    SIZE VARIANTS
    ============================================ */
+.extraSmall {
+  height: 2rem; /* 32px */
+  padding-left: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
+  padding-top: var(--spacing-xs);
+  padding-bottom: var(--spacing-xs);
+}
+
 .small {
   height: 2.25rem; /* 36px */
   padding-left: var(--spacing-md);
@@ -117,11 +150,24 @@
   padding-right: 2rem; /* 32px */
 }
 
+/* Inline variant: no side padding (overrides size), label stays on one line */
+.inline.extraSmall,
+.inline.small,
+.inline.medium,
+.inline.large {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* ============================================
    ICON ONLY VARIANTS
    ============================================ */
 .iconOnly {
   padding: 0;
+}
+
+.iconOnlyExtraSmall {
+  width: 2rem; /* 32px */
 }
 
 .iconOnlySmall {

@@ -1,0 +1,63 @@
+/* ============================================
+   SEGMENTED TABS (Figma 1335-24463)
+   Main container + tab trigger (selected: white, shadow)
+   ============================================ */
+.root {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.list {
+  display: flex;
+  width: 94px;
+  height: var(--height-h-7, 28px);
+  padding: 3px;
+  align-items: center;
+  border-radius: var(--border-radius-rounded-md, var(--radius-md));
+  background: var(--color-segmented-tabs-bg, #F0ECEA);
+  gap: 0;
+}
+
+.tab {
+  display: flex;
+  padding: var(--spacing-1, 4px) var(--spacing-2, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-2, 8px);
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: var(--border-radius-rounded-md, var(--radius-md));
+  border: var(--border-width-border, 1px) solid var(--custom-dark-input, transparent);
+  background: transparent;
+  color: var(--color-content-primary);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+  min-width: 0;
+}
+
+.tab:hover:not(:disabled) {
+  background-color: var(--color-control-hover);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+.tab:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Selected: white background, border, shadow/sm */
+.tab[data-active] {
+  border-radius: var(--border-radius-rounded-md, var(--radius-md));
+  border: var(--border-width-border, 1px) solid var(--custom-dark-input, transparent);
+  background: var(--custom-background-dark-input-30, var(--color-card));
+  box-shadow: var(--shadow-sm-1-offset-x, 0) var(--shadow-sm-1-offset-y, 1px) var(--shadow-sm-1-blur-radius, 3px) var(--shadow-sm-1-spread-radius, 0) var(--shadow-sm-1-color, rgba(0, 0, 0, 0.10)), var(--shadow-sm-2-offset-x, 0) var(--shadow-sm-2-offset-y, 1px) var(--shadow-sm-2-blur-radius, 2px) var(--shadow-sm-2-spread-radius, -1px) var(--shadow-sm-2-color, rgba(0, 0, 0, 0.10));
+}
+
+.tab[data-active]:hover:not(:disabled) {
+  background-color: var(--color-control-hover);
+}

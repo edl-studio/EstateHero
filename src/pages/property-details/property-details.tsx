@@ -14,7 +14,7 @@ import { DataList, DataListItem } from "@/components/ui/data-list";
 import { IconContainer } from "@/components/ui/icon-container";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { OccupancyChart } from "@/components/ui/occupancy-chart";
-import { BuildingAreaChart } from "@/components/ui/building-area-chart";
+import { DonutChart } from "@/components/ui/donut-chart";
 import {
   CommandDialog,
   CommandInput,
@@ -251,25 +251,25 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
               </TabItem>
               <TabItem
                 isActive={activeTab === "critical-rent"}
-                onClick={() => setActiveTab("critical-rent")}
+                onClick={() => navigate(`/property/${propertyId}/critical-rent`)}
               >
                 Critical Rent
               </TabItem>
               <TabItem
                 isActive={activeTab === "units"}
-                onClick={() => setActiveTab("units")}
+                onClick={() => navigate(`/property/${propertyId}/units`)}
               >
                 Units
               </TabItem>
               <TabItem
                 isActive={activeTab === "tinglysning"}
-                onClick={() => setActiveTab("tinglysning")}
+                onClick={() => navigate(`/property/${propertyId}/tinglysning`)}
               >
                 Tinglysning
               </TabItem>
               <TabItem
                 isActive={activeTab === "neighborhood"}
-                onClick={() => setActiveTab("neighborhood")}
+                onClick={() => navigate(`/property/${propertyId}/neighborhood`)}
               >
                 Neighborhood
               </TabItem>
@@ -311,7 +311,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                     <TileTitle>Building Area</TileTitle>
                   </TileHeader>
                   <TileContent>
-                    <BuildingAreaChart
+                    <DonutChart
                       data={[
                         { name: "residential", value: 70, color: "var(--color-accent-light)", label: "Residential units" },
                         { name: "garage", value: 30, color: "var(--color-accent)", label: "Garage" },

@@ -103,6 +103,7 @@
     --tracking-loose: 0.05em;
     
     /* Effects */
+    --shadow-2xs: 0 1px 0 0 rgba(0, 0, 0, 0.05);
     --shadow-xs: 0 1px 2px 0 #0a0d120d;
     --shadow-sm: 0 1px 3px 0 #0a0d121a, 0 1px 2px 0 #0a0d120f;
 
@@ -293,6 +294,29 @@
     font-size: var(--text-4xl); /* 2.25rem / 36px */
     line-height: var(--leading-tight); /* 1.2 / 120% */
     letter-spacing: var(--tracking-tight); /* -0.02em / -2% */
+  }
+
+  /* body/sans-serif/regular/14 */
+  .body-sans-regular-14 {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-style: normal;
+    font-weight: var(--font-normal);
+    line-height: 140%;
+  }
+
+  /* Critical rent comparison table: single grid, fixed column alignment */
+  .critical-rent-comparison-table td,
+  .critical-rent-comparison-table th {
+    min-width: 0;
+  }
+
+  /* Critical rent section header row: all cells get surface background, no rounded corners */
+  .critical-rent-comparison-table tbody tr[data-section-header] th {
+    background-color: var(--color-surface);
+  }
+  .critical-rent-comparison-table tbody tr[data-section-header] th > span {
+    border-radius: 0;
   }
 
   /* Table: no bottom border on last row (inset box-shadow: only right edge) */

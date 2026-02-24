@@ -8,11 +8,11 @@ export interface ButtonProps
   /**
    * The visual style variant of the button
    */
-  variant?: "primary" | "secondary" | "ghost" | "outline" | "destructive";
+  variant?: "primary" | "secondary" | "ghost" | "outline" | "destructive" | "inline";
   /**
-   * The size of the button
+   * The size of the button (xs = 32px, sm = 36px, md = 40px, lg = 44px)
    */
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   /**
    * Icon to display before the button text.
    * Recommended size: 16×16px (h-4 w-4)
@@ -55,12 +55,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant === "ghost" && styles.ghost,
       variant === "outline" && styles.outline,
       variant === "destructive" && styles.destructive,
+      variant === "inline" && styles.inline,
       // Size styles
+      size === "xs" && styles.extraSmall,
       size === "sm" && styles.small,
       size === "md" && styles.medium,
       size === "lg" && styles.large,
       // Icon-only styles
       isIconOnly && styles.iconOnly,
+      isIconOnly && size === "xs" && styles.iconOnlyExtraSmall,
       isIconOnly && size === "sm" && styles.iconOnlySmall,
       isIconOnly && size === "md" && styles.iconOnlyMedium,
       isIconOnly && size === "lg" && styles.iconOnlyLarge,

@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BuildingAreaChart } from "./building-area-chart";
+import { DonutChart } from "./donut-chart";
 
 /**
- * The BuildingAreaChart component displays a full donut chart showing different
- * area categories with a centered total value and legend below.
+ * The DonutChart component displays a donut chart with a centered value and legend.
+ * Use it for any proportional data (area, units, percentages, etc.).
  *
  * ## Usage
  *
  * ```tsx
- * import { BuildingAreaChart } from "@/components/ui/building-area-chart";
+ * import { DonutChart } from "@/components/ui/donut-chart";
  *
- * <BuildingAreaChart
+ * <DonutChart
  *   data={[
  *     { name: "residential", value: 70, color: "#93C5FD", label: "Residential units" },
  *     { name: "garage", value: 30, color: "#3B82F6", label: "Garage" }
@@ -22,8 +22,8 @@ import { BuildingAreaChart } from "./building-area-chart";
  * ```
  */
 const meta = {
-  title: "UI/BuildingAreaChart",
-  component: BuildingAreaChart,
+  title: "UI/DonutChart",
+  component: DonutChart,
   parameters: {
     layout: "centered",
   },
@@ -46,13 +46,13 @@ const meta = {
       description: "The label above the center value",
     },
   },
-} satisfies Meta<typeof BuildingAreaChart>;
+} satisfies Meta<typeof DonutChart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * Default building area chart showing residential units and garage areas.
+ * Default donut chart showing residential units and garage areas.
  */
 export const Default: Story = {
   args: {

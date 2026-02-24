@@ -1,5 +1,5 @@
 /* ============================================
-   BUILDING AREA CHART
+   DONUT CHART
    ============================================ */
 .container {
   display: flex;
@@ -24,24 +24,18 @@
    ============================================ */
 .centerContent {
   position: absolute;
-  left: 44px;
-  top: 52px;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: var(--spacing-xs);
+  justify-content: center;
+  gap: 2px;
 }
 
 .centerLabel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  line-height: 0;
-  margin-bottom: -4px;
   color: var(--color-content-tertiary);
   text-align: center;
   white-space: nowrap;
-  /* Typography: ui-sans-regular-14 */
 }
 
 .centerLabelText {
@@ -51,8 +45,7 @@
 .centerValueContainer {
   display: flex;
   gap: 2px;
-  align-items: flex-end;
-  margin-bottom: -4px;
+  align-items: baseline;
   color: var(--color-content-primary);
 }
 

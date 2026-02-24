@@ -37,6 +37,25 @@ export const TileHeader = React.forwardRef<HTMLDivElement, TileHeaderProps>(
 
 TileHeader.displayName = "TileHeader";
 
+// Tile Header Actions (right-hand slot for 2 inline buttons)
+export interface TileHeaderActionsProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+export const TileHeaderActions = React.forwardRef<
+  HTMLDivElement,
+  TileHeaderActionsProps
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={cn(styles.headerActions, className)}
+      {...props}
+    />
+  );
+});
+
+TileHeaderActions.displayName = "TileHeaderActions";
+
 // Tile Title
 export interface TileTitleProps
   extends React.HTMLAttributes<HTMLHeadingElement> {}

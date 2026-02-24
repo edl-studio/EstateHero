@@ -284,7 +284,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Coming Soon Banner - under search on desktop only */}
-          <div className="max-w-2xl mx-auto hidden md:block pointer-events-auto">
+          <div className="max-w-2xl mx-auto hidden md:block pointer-events-auto mb-[64px]">
             <div className="flex items-center gap-2 self-stretch" style={{ paddingLeft: 'var(--spacing-md)', paddingRight: 'var(--spacing-md)' }}>
               <BadgeHome>
                 COMING SOON

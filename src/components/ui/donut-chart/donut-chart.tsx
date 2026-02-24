@@ -1,35 +1,44 @@
 import * as React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { cn } from "@/lib/utils";
-import styles from "./building-area-chart.module.css";
+import styles from "./donut-chart.module.css";
 
-export interface BuildingAreaChartDataItem {
+export interface DonutChartDataItem {
   name: string;
   value: number;
   color: string;
   label: string;
 }
 
-export interface BuildingAreaChartProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface DonutChartProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Array of data items for the chart */
-  data: BuildingAreaChartDataItem[];
+  data: DonutChartDataItem[];
   /** The value to display in the center */
   centerValue: string | number;
   /** The unit for the center value (e.g., "m²", "units") */
   centerUnit?: string;
   /** The label above the center value */
   centerLabel?: string;
+  /** Override typography class for the center value (default: ui-mono-semibold-24) */
+  centerValueClassName?: string;
+  /** Override typography class for the center label (default: ui-sans-regular-14) */
+  centerLabelClassName?: string;
+  /** Hide the legend below the chart */
+  hideLegend?: boolean;
   /** Custom className */
   className?: string;
 }
 
-export const BuildingAreaChart = React.forwardRef<HTMLDivElement, BuildingAreaChartProps>(
+export const DonutChart = React.forwardRef<HTMLDivElement, DonutChartProps>(
   (
     {
       data,
       centerValue,
       centerUnit,
-      centerLabel = "Area",
+      centerLabel,
+      centerValueClassName = "ui-mono-semibold-24",
+      centerLabelClassName = "ui-sans-regular-14",
+      hideLegend = false,
       className,
       ...props
     },
@@ -38,7 +47,7 @@ export const BuildingAreaChart = React.forwardRef<HTMLDivElement, BuildingAreaCh
     // Extract numeric value and superscript from centerUnit
     const renderCenterUnit = () => {
       if (!centerUnit) return null;
-      
+
       // Check if unit contains superscript (e.g., "m²")
       if (centerUnit.includes("²")) {
         const parts = centerUnit.split("²");
@@ -53,9 +62,7 @@ export const BuildingAreaChart = React.forwardRef<HTMLDivElement, BuildingAreaCh
       }
 
       return (
-        <span
-          className={cn(styles.centerUnit, styles.centerUnitText, "ui-sans-regular-12")}
-        >
+        <span className={cn(styles.centerUnitText, "ui-sans-regular-12")}>
           {centerUnit}
         </span>
       );
@@ -67,7 +74,6 @@ export const BuildingAreaChart = React.forwardRef<HTMLDivElement, BuildingAreaCh
         className={cn(styles.container, className)}
         {...props}
       >
-        {/* Pie chart container - fixed height for alignment with OccupancyChart */}
         <div className={styles.chartContainer}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
@@ -96,13 +102,13 @@ export const BuildingAreaChart = React.forwardRef<HTMLDivElement, BuildingAreaCh
           <div className={styles.centerContent}>
             {centerLabel && (
               <div className={styles.centerLabel}>
-                <p className={cn(styles.centerLabelText, "ui-sans-regular-14")}>
+                <p className={cn(styles.centerLabelText, centerLabelClassName)}>
                   {centerLabel}
                 </p>
               </div>
             )}
             <div className={styles.centerValueContainer}>
-              <p className={cn(styles.centerValue, "ui-mono-semibold-24")}>
+              <p className={cn(styles.centerValue, centerValueClassName)}>
                 {centerValue}
               </p>
               {renderCenterUnit()}
@@ -111,6 +117,7 @@ export const BuildingAreaChart = React.forwardRef<HTMLDivElement, BuildingAreaCh
         </div>
 
         {/* Legend items */}
+        {!hideLegend && (
         <div className={styles.legendContainer}>
           {data.map((item, index) => (
             <div key={index} className={styles.legendItem}>
@@ -128,9 +135,10 @@ export const BuildingAreaChart = React.forwardRef<HTMLDivElement, BuildingAreaCh
             </div>
           ))}
         </div>
+        )}
       </div>
     );
   }
 );
 
-BuildingAreaChart.displayName = "BuildingAreaChart";
+DonutChart.displayName = "DonutChart";

@@ -1,0 +1,85 @@
+/* ============================================
+   INLINE MESSAGE - BASE (Figma 1327-19152)
+   Card-style: light background, border, shadow, rounded corners
+   ============================================ */
+.inlineMessage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs); /* 4px between heading and subheading */
+  width: 100%;
+  padding: var(--spacing-lg);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+}
+
+/* ============================================
+   TITLE ROW (icon + primary message)
+   ============================================ */
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.iconSlot {
+  flex-shrink: 0;
+}
+
+.iconSlot svg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  /* Typography: ui-sans-medium-14 */
+}
+
+/* ============================================
+   DESCRIPTION (secondary message)
+   ============================================ */
+.description {
+  color: var(--color-content-secondary);
+  /* Typography: ui-sans-regular-14 */
+  padding-left: calc(var(--icon-size-lg) + var(--spacing-md)); /* align with title text */
+}
+
+/* Single-line mode (no title): align with icon, use primary text color */
+.description.noTitle {
+  padding-left: 0;
+  color: var(--color-content-primary);
+}
+
+/* ============================================
+   VARIANTS - WARNING (Figma: amber icon + title)
+   ============================================ */
+.warning .iconSlot,
+.warning .title {
+  color: var(--color-warning-dark);
+}
+
+/* ============================================
+   VARIANTS - INFO
+   ============================================ */
+.info .iconSlot,
+.info .title {
+  color: var(--color-teal-dark);
+}
+
+/* ============================================
+   VARIANTS - ERROR
+   ============================================ */
+.error .iconSlot,
+.error .title {
+  color: var(--color-destructive);
+}
+
+/* ============================================
+   VARIANTS - SUCCESS
+   ============================================ */
+.success .iconSlot,
+.success .title {
+  color: var(--color-success-dark);
+}

@@ -3,9 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Tile, TileHeader, TileTitle, TileContent } from "@/components/ui/tile";
+import { Tile, TileHeader, TileHeaderActions, TileTitle, TileContent } from "@/components/ui/tile";
 import { ValueCard } from "@/components/ui/value-card";
-import { Input } from "@/components/ui/input";
+import { Input, InputTrailingActions } from "@/components/ui/input";
 import { TableHeader } from "@/components/ui/table-header";
 import { TableRow } from "@/components/ui/table-row";
 import { TableCell } from "@/components/ui/table-cell";
@@ -15,6 +15,7 @@ import { GlobalHeader } from "@/components/ui/global-header";
 import { PropertyHeader } from "@/components/ui/property-header";
 import { MetadataItem } from "@/components/ui/metadata-item";
 import { EmptyState } from "@/components/ui/empty-state";
+import { InlineMessage } from "@/components/ui/inline-message";
 import { TabItem } from "@/components/ui/tab-item";
 import { Icon, type IconName } from "@/components/ui/icon";
 import {
@@ -80,6 +81,8 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
   const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState("comparison");
+  const [simulationYield, setSimulationYield] = React.useState("5");
+  const [operatingExpensesTotal, setOperatingExpensesTotal] = React.useState("100.783");
 
   type RentalSortColumn = "unit" | "m2" | "monthly" | "annual" | "perM2";
   type RentalSortDirection = "asc" | "desc";
@@ -121,6 +124,48 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
       return column;
     });
   };
+
+  const [calculatedRentalValues, setCalculatedRentalValues] = React.useState<
+    Record<string, { monthly: string; annual: string; perM2: string }>
+  >(() => {
+    const init: Record<string, { monthly: string; annual: string; perM2: string }> = {};
+    rentalTableRows.forEach((r) => {
+      init[r.unit] = { monthly: r.monthly, annual: r.annual, perM2: r.perM2 };
+    });
+    return init;
+  });
+
+  const updateCalculatedRental = (
+    unit: string,
+    field: "monthly" | "annual" | "perM2",
+    value: string
+  ) => {
+    setCalculatedRentalValues((prev) => ({
+      ...prev,
+      [unit]: { ...prev[unit], [field]: value },
+    }));
+  };
+
+  const clearCalculatedRentalField = (unit: string, field: "monthly" | "annual" | "perM2") => {
+    setCalculatedRentalValues((prev) => ({
+      ...prev,
+      [unit]: { ...prev[unit], [field]: "" },
+    }));
+  };
+
+  const operatingExpensesRows = React.useMemo(
+    () => [
+      { type: "Property tax & charges", total: "19.783", perM2: "59" },
+      { type: "Renovation", total: "15.000", perM2: "45" },
+      { type: "Shared electricity", total: "12.000", perM2: "36" },
+      { type: "Insurance", total: "8.500", perM2: "25" },
+      { type: "Administration (2.500 per tenancy)", total: "9.200", perM2: "27" },
+      { type: "Cleaning & maintenance", total: "11.300", perM2: "34" },
+      { type: "Landscaping", total: "10.000", perM2: "30" },
+      { type: "Other", total: "15.000", perM2: "44" },
+    ],
+    []
+  );
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -265,17 +310,23 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
               <TabItem isActive>Financial Comparison</TabItem>
               <TabItem
                 isActive={false}
-                onClick={() => {}}
+                onClick={() => navigate(`/property/${propertyId}/critical-rent`)}
               >
                 Critical Rent
               </TabItem>
-              <TabItem isActive={false} onClick={() => {}}>
+              <TabItem
+                isActive={false}
+                onClick={() => navigate(`/property/${propertyId}/units`)}
+              >
                 Units
               </TabItem>
-              <TabItem isActive={false} onClick={() => {}}>
+              <TabItem
+                isActive={false}
+                onClick={() => navigate(`/property/${propertyId}/tinglysning`)}
+              >
                 Tinglysning
               </TabItem>
-              <TabItem isActive={false} onClick={() => {}}>
+              <TabItem isActive={false} onClick={() => navigate(`/property/${propertyId}/neighborhood`)}>
                 Neighborhood
               </TabItem>
             </div>
@@ -332,24 +383,28 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                     >
                       <ValueCard
                         label="Calculated value"
+                        labelTooltip="AI-estimated or calculated property value."
                         value="5.080.421"
                         metric="DKK"
                         valueIcon={<Icon name="Sparkles" size="lg" />}
                       />
                       <ValueCard
                         label="Yield"
+                        labelTooltip="Yield percentage."
                         value="5"
                         metric="%"
                         valueIcon={null}
                       />
                       <ValueCard
                         label="Value per M²"
+                        labelTooltip="Property value per square meter."
                         value="336"
                         metric="M²"
                         valueIcon={null}
                       />
                       <ValueCard
                         label="Price per M²"
+                        labelTooltip="Price per square meter."
                         value="23.000"
                         metric="DKK"
                         valueIcon={null}
@@ -357,73 +412,192 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                     </div>
                   </TabsPanel>
                   <TabsPanel value="calculated" className="mt-0">
-                    <TablePage />
+                    <TileHeader>
+                      <TileTitle>Valuation summary</TileTitle>
+                    </TileHeader>
+                    <div
+                      className={cn("gap-[var(--spacing-xl)]")}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(4, 1fr)",
+                        marginTop: "var(--spacing-md)",
+                      }}
+                    >
+                      <ValueCard
+                        label="Calculated value"
+                        labelTooltip="AI-estimated or calculated property value."
+                        value="5.080.421"
+                        metric="DKK"
+                        valueIcon={<Icon name="Sparkles" size="lg" />}
+                      />
+                      <ValueCard
+                        label="Yield"
+                        labelTooltip="Yield percentage."
+                        value="5"
+                        metric="%"
+                        valueIcon={null}
+                      />
+                      <ValueCard
+                        label="Value per M²"
+                        labelTooltip="Property value per square meter."
+                        value="336"
+                        metric="M²"
+                        valueIcon={null}
+                      />
+                      <ValueCard
+                        label="Price per M²"
+                        labelTooltip="Price per square meter."
+                        value="23.000"
+                        metric="DKK"
+                        valueIcon={null}
+                      />
+                    </div>
                   </TabsPanel>
                   <TabsPanel value="simulation" className="mt-0">
-                    <TablePage />
+                    <TileHeader>
+                      <TileTitle>Valuation summary</TileTitle>
+                    </TileHeader>
+                    <div
+                      className={cn("gap-[var(--spacing-xl)]")}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(4, 1fr)",
+                        marginTop: "var(--spacing-md)",
+                      }}
+                    >
+                      <ValueCard
+                        label="Calculated value"
+                        labelTooltip="AI-estimated or calculated property value."
+                        value="5.080.421"
+                        metric="DKK"
+                        valueIcon={<Icon name="Sparkles" size="lg" />}
+                      />
+                      <ValueCard
+                        variant="editable"
+                        label="Yield"
+                        labelTooltip="Yield percentage. Edit to simulate."
+                        value={simulationYield}
+                        metric="%"
+                        valueIcon={null}
+                        onInputChange={(e) => setSimulationYield(e.target.value)}
+                        onInputConfirmKeyDown={() => {}}
+                        onInputClearKeyDown={() => setSimulationYield("")}
+                        inputTrailingSlot={
+                          <InputTrailingActions
+                            onClear={() => setSimulationYield("")}
+                            onConfirm={() => {}}
+                            confirmShortcut
+                            ariaLabelClear="Clear"
+                            ariaLabelConfirm="Confirm"
+                          />
+                        }
+                      />
+                      <ValueCard
+                        label="Value per M²"
+                        labelTooltip="Property value per square meter."
+                        value="336"
+                        metric="M²"
+                        valueIcon={null}
+                      />
+                      <ValueCard
+                        label="Price per M²"
+                        labelTooltip="Price per square meter."
+                        value="23.000"
+                        metric="DKK"
+                        valueIcon={null}
+                      />
+                    </div>
                   </TabsPanel>
                 </Tabs>
               </CardContent>
             </Card>
 
-            {activeTab === "market" && (
+            {(activeTab === "market" || activeTab === "calculated" || activeTab === "simulation") && (
+              <>
               <Tile className="w-full">
                 <TileHeader>
                   <TileTitle>Rental income</TileTitle>
+                  {activeTab === "calculated" && (
+                    <TileHeaderActions>
+                      <Button variant="inline" size="md" iconLeft={<Icon name="Upload" size="md" />}>
+                        Upload Rent roll
+                      </Button>
+                    </TileHeaderActions>
+                  )}
+                  {activeTab === "simulation" && (
+                    <TileHeaderActions>
+                      <Button variant="inline" size="md" iconLeft={<Icon name="Plus" size="md" />}>
+                        Add rental
+                      </Button>
+                    </TileHeaderActions>
+                  )}
                 </TileHeader>
                 <TileContent
                   className={cn("flex flex-col gap-[var(--spacing-xl)]")}
                 >
                   <div
-                    className={cn("gap-[var(--spacing-xl)]")}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gridTemplateColumns: "repeat(4, 1fr)",
+                      gap: "18px",
                     }}
                   >
                     <ValueCard
                       label="Total annual income"
+                      labelTooltip="Total rental income per year."
                       value="487.200"
                       metric="DKK"
                       valueIcon={null}
                     />
                     <ValueCard
                       label="Net rent"
+                      labelTooltip="Net rent after deductions."
                       value="386.417"
                       metric="DKK"
                       valueIcon={null}
                     />
                     <ValueCard
                       label="Rent per M²"
+                      labelTooltip="Rent per square meter."
                       value="1.450"
                       metric="DKK"
                       valueIcon={null}
                     />
                   </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "var(--spacing-sm)",
-                      alignItems: "center",
-                      padding: "var(--spacing-sm)",
-                      border: "1px solid var(--color-border)",
-                      borderRadius: "var(--radius-base)",
-                      backgroundColor: "var(--color-card)",
-                    }}
-                  >
-                    <Input
-                      variant="default"
-                      size="default"
-                      fontVariant="sans"
-                      placeholder="Search..."
-                      leadingIcon={<Icon name="Search" size="md" />}
-                      className="min-w-0 flex-1"
-                    />
-                    <Button variant="outline" size="md" iconLeft={<Icon name="Columns" size="md" />}>
-                      COLUMNS
-                    </Button>
-                  </div>
+                  {activeTab === "calculated" && (
+                    <InlineMessage
+                      variant="warning"
+                      title="2 Issues detected in the table"
+                    >
+                      Please review the highlighted entries for potential discrepancies or necessary updates.
+                    </InlineMessage>
+                  )}
+                  {activeTab === "market" && (
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        gap: "var(--spacing-sm)",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div style={{ width: "340px" }} className="min-w-0 shrink-0">
+                        <Input
+                          variant="default"
+                          size="default"
+                          fontVariant="sans"
+                          placeholder="Search..."
+                          leadingIcon={<Icon name="Search" size="md" />}
+                          className="w-full"
+                        />
+                      </div>
+                      <Button variant="outline" size="md" iconLeft={<Icon name="Columns" size="md" />}>
+                        COLUMNS
+                      </Button>
+                    </div>
+                  )}
 
                   <TooltipProvider>
                     <div className="overflow-x-auto rounded-lg bg-[var(--color-card)]">
@@ -434,6 +608,9 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                           <col style={{ width: "auto" }} />
                           <col style={{ width: "auto" }} />
                           <col style={{ width: "auto" }} />
+                          {activeTab === "calculated" && (
+                            <col style={{ width: "120px" }} />
+                          )}
                         </colgroup>
                         <thead>
                           <tr>
@@ -486,28 +663,129 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                               align="right"
                               className="cursor-pointer"
                             />
+                            {activeTab === "calculated" && (
+                              <TableHeader
+                                theme="light"
+                                label="ACTIONS"
+                                align="right"
+                                className="w-[120px]"
+                              />
+                            )}
                           </tr>
                         </thead>
                         <tbody>
-                          {sortedRentalRows.map((row) => (
-                            <TableRow key={row.unit} className="border-b-inset">
-                              <TableCell align="left">{row.unit}</TableCell>
-                              <TableCell align="right">{row.m2}</TableCell>
-                              <TableCell suffix=" DKK" align="right">
-                                {row.monthly}
-                              </TableCell>
-                              <TableCell suffix=" DKK" align="right">
-                                {row.annual}
-                              </TableCell>
-                              <TableCell suffix=" DKK" align="right">
-                                {row.perM2}
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {sortedRentalRows.map((row) => {
+                            const values = calculatedRentalValues[row.unit] ?? {
+                              monthly: row.monthly,
+                              annual: row.annual,
+                              perM2: row.perM2,
+                            };
+                            return (
+                              <TableRow key={row.unit} className="border-b-inset">
+                                <TableCell align="left">{row.unit}</TableCell>
+                                <TableCell align="right">{row.m2}</TableCell>
+                                {activeTab === "calculated" ? (
+                                  <>
+                                    <TableCell contentWidth="full" align="right">
+                                      <Input
+                                        align="right"
+                                        value={values.monthly}
+                                        onChange={(e) =>
+                                          updateCalculatedRental(row.unit, "monthly", e.target.value)
+                                        }
+                                        onClearKeyDown={() =>
+                                          clearCalculatedRentalField(row.unit, "monthly")
+                                        }
+                                        metric=" DKK"
+                                        trailingSlot={
+                                          <InputTrailingActions
+                                            onClear={() =>
+                                              clearCalculatedRentalField(row.unit, "monthly")
+                                            }
+                                            onConfirm={() => {}}
+                                            confirmShortcut
+                                            ariaLabelClear="Clear"
+                                            ariaLabelConfirm="Confirm"
+                                          />
+                                        }
+                                      />
+                                    </TableCell>
+                                    <TableCell contentWidth="full" align="right">
+                                      <Input
+                                        align="right"
+                                        value={values.annual}
+                                        onChange={(e) =>
+                                          updateCalculatedRental(row.unit, "annual", e.target.value)
+                                        }
+                                        onClearKeyDown={() =>
+                                          clearCalculatedRentalField(row.unit, "annual")
+                                        }
+                                        metric=" DKK"
+                                        trailingSlot={
+                                          <InputTrailingActions
+                                            onClear={() =>
+                                              clearCalculatedRentalField(row.unit, "annual")
+                                            }
+                                            onConfirm={() => {}}
+                                            confirmShortcut
+                                            ariaLabelClear="Clear"
+                                            ariaLabelConfirm="Confirm"
+                                          />
+                                        }
+                                      />
+                                    </TableCell>
+                                    <TableCell contentWidth="full" align="right">
+                                      <Input
+                                        align="right"
+                                        value={values.perM2}
+                                        onChange={(e) =>
+                                          updateCalculatedRental(row.unit, "perM2", e.target.value)
+                                        }
+                                        onClearKeyDown={() =>
+                                          clearCalculatedRentalField(row.unit, "perM2")
+                                        }
+                                        metric=" DKK"
+                                        trailingSlot={
+                                          <InputTrailingActions
+                                            onClear={() =>
+                                              clearCalculatedRentalField(row.unit, "perM2")
+                                            }
+                                            onConfirm={() => {}}
+                                            confirmShortcut
+                                            ariaLabelClear="Clear"
+                                            ariaLabelConfirm="Confirm"
+                                          />
+                                        }
+                                      />
+                                    </TableCell>
+                                  </>
+                                ) : (
+                                  <>
+                                    <TableCell suffix=" DKK" align="right">
+                                      {row.monthly}
+                                    </TableCell>
+                                    <TableCell suffix=" DKK" align="right">
+                                      {row.annual}
+                                    </TableCell>
+                                    <TableCell suffix=" DKK" align="right">
+                                      {row.perM2}
+                                    </TableCell>
+                                  </>
+                                )}
+                                {activeTab === "calculated" && (
+                                  <TableCell align="right">
+                                    <Button variant="inline" className="ml-auto">
+                                      VIEW
+                                    </Button>
+                                  </TableCell>
+                                )}
+                              </TableRow>
+                            );
+                          })}
                         </tbody>
                         <tfoot>
                           <TableRow rowVariant="summary">
-                            <TableCell align="left">Total</TableCell>
+                            <TableCell align="left" contentVariant="label">Total</TableCell>
                             <TableCell align="right">336</TableCell>
                             <TableCell suffix=" DKK" align="right">
                               40.600
@@ -518,6 +796,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                             <TableCell suffix=" DKK" align="right">
                               AVG. 1.450
                             </TableCell>
+                            {activeTab === "calculated" && <TableCell />}
                           </TableRow>
                         </tfoot>
                       </table>
@@ -525,6 +804,153 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                   </TooltipProvider>
                 </TileContent>
               </Tile>
+
+              <Tile className="w-full">
+                <TileHeader>
+                  <TileTitle>Operating expenses</TileTitle>
+                  <TileHeaderActions>
+                    <Button variant="inline" size="md" iconLeft={<Icon name="RotateCw" size="md" />}>
+                      RESET
+                    </Button>
+                    <Button variant="inline" size="md" iconLeft={<Icon name="Plus" size="md" />}>
+                      Add expenses
+                    </Button>
+                  </TileHeaderActions>
+                </TileHeader>
+                <TileContent
+                  className={cn("flex flex-col gap-[var(--spacing-xl)]")}
+                >
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(4, 1fr)",
+                      gap: "18px",
+                    }}
+                  >
+                    <ValueCard
+                      variant="editable"
+                      label="Total annual expenses"
+                      labelTooltip="Total operating expenses per year."
+                      value={operatingExpensesTotal}
+                      metric="DKK"
+                      valueIcon={null}
+                      onInputChange={(e) => setOperatingExpensesTotal(e.target.value)}
+                      onInputConfirmKeyDown={() => {}}
+                      onInputClearKeyDown={() => setOperatingExpensesTotal("")}
+                      inputTrailingSlot={
+                        <InputTrailingActions
+                          onClear={() => setOperatingExpensesTotal("")}
+                          onConfirm={() => {}}
+                          confirmShortcut
+                          ariaLabelClear="Clear"
+                          ariaLabelConfirm="Confirm"
+                        />
+                      }
+                    />
+                    <ValueCard
+                      label="Operating costs per M²"
+                      labelTooltip="Operating costs per square meter."
+                      value="300"
+                      metric="DKK"
+                      valueIcon={null}
+                    />
+                  </div>
+
+                  {activeTab !== "simulation" && (
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div style={{ width: "340px" }} className="min-w-0 shrink-0">
+                        <Input
+                          variant="default"
+                          size="default"
+                          fontVariant="sans"
+                          placeholder="Search..."
+                          leadingIcon={<Icon name="Search" size="md" />}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <TooltipProvider>
+                    <div className="overflow-x-auto rounded-lg bg-[var(--color-card)]">
+                      <table className="data-table w-full min-w-[560px] border-collapse table-fixed">
+                        <colgroup>
+                          <col style={{ width: "auto" }} />
+                          <col style={{ width: "auto" }} />
+                          <col style={{ width: "auto" }} />
+                          <col style={{ width: "120px" }} />
+                        </colgroup>
+                        <thead>
+                          <tr>
+                            <TableHeader
+                              theme="light"
+                              label="Expenses type"
+                              tooltipContent="Type of operating expense."
+                            />
+                            <TableHeader
+                              theme="light"
+                              label="Total expenses"
+                              tooltipContent="Total amount in DKK."
+                              align="right"
+                            />
+                            <TableHeader
+                              theme="light"
+                              label="Expenses per M²"
+                              tooltipContent="Cost per square meter."
+                              align="right"
+                            />
+                            <TableHeader
+                              theme="light"
+                              label="ACTIONS"
+                              align="right"
+                              className="w-[120px]"
+                            />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {operatingExpensesRows.map((row) => (
+                            <TableRow key={row.type} className="border-b-inset">
+                              <TableCell align="left">{row.type}</TableCell>
+                              <TableCell suffix=" DKK" align="right">
+                                {row.total}
+                              </TableCell>
+                              <TableCell suffix=" DKK" align="right">
+                                {row.perM2}
+                              </TableCell>
+                              <TableCell align="right">
+                                <Button variant="inline" onClick={() => {}}>
+                                  NOTES (1)
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </tbody>
+                        <tfoot>
+                          <TableRow rowVariant="summary">
+                            <TableCell align="left" contentVariant="label">
+                              Total
+                            </TableCell>
+                            <TableCell suffix=" DKK" align="right">
+                              100.783
+                            </TableCell>
+                            <TableCell suffix=" DKK" align="right">
+                              300
+                            </TableCell>
+                            <TableCell align="right" />
+                          </TableRow>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </TooltipProvider>
+                </TileContent>
+              </Tile>
+              </>
             )}
 
             {activeTab === "comparison" && (

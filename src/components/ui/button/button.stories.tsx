@@ -14,8 +14,8 @@ const meta: Meta<typeof Button> = {
 Primary button component for user actions. Built on Base UI Button primitive with full keyboard accessibility.
 
 ## Features
-- 5 variants: primary, secondary, ghost, outline, destructive
-- 3 sizes: sm (36px), md (40px), lg (44px)
+- 6 variants: primary, secondary, ghost, outline, destructive, inline
+- 4 sizes: xs (32px), sm (36px), md (40px), lg (44px)
 - Icon support: left, right, or icon-only
 - Loading states with spinner
 - Disabled states
@@ -55,6 +55,7 @@ import { Icon } from "@/components/ui/icon";
 <Button disabled>Disabled</Button>
 
 // Sizes
+<Button size="xs">Extra small</Button>
 <Button size="sm">Small</Button>
 <Button size="md">Medium</Button>
 <Button size="lg">Large</Button>
@@ -72,7 +73,7 @@ import { Icon } from "@/components/ui/icon";
   argTypes: {
     variant: {
       control: "select",
-      options: ["primary", "secondary", "ghost", "outline", "destructive"],
+      options: ["primary", "secondary", "ghost", "outline", "destructive", "inline"],
       description: "The visual style variant of the button",
       table: {
         type: { summary: "string" },
@@ -81,8 +82,8 @@ import { Icon } from "@/components/ui/icon";
     },
     size: {
       control: "radio",
-      options: ["sm", "md", "lg"],
-      description: "The size of the button",
+      options: ["xs", "sm", "md", "lg"],
+      description: "The size of the button (xs=32px, sm=36px, md=40px, lg=44px)",
       table: {
         type: { summary: "string" },
         defaultValue: { summary: "md" },
@@ -136,18 +137,21 @@ export const Playground: Story = {
 // ============================================
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap items-center gap-4">
       <Button variant="primary">Primary</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="outline">Outline</Button>
       <Button variant="ghost">Ghost</Button>
       <Button variant="destructive">Destructive</Button>
+      <Button variant="inline" iconLeft={<Icon name="RefreshCw" />}>
+        Reset
+      </Button>
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story: "All 5 button variants. **Primary** for main actions, **Secondary** for supporting actions, **Outline** for secondary UI, **Ghost** for subtle actions, **Destructive** for dangerous operations.",
+        story: "All 6 button variants. **Primary** for main actions, **Secondary** for supporting actions, **Outline** for secondary UI, **Ghost** for subtle actions, **Destructive** for dangerous operations, **Inline** for text-like actions (e.g. reset) with accent color and underline on hover.",
       },
     },
   },
@@ -159,6 +163,7 @@ export const AllVariants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-4">
+      <Button size="xs">Extra small (32px)</Button>
       <Button size="sm">Small (36px)</Button>
       <Button size="md">Medium (40px)</Button>
       <Button size="lg">Large (44px)</Button>
@@ -167,7 +172,7 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Three size options: **sm** (36px height), **md** (40px, default), **lg** (44px).",
+        story: "Four size options: **xs** (32px), **sm** (36px), **md** (40px, default), **lg** (44px).",
       },
     },
   },
@@ -295,6 +300,40 @@ export const States: Story = {
     docs: {
       description: {
         story: "Button states: **default**, **disabled** (50% opacity), and **loading** (shows spinner, auto-disabled).",
+      },
+    },
+  },
+};
+
+// ============================================
+// INLINE (Figma: text-like accent button, underline on hover)
+// ============================================
+export const Inline: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <p className="text-sm" style={{ color: "var(--color-content-secondary)" }}>
+        Inline button matches Figma: accent blue, transparent background, underline on hover. Use in sentences or toolbars.
+      </p>
+      <div className="flex flex-wrap items-center gap-4">
+        <Button variant="inline" iconLeft={<Icon name="RefreshCw" />}>
+          Reset
+        </Button>
+        <span style={{ color: "var(--color-content-secondary)" }}>or</span>
+        <Button variant="inline">Clear filters</Button>
+      </div>
+      <p className="text-sm" style={{ color: "var(--color-content-secondary)" }}>
+        You can use it in a sentence:{" "}
+        <Button variant="inline" iconLeft={<Icon name="RefreshCw" />}>
+          reset the comparison
+        </Button>{" "}
+        to start over.
+      </p>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "**Inline** variant: no background or border, accent color text and icon, hover shows darker blue and underline. Uses `--color-content-accent` and `--color-content-accent-dark` from globals.css.",
       },
     },
   },

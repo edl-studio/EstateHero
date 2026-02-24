@@ -5,11 +5,49 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  padding: var(--spacing-xl);
+  height: 88px;
+  padding: var(--spacing-lg); /* 16px all around */
   border-radius: var(--radius-base);
   border: 1px solid var(--color-border);
   background-color: var(--color-card);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-2xs);
+}
+
+/* Default (display) variant: space between label and value rows */
+.root.displayVariant {
+  justify-content: space-between;
+}
+
+/* Illustration variant: fixed height, illustration 32×40, label+icon, value right-aligned (Figma 1201-4192) */
+.root.illustrationVariant {
+  height: 156px;
+  max-width: 304.5px;
+  padding: var(--spacing-lg);
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1 0 0;
+  gap: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-2xs);
+}
+
+.illustrationSlot {
+  width: 32px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.illustrationSlot img {
+  display: block;
+  width: 32px;
+  height: 40px;
+  object-fit: contain;
+  object-position: left top;
 }
 
 /* ============================================
@@ -19,13 +57,14 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  height: 1rem; /* 16px - fixed so tooltip wrapper does not affect card height */
 }
 
 .label {
-  color: var(--color-content-muted);
+  color: var(--color-content-secondary);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
-  /* Typography set in component: ui-sans-regular-12 or ui-sans-medium-12 */
+  /* Typography set in component: ui-mono-13 */
 }
 
 .labelWithTooltip {
@@ -35,6 +74,24 @@
 .infoIcon {
   color: var(--color-content-muted);
   flex-shrink: 0;
+}
+
+/* ============================================
+   VALUE ROW WRAPPER (illustration variant: inset box)
+   ============================================ */
+.valueRowWrapper {
+  width: 100%;
+}
+
+.valueRowWrapperIllustration {
+  width: 100%;
+  margin-top: 0;
+}
+
+.valueRowWrapperIllustration .valueRow {
+  justify-content: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
 }
 
 /* ============================================
@@ -66,4 +123,15 @@
 .valueInput {
   flex: 1;
   min-width: 0;
+}
+
+.valueRow .valueInput {
+  height: 2rem; /* 32px - overrides Input default size */
+}
+
+/* Custom value slot (e.g. input with trailing actions) */
+.valueSlot {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
 }

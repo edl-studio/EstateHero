@@ -1,9 +1,11 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { InputTrailingActions } from "@/components/ui/input";
+import { Input, InputTrailingActions } from "@/components/ui/input";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ValueCard } from "./value-card";
+
+import valueRatioImage from "@/assets/images/value-ratio.png";
 
 const meta: Meta<typeof ValueCard> = {
   title: "UI/ValueCard",
@@ -17,7 +19,8 @@ const meta: Meta<typeof ValueCard> = {
 A card component for displaying a key value with a label, optional info icon, and currency. Matches the Figma design: uppercase label with info icon, prominent value with leading icon (e.g. sparkle) and currency.
 
 ## Features
-- **Variants**: \`display\` (static value) or \`editable\` (Input with trailing actions)
+- **Variants**: \`display\` (static value), \`editable\` (Input with trailing actions), \`illustration\` (optional graphic at top, value in inset box)
+- **valueSlot**: optional ReactNode that replaces the value entirely (e.g. custom Input with trailing actions)
 - Label (uppercase), optional tooltip on label hover (\`labelTooltip\`), optional info icon slot
 - Value with optional leading icon (default: Sparkles), optional metric (e.g. DKK)
 - Editable: \`inputTrailingSlot\`, \`onInputChange\`, \`onInputConfirmKeyDown\`, \`onInputClearKeyDown\`
@@ -52,8 +55,8 @@ Wrap the app (or Storybook) in \`TooltipProvider\` for tooltips to work.
   argTypes: {
     variant: {
       control: "radio",
-      options: ["display", "editable"],
-      description: "Display = static value; Editable = Input with trailing actions",
+      options: ["display", "editable", "illustration"],
+      description: "Display = static value; Editable = Input with trailing actions; Illustration = graphic + value in inset box",
     },
     label: { control: "text", description: "Label above the value (shown in uppercase)" },
     labelTooltip: {
@@ -62,6 +65,14 @@ Wrap the app (or Storybook) in \`TooltipProvider\` for tooltips to work.
     },
     value: { control: "text", description: "Main value (display or controlled input value)" },
     metric: { control: "text", description: "Metric/unit suffix (e.g. DKK, m²)" },
+    valueSlot: {
+      control: false,
+      description: "Custom content in place of value (e.g. Input with InputTrailingActions)",
+    },
+    illustration: {
+      control: false,
+      description: "When variant=illustration: image or graphic shown at top of card",
+    },
   },
 };
 
@@ -168,6 +179,77 @@ export const Editable: Story = {
       description: {
         story:
           "Variant editable: the value is replaced by an Input. Use inputTrailingSlot for trailing actions (e.g. InputTrailingActions with clear and confirm).",
+      },
+    },
+  },
+};
+
+/** Illustration variant: graphic at top, label with tooltip, value in right-aligned inset box (Figma 1335-21779). */
+export const Illustration: Story = {
+  args: {
+    variant: "illustration",
+    label: "Loan to value ratio",
+    labelTooltip: "Ratio of loan amount to property value.",
+    value: "78%",
+    metric: "DKK",
+    illustration: <img src={valueRatioImage} alt="" width={120} height={80} />,
+    valueIcon: null,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Variant illustration: optional illustration at top, label row with tooltip, and value/metric in a light grey inset box (right-aligned). Use the \`illustration\` prop for the graphic.",
+      },
+    },
+  },
+};
+
+/** Custom value slot: pass an Input with trailing actions (or any content) via valueSlot. */
+export const WithValueSlot: Story = {
+  args: {
+    label: "Override value",
+    labelTooltip: "Use valueSlot to render custom content (e.g. input with trailing actions).",
+    value: "",
+  },
+  render: function WithValueSlotRender() {
+    const [value, setValue] = React.useState("5.080.421");
+    return (
+      <div style={{ width: "360px" }}>
+        <ValueCard
+          label="Override value"
+          labelTooltip="Use valueSlot to render custom content (e.g. input with trailing actions)."
+          value={value}
+          valueSlot={
+            <Input
+              variant="default"
+              size="default"
+              fontVariant="mono"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              metric=" DKK"
+              trailingSlot={
+                <InputTrailingActions
+                  onClear={() => setValue("")}
+                  onConfirm={() => console.log("Confirm", value)}
+                  confirmShortcut
+                  ariaLabelClear="Clear"
+                  ariaLabelConfirm="Confirm"
+                />
+              }
+              onConfirmKeyDown={() => console.log("Confirm", value)}
+              onClearKeyDown={() => setValue("")}
+            />
+          }
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Use valueSlot to render an input with trailing actions (or any custom content) instead of the default value. Value and metric are ignored when valueSlot is set.",
       },
     },
   },

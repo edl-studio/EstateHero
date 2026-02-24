@@ -18,16 +18,9 @@
   }
 }
 
-/* Summary row: row controls height via TableRow; cell inherits. */
 :global([data-row-variant="summary"]) .cell {
-  height: auto;
-  min-height: 48px;
-}
-
-@media (min-width: 768px) {
-  :global([data-row-variant="summary"]) .cell {
-    height: 56px;
-  }
+  height: 44px;
+  min-height: 44px;
 }
 
 /* Header cell (when used as th) */

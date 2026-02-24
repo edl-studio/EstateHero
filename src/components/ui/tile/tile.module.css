@@ -16,8 +16,23 @@
    TILE HEADER
    ============================================ */
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.75rem; /* 12px */
+}
+
+/* ============================================
+   TILE HEADER ACTIONS (right-hand slot for inline buttons)
+   ============================================ */
+.headerActions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+  height: 1.5rem; /* 24px */
 }
 
 /* ============================================

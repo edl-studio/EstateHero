@@ -1,0 +1,63 @@
+/* ============================================
+   INFO CARD (Figma 1335-27080)
+   Title, description, outline button, illustration bottom-right
+   ============================================ */
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 156px;
+  max-width: 304.5px;
+  padding: var(--spacing-lg);
+  flex: 1 0 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-info-card-bg, var(--color-badge-bg));
+  box-shadow: var(--shadow-2xs);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  color: var(--color-content-primary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.description {
+  color: var(--color-content-secondary);
+}
+
+/* Footer: button and illustration in same row with space-between */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  flex-shrink: 0;
+  gap: var(--spacing-md);
+}
+
+.illustrationSlot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.illustrationSlot img {
+  display: block;
+  width: auto;
+  height: 32px;
+  object-fit: contain;
+  object-position: right center;
+}
