@@ -101,10 +101,8 @@ export const TableHeader = React.forwardRef<
             <span className={styles.label}>{label}</span>
             {tooltipContent != null && (
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className={styles.iconSlot} aria-hidden>
-                    <Icon name="HelpCircle" size="md" />
-                  </span>
+                <TooltipTrigger render={<span className={styles.iconSlot} aria-hidden />}>
+                  <Icon name="HelpCircle" size="md" />
                 </TooltipTrigger>
                 <TooltipContent>{tooltipContent}</TooltipContent>
               </Tooltip>
@@ -131,7 +129,7 @@ export const TableHeader = React.forwardRef<
     const { style, ...restProps } = props;
     return (
       <Component
-        ref={ref as React.Ref<HTMLDivElement>}
+        ref={ref as unknown as React.LegacyRef<HTMLTableHeaderCellElement>}
         className={cn(
           styles.th,
           theme === "light" && styles.themeLight,

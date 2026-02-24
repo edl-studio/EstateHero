@@ -14,7 +14,7 @@ import styles from "./mortgage-rate-card.module.css";
 export type MortgageRateCardDuration = "20y" | "30y";
 
 export interface MortgageRateCardProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onDurationChange"> {
   /** Illustration or icon shown at the top-left (e.g. 32×40 image). */
   illustration?: React.ReactNode;
   /** Label above the value (e.g. "Mortgage interest rate"). Rendered in uppercase. */

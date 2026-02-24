@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { MetadataItem } from "./metadata-item";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icon";
+import { TrendingUp, Upload } from "lucide-react";
 
 const meta: Meta<typeof MetadataItem> = {
   title: "UI/Metadata Item",
@@ -45,8 +46,12 @@ Metadata item component displays property or data information in two variants:
 export default meta;
 type Story = StoryObj<typeof MetadataItem>;
 
+const HelpCircleIcon = ({ className }: { className?: string }) => (
+  <Icon name="HelpCircle" className={className} />
+);
+
 // Globe Icon Component (for the example)
-const GlobeIcon: React.FC<{ className?: string }> = ({ className }) => (
+const GlobeIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
     viewBox="0 0 20 20"
@@ -85,7 +90,7 @@ export const DataGroup: Story = {
     dataValue: "7.728.337",
     dataUnit: "DKK",
     badge: (
-      <Badge variant="positive" icon={<Icon name="Chart" size="xs" />}>
+      <Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>
         5%
       </Badge>
     ),
@@ -132,7 +137,7 @@ export const DataGroupWithBadge: Story = {
     dataValue: "3.200.000",
     dataUnit: "DKK",
     badge: (
-      <Badge variant="negative" icon={<TrendingUp size={12} strokeWidth={1.5} />}>
+      <Badge variant="negative" iconLeft={<TrendingUp size={12} strokeWidth={1.5} />}>
         -2%
       </Badge>
     ),
@@ -224,7 +229,7 @@ export const AllVariants: Story = {
         dataValue="7.728.337"
         dataUnit="DKK"
         badge={
-          <Badge variant="positive" icon={<Icon name="Chart" size="xs" />}>
+          <Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>
             5%
           </Badge>
         }
@@ -258,7 +263,7 @@ export const DataGroupExamples: Story = {
         dataValue="7.728.337"
         dataUnit="DKK"
         badge={
-          <Badge variant="positive" icon={<Icon name="Chart" size="xs" />}>
+          <Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>
             5%
           </Badge>
         }
@@ -276,7 +281,7 @@ export const DataGroupExamples: Story = {
         dataValue="45.000"
         dataUnit="DKK"
         badge={
-          <Badge variant="positive" icon={<Icon name="Chart" size="xs" />}>
+          <Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>
             3%
           </Badge>
         }
@@ -354,7 +359,7 @@ export const Playground: Story = {
     dataValue: "7.728.337",
     dataUnit: "DKK",
     badge: (
-      <Badge variant="positive" icon={<Icon name="Chart" size="xs" />}>
+      <Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>
         5%
       </Badge>
     ),

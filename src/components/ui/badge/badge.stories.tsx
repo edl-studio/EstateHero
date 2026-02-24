@@ -77,10 +77,6 @@ import { Check } from "lucide-react";
         defaultValue: { summary: "mono" },
       },
     },
-    icon: {
-      control: false,
-      description: "Icon element (12×12px recommended) - deprecated, use iconLeft",
-    },
     iconLeft: {
       control: false,
       description: "Icon element before text",

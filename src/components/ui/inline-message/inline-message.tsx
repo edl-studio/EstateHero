@@ -11,7 +11,7 @@ const DEFAULT_ICONS: Record<NonNullable<InlineMessageProps["variant"]>, IconName
   success: "CheckCircle",
 };
 
-export interface InlineMessageProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface InlineMessageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /**
    * Visual and semantic variant.
    * - `warning`: Amber icon and title (Figma design)

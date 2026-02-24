@@ -81,7 +81,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     onKeyDown: onKeyDownProp,
     ...props 
   }, ref) => {
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const inputRef = React.useRef<HTMLInputElement | null>(null);
     const measureRef = React.useRef<HTMLSpanElement>(null);
     const metricRef = React.useRef<HTMLSpanElement>(null);
     const [metricLeft, setMetricLeft] = React.useState<number | null>(null);

@@ -23,7 +23,7 @@ export function MetadataItemTestPage() {
             dataValue="7.728.337"
             dataUnit="DKK"
             badge={
-              <Badge variant="positive" icon={<TrendingUp size={12} strokeWidth={1.5} />}>
+              <Badge variant="positive" iconLeft={<TrendingUp size={12} strokeWidth={1.5} />}>
                 5%
               </Badge>
             }
@@ -47,7 +47,7 @@ export function MetadataItemTestPage() {
             dataValue="45.000"
             dataUnit="DKK"
             badge={
-              <Badge variant="positive" icon={<TrendingUp size={12} strokeWidth={1.5} />}>
+              <Badge variant="positive" iconLeft={<TrendingUp size={12} strokeWidth={1.5} />}>
                 3%
               </Badge>
             }
@@ -65,7 +65,7 @@ export function MetadataItemTestPage() {
             dataValue="3.200.000"
             dataUnit="DKK"
             badge={
-              <Badge variant="negative" icon={<TrendingDown size={12} strokeWidth={1.5} />}>
+              <Badge variant="negative" iconLeft={<TrendingDown size={12} strokeWidth={1.5} />}>
                 -2%
               </Badge>
             }
@@ -131,7 +131,7 @@ export function MetadataItemTestPage() {
             dataValue="7.728.337"
             dataUnit="DKK"
             badge={
-              <Badge variant="positive" icon={<TrendingUp size={12} strokeWidth={1.5} />}>
+              <Badge variant="positive" iconLeft={<TrendingUp size={12} strokeWidth={1.5} />}>
                 5%
               </Badge>
             }
