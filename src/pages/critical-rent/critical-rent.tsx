@@ -336,15 +336,15 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
               <TileContent style={{ paddingTop: "var(--spacing-xl)" }}>
                 <TooltipProvider>
                   <div className="overflow-x-auto rounded-lg bg-[var(--color-card)]">
-                    <table className="data-table critical-rent-comparison-table w-full min-w-[640px] border-collapse" style={{ tableLayout: "fixed" }}>
+                    <table className="data-table critical-rent-comparison-table w-full min-w-[640px] border-separate border-spacing-0" style={{ tableLayout: "fixed" }}>
                       <colgroup>
-                        <col style={{ width: "22%" }} />
-                        <col style={{ width: "13%" }} />
-                        <col style={{ width: "13%" }} />
-                        <col style={{ width: "13%" }} />
-                        <col style={{ width: "13%" }} />
-                        <col style={{ width: "13%" }} />
-                        <col style={{ width: "13%" }} />
+                        <col style={{ width: "224px" }} />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
                       </colgroup>
                       <thead>
                         <tr>
