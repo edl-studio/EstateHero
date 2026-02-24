@@ -8,7 +8,12 @@
   min-width: 0;
   border-radius: var(--radius-md);
   color: var(--color-content-primary);
-  transition: var(--transition-default);
+  transition:
+    border-color var(--transition-default),
+    box-shadow var(--transition-default),
+    background-color var(--transition-default),
+    color var(--transition-default),
+    opacity var(--transition-default);
   /* Typography: ui-sans-regular-16 (fontVariant=sans) | ui-mono-20 (fontVariant=mono) */
 }
 
@@ -311,6 +316,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem; /* 8px between clear and confirm */
+  /* transition is intentionally absent here – added only after first interaction */
+}
+
+/* Only animate after the user has interacted with the input for the first time */
+.inputContainerAnimated .trailingSlot {
   transition:
     transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -327,6 +337,12 @@
 .inputContainer:not(:focus-within) .input.hasTrailingSlot.sizeLarge,
 .inputContainer:not(:focus-within) .input.hasTrailingSlot.sizeMobile {
   padding-right: 0.75rem; /* same as regular input */
+}
+
+/* Animate padding transition only after first user interaction */
+.inputContainerAnimated:not(:focus-within) .input.hasTrailingSlot.sizeDefault,
+.inputContainerAnimated:not(:focus-within) .input.hasTrailingSlot.sizeLarge,
+.inputContainerAnimated:not(:focus-within) .input.hasTrailingSlot.sizeMobile {
   transition: padding-right 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

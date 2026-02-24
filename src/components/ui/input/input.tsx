@@ -87,6 +87,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [metricLeft, setMetricLeft] = React.useState<number | null>(null);
     const [metricRightPadding, setMetricRightPadding] = React.useState<number | null>(null);
     const [isFocused, setIsFocused] = React.useState(false);
+    const [hasInteracted, setHasInteracted] = React.useState(false);
     const [measureValue, setMeasureValue] = React.useState("");
 
     const isMetricWithTrailingSlot = !!(trailingSlot && metric);
@@ -124,6 +125,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true);
+      if (!hasInteracted) setHasInteracted(true);
       onFocus?.(e);
     };
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -189,7 +191,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     // With icons, wrap in container
     return (
-      <div className={styles.inputContainer}>
+      <div className={cn(styles.inputContainer, hasInteracted && styles.inputContainerAnimated)}>
         {leadingIcon && (
           <span
             className={cn(

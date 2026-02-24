@@ -6,23 +6,12 @@
   min-width: 160px;
   padding: 0;
   border: none;
-  box-shadow: inset -1px 0 0 var(--color-border);
   vertical-align: middle;
-}
-
-/* No left border on the first (leftmost) header cell; all others get a left border. */
-.th:first-child {
-  box-shadow: none;
-}
-
-/* No left border on the last (rightmost) header cell. */
-.th:last-child {
-  box-shadow: none;
 }
 
 /* First header cell: rounded left corners (top-left 8px, bottom-left 8px). Last: top-right 8px only. Single cell: all corners. */
 .th:first-child .root {
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  border-radius: var(--radius-md) 0 0 0;
 }
 
 .th:last-child .root {
@@ -30,10 +19,11 @@
 }
 
 .th:first-child:last-child .root {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 /* Inner bar: flex layout. Typography: use .ui-mono-13 in component. */
+/* box-shadow lives here (not on th) because the background is here and would paint over a shadow on the outer th. */
 .root {
   display: flex;
   align-items: center;
@@ -42,6 +32,12 @@
   min-height: 44px;
   text-align: left;
   text-transform: uppercase;
+  box-shadow: inset -1px 0 0 var(--color-border), inset 0 -1px 0 var(--color-border);
+}
+
+/* Last header cell: keep bottom border, drop right border. */
+.th:last-child .root {
+  box-shadow: inset 0 -1px 0 var(--color-border);
 }
 
 /* Mobile stacked layout (< 768px): outer gets height 44px via inline style; inner .root fills it */
