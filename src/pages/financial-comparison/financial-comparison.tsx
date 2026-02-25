@@ -14,6 +14,7 @@ import { PropertyCard } from "@/components/ui/property-card";
 import { GlobalHeader } from "@/components/ui/global-header";
 import { PropertyHeader } from "@/components/ui/property-header";
 import { MetadataItem } from "@/components/ui/metadata-item";
+import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { InlineMessage } from "@/components/ui/inline-message";
 import { TabItem } from "@/components/ui/tab-item";
@@ -251,18 +252,22 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
               <>
                 <MetadataItem
                   variant="data-group"
-                  label="Property Value"
-                  icon={<Icon name="Globe" size="lg" />}
+                  label="Market"
+                  icon={<Icon name="Globe" size="xl" />}
                   dataValue="7.728.337"
                   dataUnit="DKK"
-                  labelIcon={<Icon name="HelpCircle" size="xs" />}
+                  badge={<Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>5%</Badge>}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="Estimated current market value based on automated valuation model"
                 />
 
                 <MetadataItem
                   variant="button"
-                  label="Last Updated"
-                  buttonText="View History"
-                  buttonIcon={<Icon name="Calendar" />}
+                  label="Calculated"
+                  buttonText="Upload Rent Roll"
+                  buttonIcon={<Icon name="FileUp" />}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="This value is calculated automatically based on available data"
                 />
               </>
             }
@@ -693,6 +698,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "monthly", e.target.value)
                                         }
+                                        onConfirmKeyDown={() => {}}
                                         onClearKeyDown={() =>
                                           clearCalculatedRentalField(row.unit, "monthly")
                                         }
@@ -717,6 +723,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "annual", e.target.value)
                                         }
+                                        onConfirmKeyDown={() => {}}
                                         onClearKeyDown={() =>
                                           clearCalculatedRentalField(row.unit, "annual")
                                         }
@@ -741,6 +748,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "perM2", e.target.value)
                                         }
+                                        onConfirmKeyDown={() => {}}
                                         onClearKeyDown={() =>
                                           clearCalculatedRentalField(row.unit, "perM2")
                                         }

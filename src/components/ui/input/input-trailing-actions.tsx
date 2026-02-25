@@ -57,7 +57,13 @@ export const InputTrailingActions: React.FC<InputTrailingActionsProps> = ({
       </button>
       <button
         type="button"
-        onClick={onConfirm}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => {
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+          onConfirm();
+        }}
         className={cn(
           styles.trailingActionBtn,
           styles.trailingActionBtnConfirm,

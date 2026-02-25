@@ -85,6 +85,11 @@ import { Check } from "lucide-react";
       control: false,
       description: "Icon element after text",
     },
+    tooltip: {
+      control: "text",
+      description:
+        "Tooltip text shown on the help icon. Automatically renders a HelpCircle icon when set.",
+    },
     children: {
       control: "text",
       description: "Badge text content",
@@ -172,20 +177,43 @@ export const FontVariants: Story = {
 export const WithIcons: Story = {
   render: () => (
     <div className="flex flex-wrap gap-3">
-      <Badge variant="positive" iconLeft={<Icon name="HelpCircle" size="xs" />}>
+      <Badge variant="positive" iconLeft={<Icon name="Check" size="xs" />}>
         Verified
       </Badge>
       <Badge variant="negative" iconLeft={<Icon name="X" size="xs" />}>
         Declined
       </Badge>
-      <Badge variant="warning" iconLeft={<Icon name="HelpCircle" size="xs" />}>
+      <Badge variant="warning" iconLeft={<Icon name="TriangleAlert" size="xs" />}>
         Alert
-      </Badge>
-      <Badge variant="info" iconLeft={<Icon name="HelpCircle" size="xs" />}>
-        Notice
       </Badge>
       <Badge variant="info" iconLeft={<Icon name="Star" size="xs" />}>
         Featured
+      </Badge>
+    </div>
+  ),
+};
+
+/**
+ * Badges with a `tooltip` prop automatically render a HelpCircle icon that reveals
+ * explanatory text on hover — no manual icon setup required.
+ */
+export const WithTooltip: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-3">
+      <Badge variant="info" tooltip="This property is currently listed for sale on the open market.">
+        For Sale
+      </Badge>
+      <Badge variant="success" tooltip="Listing has been verified by our team.">
+        Verified
+      </Badge>
+      <Badge variant="warning" tooltip="The asking price was recently reduced by the seller.">
+        Price Reduced
+      </Badge>
+      <Badge variant="positive" tooltip="This deal has been fully executed and closed.">
+        Sold
+      </Badge>
+      <Badge variant="neutral" fontVariant="sans" tooltip="A detached single-family residential property.">
+        Single Family Home
       </Badge>
     </div>
   ),

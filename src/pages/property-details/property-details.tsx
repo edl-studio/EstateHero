@@ -184,18 +184,22 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
               <>
                 <MetadataItem
                   variant="data-group"
-                  label="Property Value"
-                  icon={<Icon name="Globe" size="lg" />}
+                  label="Market"
+                  icon={<Icon name="Globe" size="xl" />}
                   dataValue="7.728.337"
                   dataUnit="DKK"
-                  labelIcon={<Icon name="HelpCircle" size="xs" />}
+                  badge={<Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>5%</Badge>}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="Estimated current market value based on automated valuation model"
                 />
 
                 <MetadataItem
                   variant="button"
-                  label="Last Updated"
-                  buttonText="View History"
-                  buttonIcon={<Icon name="Calendar" />}
+                  label="Calculated"
+                  buttonText="Upload Rent Roll"
+                  buttonIcon={<Icon name="FileUp" />}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="This value is calculated automatically based on available data"
                 />
               </>
             }
@@ -339,7 +343,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                       <TileContent className="gap-[var(--spacing-md)] justify-end min-h-[var(--spacing-10xl)]">
                         <p className="text-[length:var(--text-xl)] font-[weight:var(--font-normal)] text-[var(--color-content-primary)]">Clay tiles</p>
                         <div className="flex gap-[var(--spacing-sm)]">
-                          <Badge variant="success" fontVariant="sans" iconRight={<Icon name="HelpCircle" size="xs" />}>
+                          <Badge variant="success" fontVariant="sans" tooltip="Roof was renovated within the last 5 years, indicating good structural condition.">
                             Recently renovated
                           </Badge>
                         </div>
@@ -354,7 +358,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                       <TileContent className="gap-[var(--spacing-md)] justify-end min-h-[var(--spacing-10xl)]">
                         <p className="text-[length:var(--text-xl)] font-[weight:var(--font-normal)] text-[var(--color-content-primary)]">Brick masonry</p>
                         <div className="flex gap-[var(--spacing-sm)]">
-                          <Badge variant="warning" fontVariant="sans" iconRight={<Icon name="HelpCircle" size="xs" />}>
+                          <Badge variant="warning" fontVariant="sans" tooltip="Exterior wall was renovated between 5 and 10 years ago. May require inspection soon.">
                             Renovated 5–10 yrs ago
                           </Badge>
                         </div>
@@ -369,10 +373,10 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                       <TileContent className="gap-[var(--spacing-md)] justify-end min-h-[var(--spacing-10xl)]">
                         <p className="text-[length:var(--text-xl)] font-[weight:var(--font-normal)] text-[var(--color-content-primary)]">1500 L</p>
                         <div className="flex gap-[var(--spacing-sm)]">
-                          <Badge variant="neutral" fontVariant="sans" iconRight={<Icon name="HelpCircle" size="xs" />}>
+                          <Badge variant="neutral" fontVariant="sans" tooltip="Oil tank was installed in 2005. Tanks over 20 years old may require replacement.">
                             Installed 2005
                           </Badge>
-                          <Badge variant="neutral" fontVariant="sans" iconRight={<Icon name="HelpCircle" size="xs" />}>
+                          <Badge variant="neutral" fontVariant="sans" tooltip="Most recent oil tank inspection was carried out in 2022.">
                             Inspected 2022
                           </Badge>
                         </div>
@@ -387,7 +391,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                       <TileContent className="gap-[var(--spacing-md)] justify-end min-h-[var(--spacing-10xl)]">
                         <p className="text-[length:var(--text-xl)] font-[weight:var(--font-normal)] text-[var(--color-content-primary)]">No contamination detected</p>
                         <div className="flex gap-[var(--spacing-sm)]">
-                          <Badge variant="neutral" fontVariant="sans" iconRight={<Icon name="HelpCircle" size="xs" />}>
+                          <Badge variant="neutral" fontVariant="sans" tooltip="Soil contamination test was last performed in March 2025. No contamination was detected.">
                             Last tested March, 2025
                           </Badge>
                         </div>
@@ -408,7 +412,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                     <Tile className="flex-1">
                       <div className="flex flex-col gap-[var(--spacing-xl)]">
                         <Badge 
-                          variant="info" 
+                          variant="default" 
                           fontVariant="mono" 
                           iconLeft={<Icon name="Dock" size="xs" />}
                           className="self-start"

@@ -1,5 +1,14 @@
+"use client";
+
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import styles from "./badge.module.css";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -33,6 +42,13 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
    * Use the Icon component with size="sm" for correct size and stroke (aligned with icon system).
    */
   iconRight?: React.ReactNode;
+
+  /**
+   * Tooltip text shown when hovering the help icon.
+   * When provided, a HelpCircle icon is automatically rendered after the badge text
+   * and acts as the tooltip trigger.
+   */
+  tooltip?: string;
 }
 
 export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
@@ -43,6 +59,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       fontVariant = "mono", 
       iconLeft,
       iconRight,
+      tooltip,
       children, 
       ...props 
     }, 
@@ -69,6 +86,16 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
           <span aria-hidden="true" className={styles.iconContainer}>
             {iconRight}
           </span>
+        )}
+        {tooltip && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger render={<span className={styles.iconContainer} />}>
+                <Icon name="HelpCircle" size="xs" />
+              </TooltipTrigger>
+              <TooltipContent>{tooltip}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
       </div>
     );
