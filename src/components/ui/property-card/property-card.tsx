@@ -17,6 +17,8 @@ export interface PropertyCardProps extends React.HTMLAttributes<HTMLDivElement> 
   propertyType?: string;
   /** Status label (e.g. "Under offer") – shown as pill with help icon when badges not provided */
   statusLabel?: string;
+  /** Tooltip text shown on the status label's help icon */
+  statusLabelTooltip?: string;
   /** Main price string (e.g. "6.250.000") */
   price?: string;
   /** Currency label (e.g. "DKK") – shown next to main price in smaller, muted text */
@@ -38,6 +40,7 @@ export const PropertyCard = React.forwardRef<HTMLDivElement, PropertyCardProps>(
       badges: badgesSlot,
       propertyType,
       statusLabel,
+      statusLabelTooltip,
       price,
       currency,
       priceChangePercent,
@@ -69,7 +72,7 @@ export const PropertyCard = React.forwardRef<HTMLDivElement, PropertyCardProps>(
             <Badge
               variant="neutral"
               fontVariant="sans"
-              iconRight={<Icon name="HelpCircle" size="sm" />}
+              tooltip={statusLabelTooltip}
             >
               {statusLabel}
             </Badge>

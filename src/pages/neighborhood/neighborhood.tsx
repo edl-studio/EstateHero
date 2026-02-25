@@ -15,12 +15,6 @@ import { Icon, type IconName } from "@/components/ui/icon";
 import { EmptyState } from "@/components/ui/empty-state";
 import { DonutChart } from "@/components/ui/donut-chart";
 import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
-import {
   CommandDialog,
   CommandInput,
   CommandList,
@@ -164,17 +158,21 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
               <>
                 <MetadataItem
                   variant="data-group"
-                  label="Property Value"
-                  icon={<Icon name="Globe" size="lg" />}
+                  label="Market"
+                  icon={<Icon name="Globe" size="xl" />}
                   dataValue="7.728.337"
                   dataUnit="DKK"
-                  labelIcon={<Icon name="HelpCircle" size="xs" />}
+                  badge={<Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>5%</Badge>}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="Estimated current market value based on automated valuation model"
                 />
                 <MetadataItem
                   variant="button"
-                  label="Last Updated"
-                  buttonText="View History"
-                  buttonIcon={<Icon name="Calendar" />}
+                  label="Calculated"
+                  buttonText="Upload Rent Roll"
+                  buttonIcon={<Icon name="FileUp" />}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="This value is calculated automatically based on available data"
                 />
               </>
             }
@@ -282,19 +280,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                 {/* NOISE – donut chart */}
                 <Tile>
                   <TileHeader>
-                    <div className="flex items-center gap-1">
-                      <TileTitle>Noise</TileTitle>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Icon name="HelpCircle" size="xs" className="text-[var(--color-content-muted)]" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Average noise level in the surrounding area, measured in decibels (dB).
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
+                    <TileTitle tooltip="Average noise level in the surrounding area, measured in decibels (dB).">Noise</TileTitle>
                   </TileHeader>
                   <TileContent className="items-center">
                     <DonutChart
@@ -315,19 +301,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                 {/* TRAFFIC – donut chart */}
                 <Tile>
                   <TileHeader>
-                    <div className="flex items-center gap-1">
-                      <TileTitle>Traffic</TileTitle>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Icon name="HelpCircle" size="xs" className="text-[var(--color-content-muted)]" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Percentage of time the area experiences heavy road traffic.
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
+                    <TileTitle tooltip="Percentage of time the area experiences heavy road traffic.">Traffic</TileTitle>
                   </TileHeader>
                   <TileContent className="items-center">
                     <DonutChart
@@ -348,19 +322,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                 {/* FLOOD RISK – 5-segment bar */}
                 <Tile>
                   <TileHeader>
-                    <div className="flex items-center gap-1">
-                      <TileTitle>Flood risk</TileTitle>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Icon name="HelpCircle" size="xs" className="text-[var(--color-content-muted)]" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Flood risk rating based on proximity to water bodies and local elevation data.
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
+                    <TileTitle tooltip="Flood risk rating based on proximity to water bodies and local elevation data.">Flood risk</TileTitle>
                   </TileHeader>
                   <TileContent className="flex flex-col justify-end gap-[var(--spacing-md)]">
                     {/* 5-segment risk bar */}
@@ -388,7 +350,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                     <Badge
                       variant="success"
                       fontVariant="sans"
-                      iconRight={<Icon name="HelpCircle" size="xs" />}
+                      tooltip="Flood risk is rated 1 out of 5 — low probability of flooding based on elevation and proximity to water."
                       className="self-start"
                     >
                       Low
@@ -399,19 +361,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                 {/* SOIL POLLUTION – value + status */}
                 <Tile>
                   <TileHeader>
-                    <div className="flex items-center gap-1">
-                      <TileTitle>Soil pollution</TileTitle>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Icon name="HelpCircle" size="xs" className="text-[var(--color-content-muted)]" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Concentration of contaminants in the soil, measured in milligrams per kilogram (mg/kg).
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
+                    <TileTitle tooltip="Concentration of contaminants in the soil, measured in milligrams per kilogram (mg/kg).">Soil pollution</TileTitle>
                   </TileHeader>
                   <TileContent className="flex flex-col justify-end gap-[var(--spacing-md)]">
                     <p className="ui-sans-regular-20 text-[var(--color-content-primary)]">
@@ -420,7 +370,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                     <Badge
                       variant="success"
                       fontVariant="sans"
-                      iconRight={<Icon name="HelpCircle" size="xs" />}
+                      tooltip="Soil contamination level of 300 mg/kg is within safe limits. No remediation required."
                       className="self-start"
                     >
                       Safe
@@ -433,19 +383,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
             {/* IMMEDIATE AREA tile */}
             <Tile className="w-full">
               <TileHeader>
-                <div className="flex items-center gap-1">
-                  <TileTitle>Immediate area</TileTitle>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Icon name="HelpCircle" size="xs" className="text-[var(--color-content-muted)]" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        Points of interest and services within the immediate vicinity of the property.
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
+                <TileTitle tooltip="Points of interest and services within the immediate vicinity of the property.">Immediate area</TileTitle>
               </TileHeader>
               <TileContent>
                 <div className="grid w-full grid-cols-1 gap-[var(--spacing-2xl)] sm:grid-cols-2 lg:grid-cols-3">
@@ -589,7 +527,11 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                         <Badge
                           variant={row.status === "Proposal" ? "warning" : "success"}
                           fontVariant="sans"
-                          iconRight={<Icon name="HelpCircle" size="xs" />}
+                          tooltip={
+                            row.status === "Proposal"
+                              ? "This plan is in the proposal stage and has not yet been formally adopted."
+                              : "This plan has been formally adopted and is in effect."
+                          }
                         >
                           {row.status}
                         </Badge>
@@ -609,19 +551,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
             {/* HISTORICAL MAP */}
             <Card className="w-full">
               <CardHeader className="pb-[var(--spacing-lg)] pr-[var(--spacing-2xl)]">
-                <div className="flex items-center gap-1">
-                  <CardTitle>Historical map</CardTitle>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Icon name="HelpCircle" size="xs" className="text-[var(--color-content-muted)]" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        Historical zoning maps and land-use records for this area.
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
+                <CardTitle tooltip="Historical zoning maps and land-use records for this area.">Historical map</CardTitle>
               </CardHeader>
               <CardContent>
                 <DataList className="w-full">
@@ -644,7 +574,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                       <Badge
                         variant="success"
                         fontVariant="sans"
-                        iconRight={<Icon name="HelpCircle" size="xs" />}
+                        tooltip="This historical map record has been formally adopted and is part of the official municipal archive."
                       >
                         Adopted
                       </Badge>
