@@ -1,5 +1,12 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import styles from "./tile.module.css";
 
 // Tile Root
@@ -58,18 +65,32 @@ TileHeaderActions.displayName = "TileHeaderActions";
 
 // Tile Title
 export interface TileTitleProps
-  extends React.HTMLAttributes<HTMLHeadingElement> {}
+  extends React.HTMLAttributes<HTMLHeadingElement> {
+  tooltip?: React.ReactNode;
+}
 
 export const TileTitle = React.forwardRef<
   HTMLParagraphElement,
   TileTitleProps
->(({ className, ...props }, ref) => {
+>(({ className, tooltip, children, ...props }, ref) => {
   return (
     <p
       ref={ref}
-      className={cn(styles.title, "ui-mono-13", className)}
+      className={cn(styles.title, styles.titleWithIcon, "ui-mono-13", className)}
       {...props}
-    />
+    >
+      {children}
+      {tooltip != null && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger render={<span className={styles.titleHelpIcon} />}>
+              <Icon name="HelpCircle" size="md" />
+            </TooltipTrigger>
+            <TooltipContent>{tooltip}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+    </p>
   );
 });
 

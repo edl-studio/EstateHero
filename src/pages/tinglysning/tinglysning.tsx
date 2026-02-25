@@ -6,6 +6,7 @@ import { Tile, TileHeader, TileTitle, TileContent } from "@/components/ui/tile";
 import { GlobalHeader } from "@/components/ui/global-header";
 import { PropertyHeader } from "@/components/ui/property-header";
 import { MetadataItem } from "@/components/ui/metadata-item";
+import { Badge } from "@/components/ui/badge";
 import { TabItem } from "@/components/ui/tab-item";
 import { Icon, type IconName } from "@/components/ui/icon";
 import {
@@ -153,17 +154,21 @@ export const TinglysningPage: React.FC<TinglysningPageProps> = ({
               <>
                 <MetadataItem
                   variant="data-group"
-                  label="Property Value"
-                  icon={<Icon name="Globe" size="lg" />}
+                  label="Market"
+                  icon={<Icon name="Globe" size="xl" />}
                   dataValue="7.728.337"
                   dataUnit="DKK"
-                  labelIcon={<Icon name="HelpCircle" size="xs" />}
+                  badge={<Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>5%</Badge>}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="Estimated current market value based on automated valuation model"
                 />
                 <MetadataItem
                   variant="button"
-                  label="Last Updated"
-                  buttonText="View History"
-                  buttonIcon={<Icon name="Calendar" />}
+                  label="Calculated"
+                  buttonText="Upload Rent Roll"
+                  buttonIcon={<Icon name="FileUp" />}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="This value is calculated automatically based on available data"
                 />
               </>
             }

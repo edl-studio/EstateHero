@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { TableCell } from "./table-cell";
 import { TableRow } from "@/components/ui/table-row";
 import { Input, InputTrailingActions } from "@/components/ui/input";
@@ -126,28 +126,21 @@ export const SummaryRow: Story = {
   },
 };
 
-/** Label column recipe: contentVariant="label" + Tooltip in children. */
+/** Label column recipe: contentVariant="label" + tooltip prop (icon-only trigger). */
 export const LabelWithTooltip: Story = {
   render: () => (
-    <TooltipProvider>
-      <table style={{ borderCollapse: "collapse", minWidth: 320 }}>
-        <tbody>
-          <tr>
-            <TableCell contentVariant="label">
-              <Tooltip>
-                <TooltipTrigger>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                    ESTIMATED VALUE
-                    <Icon name="HelpCircle" size="md" aria-hidden />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>Market-based estimate of the property value.</TooltipContent>
-              </Tooltip>
-            </TableCell>
-          </tr>
-        </tbody>
-      </table>
-    </TooltipProvider>
+    <table style={{ borderCollapse: "collapse", minWidth: 320 }}>
+      <tbody>
+        <tr>
+          <TableCell
+            contentVariant="label"
+            tooltip="Market-based estimate of the property value."
+          >
+            ESTIMATED VALUE
+          </TableCell>
+        </tr>
+      </tbody>
+    </table>
   ),
   parameters: {
     isFullTable: true,
@@ -209,16 +202,8 @@ export const RecipeTable: Story = {
             <tr>
               <TableCell>7.728.337</TableCell>
               <TableCell suffix=" DKK">7.728.337</TableCell>
-              <TableCell contentVariant="label">
-                <Tooltip>
-                  <TooltipTrigger>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                      ESTIMATED VALUE
-                      <Icon name="HelpCircle" size="md" aria-hidden />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>Market-based estimate.</TooltipContent>
-                </Tooltip>
+              <TableCell contentVariant="label" tooltip="Market-based estimate.">
+                ESTIMATED VALUE
               </TableCell>
             </tr>
             <tr>

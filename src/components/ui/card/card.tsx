@@ -1,5 +1,12 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import styles from "./card.module.css";
 
 // Card Root
@@ -37,16 +44,30 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 CardHeader.displayName = "CardHeader";
 
 // Card Title
-export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
+export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  tooltip?: React.ReactNode;
+}
 
 export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, tooltip, children, ...props }, ref) => {
     return (
       <h3
         ref={ref}
-        className={cn(styles.title, "ui-mono-13", className)}
+        className={cn(styles.title, tooltip != null && styles.titleWithIcon, "ui-mono-13", className)}
         {...props}
-      />
+      >
+        {children}
+        {tooltip != null && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger render={<span className={styles.titleHelpIcon} />}>
+                <Icon name="HelpCircle" size="md" />
+              </TooltipTrigger>
+              <TooltipContent>{tooltip}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </h3>
     );
   }
 );

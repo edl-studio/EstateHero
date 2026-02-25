@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ export interface ValueCardProps extends React.HTMLAttributes<HTMLDivElement> {
   illustration?: React.ReactNode;
   /** Label shown above the value (e.g. "Calculated value"). Rendered in uppercase. */
   label: string;
-  /** Tooltip content shown when hovering the label. When set, the label is wrapped in a tooltip. */
+  /** Tooltip content shown when hovering the help icon next to the label. When set, a HelpCircle icon is rendered as the sole trigger. */
   labelTooltip?: React.ReactNode;
   /** Main numeric or string value (display text or controlled input value). Ignored when valueSlot is set. */
   value: string;
@@ -30,7 +31,7 @@ export interface ValueCardProps extends React.HTMLAttributes<HTMLDivElement> {
   metric?: string;
   /** Optional icon shown before the value (default: Sparkles). Set to null to hide. */
   valueIcon?: React.ReactNode;
-  /** Optional info icon after the label (e.g. for tooltip trigger). Set to null to hide. */
+  /** Optional custom icon after the label. Rendered only when labelTooltip is not set. */
   infoIcon?: React.ReactNode;
   /** Optional content below the value row */
   children?: React.ReactNode;
@@ -60,7 +61,7 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
       value,
       metric,
       valueIcon = <Icon name="Sparkles" size="lg" />,
-      infoIcon = <Icon name="HelpCircle" size="sm" />,
+      infoIcon,
       children,
       valueSlot,
       onInputChange,
@@ -136,29 +137,19 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
         )}
 
         <div className={styles.labelRow}>
+          <span className={cn(styles.label, "ui-mono-13")}>{label}</span>
           {labelTooltip != null && labelTooltip !== "" ? (
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <span
-                    className={cn(styles.label, styles.labelWithTooltip, "ui-mono-13")}
-                  />
-                }
-              >
-                {label}
-              </TooltipTrigger>
-              <TooltipContent>{labelTooltip}</TooltipContent>
-            </Tooltip>
-          ) : (
-            <span className={cn(styles.label, "ui-mono-13")}>
-              {label}
-            </span>
-          )}
-          {infoIcon != null && (
-            <span className={styles.infoIcon} aria-hidden>
-              {infoIcon}
-            </span>
-          )}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger render={<span className={styles.helpIcon} />}>
+                  <Icon name="HelpCircle" size="md" />
+                </TooltipTrigger>
+                <TooltipContent>{labelTooltip}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : infoIcon != null ? (
+            <span className={styles.infoIcon} aria-hidden>{infoIcon}</span>
+          ) : null}
         </div>
 
         <div

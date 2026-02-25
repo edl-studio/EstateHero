@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { MetadataItem } from "./metadata-item";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icon";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { TrendingUp, Upload } from "lucide-react";
 
 const meta: Meta<typeof MetadataItem> = {
@@ -43,12 +44,17 @@ Metadata item component displays property or data information in two variants:
   },
 };
 
-export default meta;
+export default {
+  ...meta,
+  decorators: [
+    (Story: () => JSX.Element) => (
+      <TooltipProvider>
+        <Story />
+      </TooltipProvider>
+    ),
+  ],
+};
 type Story = StoryObj<typeof MetadataItem>;
-
-const HelpCircleIcon = ({ className }: { className?: string }) => (
-  <Icon name="HelpCircle" className={className} />
-);
 
 // Globe Icon Component (for the example)
 const GlobeIcon = ({ className }: { className?: string }) => (
@@ -85,7 +91,8 @@ export const DataGroup: Story = {
   args: {
     variant: "data-group",
     label: "MARKET",
-    labelIcon: <HelpCircleIcon className="w-[14px] h-[14px]" />,
+    labelIcon: <Icon name="HelpCircle" size="md" />,
+    labelIconTooltip: "Estimated market value based on comparable sales",
     icon: <GlobeIcon className="w-5 h-5 text-[#10B981]" />,
     dataValue: "7.728.337",
     dataUnit: "DKK",
@@ -201,7 +208,8 @@ export const ButtonWithLabelIcon: Story = {
   args: {
     variant: "button",
     label: "CALCULATED",
-    labelIcon: <HelpCircleIcon className="w-[14px] h-[14px]" />,
+    labelIcon: <Icon name="HelpCircle" size="md" />,
+    labelIconTooltip: "Value is calculated automatically based on available data",
     buttonText: "RECALCULATE",
     onButtonClick: () => console.log("Recalculate clicked"),
   },
@@ -224,7 +232,8 @@ export const AllVariants: Story = {
       <MetadataItem
         variant="data-group"
         label="MARKET"
-        labelIcon={<HelpCircleIcon className="w-[14px] h-[14px]" />}
+        labelIcon={<Icon name="HelpCircle" size="md" />}
+        labelIconTooltip="Estimated market value based on comparable sales"
         icon={<GlobeIcon className="w-5 h-5 text-[#10B981]" />}
         dataValue="7.728.337"
         dataUnit="DKK"
@@ -258,7 +267,8 @@ export const DataGroupExamples: Story = {
       <MetadataItem
         variant="data-group"
         label="MARKET VALUE"
-        labelIcon={<HelpCircleIcon className="w-[14px] h-[14px]" />}
+        labelIcon={<Icon name="HelpCircle" size="md" />}
+        labelIconTooltip="Estimated market value based on comparable sales"
         icon={<GlobeIcon className="w-5 h-5 text-[#10B981]" />}
         dataValue="7.728.337"
         dataUnit="DKK"
@@ -310,7 +320,8 @@ export const ButtonExamples: Story = {
       <MetadataItem
         variant="button"
         label="CALCULATED"
-        labelIcon={<HelpCircleIcon className="w-[14px] h-[14px]" />}
+        labelIcon={<Icon name="HelpCircle" size="md" />}
+        labelIconTooltip="Value is calculated automatically based on available data"
         buttonText="UPLOAD RENT ROLL"
         buttonIcon={<Upload className="w-4 h-4" />}
         onButtonClick={() => console.log("Upload rent roll")}
@@ -331,7 +342,8 @@ export const ButtonExamples: Story = {
       <MetadataItem
         variant="button"
         label="DATA"
-        labelIcon={<HelpCircleIcon className="w-[14px] h-[14px]" />}
+        labelIcon={<Icon name="HelpCircle" size="md" />}
+        labelIconTooltip="Import external data to populate this field"
         buttonText="IMPORT DATA"
         onButtonClick={() => console.log("Import data")}
       />
@@ -354,7 +366,8 @@ export const Playground: Story = {
   args: {
     variant: "data-group",
     label: "MARKET",
-    labelIcon: <HelpCircleIcon className="w-[14px] h-[14px]" />,
+    labelIcon: <Icon name="HelpCircle" size="md" />,
+    labelIconTooltip: "Estimated market value based on comparable sales",
     icon: <GlobeIcon className="w-5 h-5 text-[#10B981]" />,
     dataValue: "7.728.337",
     dataUnit: "DKK",

@@ -56,7 +56,7 @@
 .labelRow {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs); /* 4px */
   height: 1rem; /* 16px - fixed so tooltip wrapper does not affect card height */
 }
 
@@ -67,12 +67,22 @@
   /* Typography set in component: ui-mono-13 */
 }
 
-.labelWithTooltip {
-  cursor: pointer;
+.helpIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-secondary);
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.helpIcon svg {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }
 
 .infoIcon {
-  color: var(--color-content-muted);
+  color: var(--color-content-secondary);
   flex-shrink: 0;
 }
 
@@ -100,7 +110,7 @@
 .valueRow {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: var(--spacing-sm);
 }
 

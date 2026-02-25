@@ -21,10 +21,15 @@
 
 .helpIcon {
   display: inline-flex;
-  width: var(--text-sm);
-  height: var(--text-sm);
-  aspect-ratio: 1/1;
-  color: #9CA3AF; /* tailwind gray-400 */
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-secondary);
+  cursor: default;
+}
+
+.helpIcon svg {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }
 
 /* ============================================
@@ -41,10 +46,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  aspect-ratio: 1/1;
-  color: #10B981; /* tailwind green-500 */
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+  color: var(--color-green);
 }
 
 .dataContent {

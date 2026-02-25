@@ -42,6 +42,25 @@
   /* Typography: ui-mono-13 */
 }
 
+.titleWithIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.titleHelpIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-secondary);
+  cursor: default;
+}
+
+.titleHelpIcon svg {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
 /* ============================================
    CARD CONTENT
    ============================================ */

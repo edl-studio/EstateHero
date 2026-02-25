@@ -80,7 +80,7 @@
 
 /* Meta Label - Small uppercase label */
 .metaLabel {
-  color: var(--color-content-muted);
+  color: var(--color-content-secondary);
   text-transform: uppercase;
   /* Typography: ui-mono-14 */
 }

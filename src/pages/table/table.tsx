@@ -9,9 +9,7 @@ import {
 import { TableHeader } from "@/components/ui/table-header";
 import { TableCell } from "@/components/ui/table-cell";
 import { Input, InputTrailingActions } from "@/components/ui/input";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Icon } from "@/components/ui/icon";
 import { useIsMobile } from "@/lib/use-media-query";
 
 /** Row for the financial comparison table (Figma design) */
@@ -222,16 +220,9 @@ export const TablePage: React.FC = () => {
         <TableCell
           contentVariant="label"
           className={stickyFirstColClass}
+          tooltip={row.original.labelTooltip}
         >
-          <Tooltip>
-            <TooltipTrigger>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                {row.original.label}
-                <Icon name="HelpCircle" size="md" aria-hidden />
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>{row.original.labelTooltip ?? ""}</TooltipContent>
-          </Tooltip>
+          {row.original.label}
         </TableCell>
       ),
     }),

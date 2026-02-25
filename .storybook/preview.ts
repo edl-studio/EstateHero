@@ -49,6 +49,21 @@ const preview: Preview = {
     },
 
     actions: { argTypesRegex: '^on[A-Z].*' },
+
+    viewport: {
+      viewports: {
+        desktop: {
+          name: 'Desktop (1440px)',
+          styles: { width: '1440px', height: '900px' },
+          type: 'desktop',
+        },
+        mobile: {
+          name: 'Mobile (375px)',
+          styles: { width: '375px', height: '812px' },
+          type: 'mobile',
+        },
+      },
+    },
   },
 };
 

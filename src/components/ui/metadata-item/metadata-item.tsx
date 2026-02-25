@@ -1,5 +1,12 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import styles from "./metadata-item.module.css";
 
@@ -9,9 +16,16 @@ export interface MetadataItemBaseProps extends React.HTMLAttributes<HTMLDivEleme
    */
   label: string;
   /**
-   * Optional icon displayed next to the label
+   * Optional icon displayed next to the label. When combined with labelIconTooltip,
+   * the icon will be wrapped in a tooltip. Defaults to the HelpCircle icon when
+   * labelIconTooltip is provided without an explicit labelIcon.
    */
   labelIcon?: React.ReactNode;
+  /**
+   * Tooltip text shown when hovering the label icon. Also causes a HelpCircle icon
+   * to be rendered automatically if no labelIcon is provided.
+   */
+  labelIconTooltip?: string;
 }
 
 export interface MetadataItemDataGroupProps extends MetadataItemBaseProps {
@@ -60,16 +74,33 @@ export type MetadataItemProps = MetadataItemDataGroupProps | MetadataItemButtonP
 
 export const MetadataItem = React.forwardRef<HTMLDivElement, MetadataItemProps>(
   (props, ref) => {
-    const { label, labelIcon, className, ...rest } = props;
+    const { label, labelIcon, labelIconTooltip, className, ...rest } = props;
 
     const classNames = [styles.metadataItem, className].filter(Boolean).join(" ");
+
+    const resolvedIcon = labelIcon ?? (labelIconTooltip ? (
+      <Icon name="HelpCircle" size="md" />
+    ) : null);
+
+    const labelIconNode = labelIconTooltip ? (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger render={<span className={styles.helpIcon} />}>
+            {resolvedIcon}
+          </TooltipTrigger>
+          <TooltipContent>{labelIconTooltip}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    ) : resolvedIcon ? (
+      <span className={styles.helpIcon}>{resolvedIcon}</span>
+    ) : null;
 
     return (
       <div ref={ref} className={classNames} {...rest}>
         {/* Label */}
         <div className={cn(styles.metaLabel, "ui-mono-14")}>
           <span>{label}</span>
-          {labelIcon && <span className={styles.helpIcon}>{labelIcon}</span>}
+          {labelIconNode}
         </div>
 
         {/* Content based on variant */}

@@ -183,7 +183,7 @@ export const WithIcons: Story = {
       <Badge variant="negative" iconLeft={<Icon name="X" size="xs" />}>
         Declined
       </Badge>
-      <Badge variant="warning" iconLeft={<Icon name="TriangleAlert" size="xs" />}>
+      <Badge variant="warning" iconLeft={<Icon name="AlertTriangle" size="xs" />}>
         Alert
       </Badge>
       <Badge variant="info" iconLeft={<Icon name="Star" size="xs" />}>

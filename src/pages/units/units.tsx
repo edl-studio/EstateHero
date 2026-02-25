@@ -6,6 +6,7 @@ import { Tile, TileHeader, TileHeaderActions, TileTitle, TileContent } from "@/c
 import { GlobalHeader } from "@/components/ui/global-header";
 import { PropertyHeader } from "@/components/ui/property-header";
 import { MetadataItem } from "@/components/ui/metadata-item";
+import { Badge } from "@/components/ui/badge";
 import { TabItem } from "@/components/ui/tab-item";
 import { Icon, type IconName } from "@/components/ui/icon";
 import {
@@ -16,6 +17,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import { ValueCard } from "@/components/ui/value-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { TableHeader } from "@/components/ui/table-header";
@@ -171,17 +173,21 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
               <>
                 <MetadataItem
                   variant="data-group"
-                  label="Property Value"
-                  icon={<Icon name="Globe" size="lg" />}
+                  label="Market"
+                  icon={<Icon name="Globe" size="xl" />}
                   dataValue="7.728.337"
                   dataUnit="DKK"
-                  labelIcon={<Icon name="HelpCircle" size="xs" />}
+                  badge={<Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>5%</Badge>}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="Estimated current market value based on automated valuation model"
                 />
                 <MetadataItem
                   variant="button"
-                  label="Last Updated"
-                  buttonText="View History"
-                  buttonIcon={<Icon name="Calendar" />}
+                  label="Calculated"
+                  buttonText="Upload Rent Roll"
+                  buttonIcon={<Icon name="FileUp" />}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="This value is calculated automatically based on available data"
                 />
               </>
             }
@@ -249,6 +255,41 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
               <TabItem isActive={false} onClick={() => navigate(`/property/${propertyId}/neighborhood`)}>
                 Neighborhood
               </TabItem>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: "18px",
+                width: "100%",
+              }}
+            >
+              <ValueCard
+                label="Residential units"
+                labelTooltip="Number of residential units in the property."
+                value="6"
+                valueIcon={<Icon name="Home" size="xl" className="text-[var(--color-content-accent)]" />}
+              />
+              <ValueCard
+                label="Business units"
+                labelTooltip="Number of commercial or business units in the property."
+                value="6"
+                valueIcon={<Icon name="Building" size="xl" className="text-[var(--color-green)]" />}
+              />
+              <ValueCard
+                label="Living area"
+                labelTooltip="Total living area across all residential units."
+                value="336"
+                valueIcon={null}
+                metric="M²"
+              />
+              <ValueCard
+                label="Commercial space"
+                labelTooltip="Total commercial floor space in the property."
+                value="0"
+                valueIcon={null}
+              />
             </div>
 
             <div

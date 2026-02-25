@@ -2,7 +2,12 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Icon } from "@/components/ui/icon";
 import styles from "./table-header.module.css";
 
@@ -100,12 +105,14 @@ export const TableHeader = React.forwardRef<
           <>
             <span className={styles.label}>{label}</span>
             {tooltipContent != null && (
-              <Tooltip>
-                <TooltipTrigger render={<span className={styles.iconSlot} aria-hidden />}>
-                  <Icon name="HelpCircle" size="md" />
-                </TooltipTrigger>
-                <TooltipContent>{tooltipContent}</TooltipContent>
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger render={<span className={cn(styles.iconSlot, styles.helpIconSlot)} />}>
+                    <Icon name="HelpCircle" size="md" />
+                  </TooltipTrigger>
+                  <TooltipContent>{tooltipContent}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
           </>
         )}

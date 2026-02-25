@@ -90,6 +90,22 @@
   color: var(--color-content-primary);
 }
 
+/* When tooltip prop is provided: row layout so icon sits beside the text */
+.contentWithTooltip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* The HelpCircle icon trigger — only this element fires the tooltip */
+.tooltipIconSlot {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--color-content-secondary);
+  cursor: default;
+}
+
 /* Label-style content (recipe: label column with tooltip) */
 .contentLabel {
   font-family: var(--font-mono);

@@ -58,6 +58,10 @@
   color: var(--color-content-muted);
 }
 
+.themeLight .helpIconSlot {
+  color: var(--color-content-primary);
+}
+
 /* Dark theme: dark background, white text and icons */
 .themeDark .root {
   background-color: var(--color-surface-inverse);
@@ -65,6 +69,10 @@
 }
 
 .themeDark .iconSlot {
+  color: var(--color-content-white);
+}
+
+.themeDark .helpIconSlot {
   color: var(--color-content-white);
 }
 

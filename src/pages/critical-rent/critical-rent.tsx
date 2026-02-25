@@ -6,6 +6,7 @@ import { Tile, TileHeader, TileHeaderActions, TileTitle, TileContent } from "@/c
 import { GlobalHeader } from "@/components/ui/global-header";
 import { PropertyHeader } from "@/components/ui/property-header";
 import { MetadataItem } from "@/components/ui/metadata-item";
+import { Badge } from "@/components/ui/badge";
 import { TabItem } from "@/components/ui/tab-item";
 import { Icon, type IconName } from "@/components/ui/icon";
 import {
@@ -16,7 +17,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { ValueCard } from "@/components/ui/value-card";
 import { MortgageRateCard } from "@/components/ui/mortgage-rate-card";
 import { InfoCard } from "@/components/ui/info-card";
@@ -24,7 +25,6 @@ import { InputTrailingActions } from "@/components/ui/input";
 import { TableHeader } from "@/components/ui/table-header";
 import { TableRow } from "@/components/ui/table-row";
 import { TableCell } from "@/components/ui/table-cell";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { cn } from "@/lib/utils";
 
@@ -169,18 +169,22 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
               <>
                 <MetadataItem
                   variant="data-group"
-                  label="Property Value"
-                  icon={<Icon name="Globe" size="lg" />}
+                  label="Market"
+                  icon={<Icon name="Globe" size="xl" />}
                   dataValue="7.728.337"
                   dataUnit="DKK"
-                  labelIcon={<Icon name="HelpCircle" size="xs" />}
+                  badge={<Badge variant="positive" iconLeft={<Icon name="Chart" size="xs" />}>5%</Badge>}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="Estimated current market value based on automated valuation model"
                 />
 
                 <MetadataItem
                   variant="button"
-                  label="Last Updated"
-                  buttonText="View History"
-                  buttonIcon={<Icon name="Calendar" />}
+                  label="Calculated"
+                  buttonText="Upload Rent Roll"
+                  buttonIcon={<Icon name="FileUp" />}
+                  labelIcon={<Icon name="HelpCircle" size="md" />}
+                  labelIconTooltip="This value is calculated automatically based on available data"
                 />
               </>
             }
@@ -252,17 +256,9 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
 
             <Tile className="w-full">
               <TileHeader>
-                <span style={{ display: "flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                  <TileTitle>loan duration comparison</TileTitle>
-                  <Tooltip>
-                    <TooltipTrigger render={<span style={{ display: "inline-flex", cursor: "help" }} aria-label="Help" />}>
-                      <Icon name="HelpCircle" size="xs" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      Compare critical rent across different loan durations.
-                    </TooltipContent>
-                  </Tooltip>
-                </span>
+                <TileTitle tooltip="Compare critical rent across different loan durations.">
+                  loan duration comparison
+                </TileTitle>
                 <TileHeaderActions>
                   <Button variant="inline" size="md" iconLeft={<Icon name="Columns" size="md" />}>
                     COLUMNS
@@ -356,64 +352,32 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                       </thead>
                       <tbody>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                              ESTIMATED VALUE
-                              <Tooltip>
-                                <TooltipTrigger render={<span style={{ display: "inline-flex", cursor: "help" }} aria-label="Help" />}>
-                                  <Icon name="HelpCircle" size="xs" />
-                                </TooltipTrigger>
-                                <TooltipContent>Estimated property value.</TooltipContent>
-                              </Tooltip>
-                            </span>
+                          <TableCell align="left" contentVariant="label" tooltip="Estimated property value.">
+                            ESTIMATED VALUE
                           </TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">7.728.337</TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">5.080.421</TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">7.728.337</TableCell>
                         </TableRow>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                              MAX MORTAGE LOAD
-                              <Tooltip>
-                                <TooltipTrigger render={<span style={{ display: "inline-flex", cursor: "help" }} aria-label="Help" />}>
-                                  <Icon name="HelpCircle" size="xs" />
-                                </TooltipTrigger>
-                                <TooltipContent>Maximum mortgage load.</TooltipContent>
-                              </Tooltip>
-                            </span>
+                          <TableCell align="left" contentVariant="label" tooltip="Maximum mortgage load.">
+                            MAX MORTAGE LOAD
                           </TableCell>
                           <TableCell colSpan={2} suffix="%" align="right">4,70</TableCell>
                           <TableCell colSpan={2} suffix="%" align="right">4,75</TableCell>
                           <TableCell colSpan={2} suffix="%" align="right">4,65</TableCell>
                         </TableRow>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                              NET RENT
-                              <Tooltip>
-                                <TooltipTrigger render={<span style={{ display: "inline-flex", cursor: "help" }} aria-label="Help" />}>
-                                  <Icon name="HelpCircle" size="xs" />
-                                </TooltipTrigger>
-                                <TooltipContent>Net rent.</TooltipContent>
-                              </Tooltip>
-                            </span>
+                          <TableCell align="left" contentVariant="label" tooltip="Net rent.">
+                            NET RENT
                           </TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">386.417</TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">254.021</TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">465.120</TableCell>
                         </TableRow>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--spacing-xs)" }}>
-                              CASH DEPOSIT
-                              <Tooltip>
-                                <TooltipTrigger render={<span style={{ display: "inline-flex", cursor: "help" }} aria-label="Help" />}>
-                                  <Icon name="HelpCircle" size="xs" />
-                                </TooltipTrigger>
-                                <TooltipContent>Cash deposit.</TooltipContent>
-                              </Tooltip>
-                            </span>
+                          <TableCell align="left" contentVariant="label" tooltip="Cash deposit.">
+                            CASH DEPOSIT
                           </TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">195.000</TableCell>
                           <TableCell colSpan={2} suffix=" DKK" align="right">210.000</TableCell>
@@ -429,7 +393,7 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                           <TableHeader theme="light" label="30 YEARS" align="right" />
                         </tr>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">CALCULATED</TableCell>
+                          <TableCell align="left" contentVariant="label" tooltip="Critical rent calculated from loan inputs.">CALCULATED</TableCell>
                           <TableCell align="right" prefix={<Icon name="Check" size="sm" className="text-[var(--color-green)]" />} suffix=" DKK">4.950.000</TableCell>
                           <TableCell align="right" prefix={<Icon name="Check" size="sm" className="text-[var(--color-green)]" />} suffix=" DKK">5.300.000</TableCell>
                           <TableCell align="right" prefix={<Icon name="X" size="sm" className="text-[var(--color-destructive)]" />} suffix=" DKK">3.250.000</TableCell>
@@ -438,7 +402,7 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                           <TableCell align="right" prefix={<Icon name="X" size="sm" className="text-[var(--color-destructive)]" />} suffix=" DKK">6.250.000</TableCell>
                         </TableRow>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">MAX. LOAN</TableCell>
+                          <TableCell align="left" contentVariant="label" tooltip="Maximum loan amount based on property value.">MAX. LOAN</TableCell>
                           <TableCell suffix=" DKK" align="right">6.030.000</TableCell>
                           <TableCell suffix=" DKK" align="right">6.030.000</TableCell>
                           <TableCell suffix=" DKK" align="right">4.064.000</TableCell>
@@ -447,7 +411,7 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                           <TableCell suffix=" DKK" align="right">6.064.000</TableCell>
                         </TableRow>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">MAX. MORTAGE (%)</TableCell>
+                          <TableCell align="left" contentVariant="label" tooltip="Maximum mortgage as a percentage of property value.">MAX. MORTAGE (%)</TableCell>
                           <TableCell suffix="%" align="right">78</TableCell>
                           <TableCell suffix="%" align="right">78</TableCell>
                           <TableCell suffix="%" align="right">80</TableCell>
@@ -456,7 +420,7 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                           <TableCell suffix="%" align="right">78,5</TableCell>
                         </TableRow>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">PERFORMANCE (%)</TableCell>
+                          <TableCell align="left" contentVariant="label" tooltip="Loan performance as a percentage.">PERFORMANCE (%)</TableCell>
                           <TableCell suffix="%" align="right">71</TableCell>
                           <TableCell suffix="%" align="right">73</TableCell>
                           <TableCell suffix="%" align="right">74</TableCell>
@@ -465,7 +429,7 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                           <TableCell suffix="%" align="right">72</TableCell>
                         </TableRow>
                         <TableRow className="border-b-inset">
-                          <TableCell align="left" contentVariant="label">MORTAGE INTEREST RATE</TableCell>
+                          <TableCell align="left" contentVariant="label" tooltip="Annual interest rate applied to the mortgage.">MORTAGE INTEREST RATE</TableCell>
                           <TableCell suffix="%" align="right">3,85</TableCell>
                           <TableCell suffix="%" align="right">3,95</TableCell>
                           <TableCell suffix="%" align="right">4,05</TableCell>

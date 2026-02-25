@@ -2,6 +2,13 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import styles from "./table-cell.module.css";
 
 export type TableCellAlign = "left" | "center" | "right";
@@ -53,6 +60,11 @@ export interface TableCellProps
    * Content typography: default (sans/base), label (mono/xs/uppercase for label column recipe).
    */
   contentVariant?: TableCellContentVariant;
+  /**
+   * When provided, a HelpCircle icon is rendered next to the content and this text
+   * is shown as a tooltip on that icon only — not on the label text.
+   */
+  tooltip?: React.ReactNode;
 }
 
 export const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
@@ -69,19 +81,33 @@ export const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
       children,
       contentWidth = "auto",
       contentVariant = "default",
+      tooltip,
       ...props
     },
     ref
   ) => {
     const Component = renderAs ?? (asHeader ? "th" : "td");
     const hasSlots = prefix != null || suffix != null;
+    const hasTooltip = tooltip != null;
+
+    const tooltipIconNode = hasTooltip ? (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger render={<span className={styles.tooltipIconSlot} />}>
+            <Icon name="HelpCircle" size="md" />
+          </TooltipTrigger>
+          <TooltipContent>{tooltip}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    ) : null;
 
     const contentNode = (
       <span
         className={cn(
           styles.content,
-          !hasSlots && styles.contentNoSlot,
+          !hasSlots && !hasTooltip && styles.contentNoSlot,
           hasSlots && styles.contentWithSlots,
+          hasTooltip && styles.contentWithTooltip,
           tone === "muted" && styles.toneMuted,
           tone === "strong" && styles.toneStrong,
           contentVariant === "label" && styles.contentLabel,
@@ -100,9 +126,13 @@ export const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
             {suffix != null && (
               <span className={styles.contentSuffix}>{suffix}</span>
             )}
+            {tooltipIconNode}
           </>
         ) : (
-          children
+          <>
+            {children}
+            {tooltipIconNode}
+          </>
         )}
       </span>
     );
