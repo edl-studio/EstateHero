@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Input as BaseInput } from "@base-ui-components/react/input";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/lib/use-media-query";
 import styles from "./input.module.css";
 
 export interface InputProps
@@ -89,6 +90,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [isFocused, setIsFocused] = React.useState(false);
     const [hasInteracted, setHasInteracted] = React.useState(false);
     const [measureValue, setMeasureValue] = React.useState("");
+    const isMobile = useIsMobile();
 
     const isMetricWithTrailingSlot = !!(trailingSlot && metric);
     const isRightAlignWithMetricSlot = align === "right" && isMetricWithTrailingSlot;
@@ -171,7 +173,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         : size === "mobile"
           ? styles.sizeMobile
           : styles.sizeDefault;
-    const textClass = fontVariant === "mono" ? "ui-mono-20" : "ui-sans-regular-16";
+    const textClass =
+      fontVariant === "mono" ? "ui-mono-20" : "ui-sans-regular-16";
+    const monoVariantClass = fontVariant === "mono" ? styles.inputMonoVariant : undefined;
     const hasTrailing = trailingSlot ?? (!!trailingIcon);
     const hasMetric = !!metric;
     const alignClass = align === "right" ? styles.inputAlignRight : undefined;
@@ -182,7 +186,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <BaseInput
           ref={ref}
           type={type}
-          className={cn(styles.input, textClass, variantClass, sizeClass, alignClass, className)}
+          className={cn(styles.input, textClass, variantClass, sizeClass, alignClass, monoVariantClass, className)}
           onKeyDown={handleKeyDown}
           {...props}
         />
@@ -232,6 +236,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             variantClass,
             sizeClass,
             alignClass,
+            monoVariantClass,
             leadingIcon && styles.hasLeadingIcon,
             trailingSlot && styles.hasTrailingSlot,
             trailingIcon && !trailingSlot && styles.hasTrailingIcon,
@@ -239,7 +244,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className
           )}
           style={
-            isRightAlignWithMetricSlot && !isFocused && metricRightPadding !== null
+            !isMobile &&
+            isRightAlignWithMetricSlot &&
+            !isFocused &&
+            metricRightPadding !== null
               ? { paddingRight: `${metricRightPadding}px` }
               : undefined
           }

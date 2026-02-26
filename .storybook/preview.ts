@@ -58,6 +58,11 @@ const preview: Preview = {
           type: 'desktop',
         },
         mobile: {
+          name: 'Mobile (358px)',
+          styles: { width: '358px', height: '812px' },
+          type: 'mobile',
+        },
+        mobile375: {
           name: 'Mobile (375px)',
           styles: { width: '375px', height: '812px' },
           type: 'mobile',

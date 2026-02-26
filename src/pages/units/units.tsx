@@ -26,6 +26,7 @@ import { TableRow } from "@/components/ui/table-row";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 import { cn } from "@/lib/utils";
+import { usePropertyNavigation } from "@/lib/use-property-navigation";
 
 import magnifyingGraphic from "@/assets/images/magnifying.png";
 
@@ -102,6 +103,7 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
   }, []);
 
   const propertyId = overridePropertyId || routePropertyId || "";
+  const { navigateBack } = usePropertyNavigation(propertyId);
   const propertyItem = React.useMemo(() => getPropertyById(propertyId), [propertyId]);
   const propertyData = React.useMemo(() => {
     if (overrideAddress && overrideCity && overridePropertyType) {
@@ -139,33 +141,27 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
   }, [searchQuery]);
 
   return (
-    <div className={cn("min-h-screen bg-[var(--color-surface)]", className)}>
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <section
-          style={{
-            display: "flex",
-            width: "100%",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <GlobalHeader
-            variant="search"
-            avatarSrc="https://i.pravatar.cc/150?img=12"
-            avatarAlt="User"
-            avatarFallback="JD"
-            searchPlaceholder="SEARCH PROPERTIES"
-            onSearchClick={() => setIsSearchModalOpen(true)}
-            onLogoClick={() => navigate("/")}
-          />
+    <div
+      className={cn(
+        "flex min-h-screen min-w-0 max-w-full flex-col items-center overflow-x-hidden bg-[var(--color-surface)]",
+        className
+      )}
+    >
+      <section className="flex min-w-0 w-full max-w-full flex-col items-center overflow-x-hidden mb-[var(--spacing-xl)]">
+        <GlobalHeader
+          variant="search"
+          avatarSrc="https://i.pravatar.cc/150?img=12"
+          avatarAlt="User"
+          avatarFallback="JD"
+          searchPlaceholder="SEARCH PROPERTIES"
+          onSearchClick={() => setIsSearchModalOpen(true)}
+          onLogoClick={navigateBack}
+          onBackClick={navigateBack}
+          mobileCenterTitle="Units"
+          onDownloadClick={() => {}}
+        />
 
+        <div className="hidden min-w-0 w-full max-w-full px-4 pt-5 pb-4 md:flex md:flex-col md:items-center md:px-0 md:pt-5 md:pb-4">
           <PropertyHeader
             metaLabel={metaLabel}
             heading={`${address}, ${city}`}
@@ -196,7 +192,7 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
                 <Button variant="outline" iconLeft={<Icon name="Bookmark" />}>
                   Save
                 </Button>
-                <Button variant="outline" iconLeft={<Icon name="Share2" />}>
+                <Button variant="outline" iconLeft={<Icon name="Share2" />} data-hide-on-mobile>
                   Share
                 </Button>
                 <Button variant="primary" iconLeft={<Icon name="Download" />}>
@@ -205,28 +201,12 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
               </>
             }
           />
-        </section>
+        </div>
+      </section>
 
-        <section
-          style={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "center",
-            padding: "var(--spacing-6xl) 0",
-          }}
-        >
-          <div
-            className="px-4 md:px-0"
-            style={{
-              display: "flex",
-              width: "100%",
-              maxWidth: "1312px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "var(--spacing-2xl)",
-            }}
-          >
-            <div style={{ display: "flex", gap: "var(--spacing-sm)", flexWrap: "wrap" }}>
+      <section className="flex min-w-0 w-full max-w-full justify-center overflow-x-hidden pt-0 pb-[var(--spacing-6xl)]">
+        <div className="flex min-w-0 w-full max-w-full flex-col items-start gap-[var(--spacing-lg)] px-4 md:max-w-[1312px] md:px-0">
+          <div className="hidden flex-wrap gap-[var(--spacing-sm)] md:flex">
               <TabItem
                 isActive={false}
                 onClick={() => navigate(`/property/${propertyId}`)}
@@ -261,7 +241,7 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(4, 1fr)",
-                gap: "18px",
+                gap: "16px",
                 width: "100%",
               }}
             >
@@ -485,7 +465,6 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
             </Tile>
           </div>
         </section>
-      </div>
 
       <CommandDialog open={isSearchModalOpen} onOpenChange={setIsSearchModalOpen}>
         <CommandInput

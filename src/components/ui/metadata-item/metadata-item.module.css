@@ -7,6 +7,12 @@
   gap: var(--spacing-sm);
 }
 
+@media (max-width: 767px) {
+  .metadataItem {
+    gap: var(--spacing-xs); /* 4px on mobile */
+  }
+}
+
 /* ============================================
    META LABEL
    ============================================ */

@@ -138,9 +138,14 @@
     --transition-opacity: opacity 200ms;
   }
   
+  html {
+    overflow-x: hidden;
+  }
+
   body {
     background-color: var(--color-surface);
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
 }
 
@@ -358,5 +363,11 @@
       height: 44px !important;
       min-height: 44px !important;
     }
+
+    /* PropertyHome nav list: show all columns (label + chevron), do not hide last 2 */
+    [data-property-home-nav] li > *:nth-last-child(-n + 2) {
+      display: revert;
+    }
   }
 }
+

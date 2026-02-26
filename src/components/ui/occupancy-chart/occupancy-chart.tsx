@@ -80,10 +80,10 @@ export const OccupancyChart = React.forwardRef<HTMLDivElement, OccupancyChartPro
         className={cn("flex flex-col gap-3 items-center w-full", className)}
         {...props}
       >
-        {/* Progress circle container - fixed height for alignment */}
-        <div className="flex flex-col items-center relative h-[150px] w-full">
-          {/* Pie chart - 300px × 150px, centered naturally by flex */}
-          <div className="relative w-[300px] h-[150px] shrink-0">
+        {/* Progress circle container - fixed height for alignment; chart scales down on narrow viewports */}
+        <div className="flex min-w-0 flex-col items-center relative h-[150px] w-full">
+          {/* Pie chart - up to 300×150px, shrinks on mobile to avoid overflow */}
+          <div className="relative h-[150px] min-w-0 w-full max-w-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                 <Pie

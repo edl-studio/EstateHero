@@ -28,8 +28,12 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Tabs, TabsList, TabsTab, TabsPanel } from "@/components/ui/inline-tabs";
+import { Select as BaseSelect } from "@base-ui-components/react/select";
 
 import { cn } from "@/lib/utils";
+import { usePropertyNavigation } from "@/lib/use-property-navigation";
+import { useIsMobile } from "@/lib/use-media-query";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 
 import { TablePage } from "@/pages/table/table";
 
@@ -84,6 +88,25 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
   const [activeTab, setActiveTab] = React.useState("comparison");
   const [simulationYield, setSimulationYield] = React.useState("5");
   const [operatingExpensesTotal, setOperatingExpensesTotal] = React.useState("100.783");
+
+  const isMobile = useIsMobile();
+  type MobileInputSheetContext =
+    | "operatingExpensesTotal"
+    | "simulationYield"
+    | { type: "calculatedRental"; unit: string; field: "monthly" | "annual" | "perM2" }
+    | null;
+  const [mobileInputSheetOpen, setMobileInputSheetOpen] = React.useState(false);
+  const [mobileInputSheetContext, setMobileInputSheetContext] =
+    React.useState<MobileInputSheetContext>(null);
+
+  const openMobileInputSheet = React.useCallback(
+    (context: MobileInputSheetContext) => {
+      if (!isMobile) return;
+      setMobileInputSheetContext(context);
+      setMobileInputSheetOpen(true);
+    },
+    [isMobile]
+  );
 
   type RentalSortColumn = "unit" | "m2" | "monthly" | "annual" | "perM2";
   type RentalSortDirection = "asc" | "desc";
@@ -180,6 +203,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
   }, []);
 
   const propertyId = overridePropertyId || routePropertyId || "";
+  const { navigateBack } = usePropertyNavigation(propertyId);
 
   const propertyItem = React.useMemo(() => getPropertyById(propertyId), [propertyId]);
   const propertyData = React.useMemo(() => {
@@ -218,33 +242,27 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
   }, [searchQuery]);
 
   return (
-    <div className={cn("min-h-screen bg-[var(--color-surface)]", className)}>
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <section
-          style={{
-            display: "flex",
-            width: "100%",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <GlobalHeader
-            variant="search"
-            avatarSrc="https://i.pravatar.cc/150?img=12"
-            avatarAlt="User"
-            avatarFallback="JD"
-            searchPlaceholder="SEARCH PROPERTIES"
-            onSearchClick={() => setIsSearchModalOpen(true)}
-            onLogoClick={() => navigate("/")}
-          />
+    <div
+      className={cn(
+        "flex min-h-screen min-w-0 max-w-full flex-col items-center overflow-x-hidden bg-[var(--color-surface)]",
+        className
+      )}
+    >
+      <section className="flex min-w-0 w-full max-w-full flex-col items-center overflow-x-hidden mb-[var(--spacing-xl)]">
+        <GlobalHeader
+          variant="search"
+          avatarSrc="https://i.pravatar.cc/150?img=12"
+          avatarAlt="User"
+          avatarFallback="JD"
+          searchPlaceholder="SEARCH PROPERTIES"
+          onSearchClick={() => setIsSearchModalOpen(true)}
+          onLogoClick={navigateBack}
+          onBackClick={navigateBack}
+          mobileCenterTitle="Financial Comparison"
+          onDownloadClick={() => {}}
+        />
 
+        <div className="hidden min-w-0 w-full max-w-full px-4 pt-5 pb-4 md:flex md:flex-col md:items-center md:px-0 md:pt-5 md:pb-4">
           <PropertyHeader
             metaLabel={metaLabel}
             heading={`${address}, ${city}`}
@@ -276,7 +294,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                 <Button variant="outline" iconLeft={<Icon name="Bookmark" />}>
                   Save
                 </Button>
-                <Button variant="outline" iconLeft={<Icon name="Share2" />}>
+                <Button variant="outline" iconLeft={<Icon name="Share2" />} data-hide-on-mobile>
                   Share
                 </Button>
                 <Button variant="primary" iconLeft={<Icon name="Download" />}>
@@ -285,27 +303,12 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
               </>
             }
           />
-        </section>
+        </div>
+      </section>
 
-        <section
-          style={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "center",
-            padding: "var(--spacing-6xl) 0",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              maxWidth: "1312px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "var(--spacing-2xl)",
-            }}
-          >
-            <div style={{ display: "flex", gap: "var(--spacing-sm)", flexWrap: "wrap" }}>
+      <section className="flex min-w-0 w-full max-w-full justify-center overflow-x-hidden pt-0 pb-[var(--spacing-6xl)]">
+        <div className="flex min-w-0 w-full max-w-full flex-col items-start gap-[var(--spacing-lg)] px-4 md:max-w-[1312px] md:px-0">
+          <div className="hidden flex-wrap gap-[var(--spacing-sm)] md:flex">
               <TabItem
                 isActive={false}
                 onClick={() => navigate(`/property/${propertyId}`)}
@@ -336,181 +339,265 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
               </TabItem>
             </div>
 
-            <Card className="w-full">
-              <CardHeader
-                style={{
-                  padding: "var(--spacing-xl)",
-                  paddingBottom: "0",
-                  gap: "var(--spacing-xl)",
-                }}
+            {/* Mobile: tab selector as dropdown (Figma 712-26439); desktop: tabs stay in card header */}
+            <div className="w-full md:hidden">
+            <BaseSelect.Root
+              value={activeTab}
+              onValueChange={(v: string | null) => v != null && setActiveTab(v)}
+              items={[
+                { value: "comparison", label: "Comparison" },
+                { value: "market", label: "Market" },
+                { value: "calculated", label: "Calculated" },
+                { value: "simulation", label: "Simulation" },
+              ]}
+            >
+              <BaseSelect.Trigger
+                aria-label="Financial comparison view"
+                className={cn(
+                  "flex h-10 w-full items-center justify-between gap-2 self-stretch",
+                  "rounded-[8px] border border-[#D5D7DA] bg-white py-2 pl-[14px] pr-[14px]",
+                  "text-[length:var(--text-sm)] font-[var(--font-normal)] leading-[var(--leading-tight)] text-[var(--color-content-primary)]",
+                  "shadow-[0_1px_2px_0_rgba(10,13,18,0.05)]",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
+                )}
               >
-                <CardTitle>Financial comparison</CardTitle>
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList>
-                    <TabsTab value="comparison">Comparison</TabsTab>
-                    <TabsTab
-                      value="market"
-                      icon={<Icon name="Globe" style={{ color: "var(--color-green)" }} />}
-                    >
-                      Market
-                    </TabsTab>
-                    <TabsTab
-                      value="calculated"
-                      icon={<Icon name="Sparkles" style={{ color: "var(--color-violet)" }} />}
-                    >
-                      Calculated
-                    </TabsTab>
-                    <TabsTab
-                      value="simulation"
-                      icon={<Icon name="Box" style={{ color: "var(--color-amber)" }} />}
-                    >
-                      Simulation
-                    </TabsTab>
-                  </TabsList>
-                </Tabs>
-              </CardHeader>
-              <CardContent style={{ padding: "20px" }}>
+                <BaseSelect.Value />
+                <BaseSelect.Icon>
+                  <Icon name="ChevronDown" size="md" className="shrink-0 text-[var(--color-content-secondary)]" />
+                </BaseSelect.Icon>
+              </BaseSelect.Trigger>
+              <BaseSelect.Portal>
+                <BaseSelect.Positioner className="left-4 right-4 w-[calc(100vw-32px)]">
+                  <BaseSelect.Popup
+                    className={cn(
+                      "z-50 w-full overflow-hidden rounded-[8px] border border-[#D5D7DA] bg-white py-1",
+                      "shadow-[0_1px_2px_0_rgba(10,13,18,0.05)]"
+                    )}
+                  >
+                    <BaseSelect.List className="max-h-[min(var(--popup-available-height,_300px),300px)] overflow-y-auto p-0">
+                      <BaseSelect.Item
+                        value="comparison"
+                        className={cn(
+                          "flex cursor-pointer items-center px-[14px] py-2 text-[length:var(--text-sm)] text-[var(--color-content-primary)]",
+                          "data-[highlighted]:bg-[var(--color-control-hover)]"
+                        )}
+                      >
+                        Comparison
+                      </BaseSelect.Item>
+                      <BaseSelect.Item
+                        value="market"
+                        className={cn(
+                          "flex cursor-pointer items-center px-[14px] py-2 text-[length:var(--text-sm)] text-[var(--color-content-primary)]",
+                          "data-[highlighted]:bg-[var(--color-control-hover)]"
+                        )}
+                      >
+                        Market
+                      </BaseSelect.Item>
+                      <BaseSelect.Item
+                        value="calculated"
+                        className={cn(
+                          "flex cursor-pointer items-center px-[14px] py-2 text-[length:var(--text-sm)] text-[var(--color-content-primary)]",
+                          "data-[highlighted]:bg-[var(--color-control-hover)]"
+                        )}
+                      >
+                        Calculated
+                      </BaseSelect.Item>
+                      <BaseSelect.Item
+                        value="simulation"
+                        className={cn(
+                          "flex cursor-pointer items-center px-[14px] py-2 text-[length:var(--text-sm)] text-[var(--color-content-primary)]",
+                          "data-[highlighted]:bg-[var(--color-control-hover)]"
+                        )}
+                      >
+                        Simulation
+                      </BaseSelect.Item>
+                    </BaseSelect.List>
+                  </BaseSelect.Popup>
+                </BaseSelect.Positioner>
+              </BaseSelect.Portal>
+            </BaseSelect.Root>
+            </div>
+
+            <Card className="w-full">
+              <div className="hidden md:block">
+                <CardHeader
+                  style={{
+                    padding: "var(--spacing-xl)",
+                    paddingBottom: "0",
+                    gap: "var(--spacing-xl)",
+                  }}
+                >
+                  <CardTitle>Financial comparison</CardTitle>
+                  <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <TabsList>
+                      <TabsTab value="comparison">Comparison</TabsTab>
+                      <TabsTab
+                        value="market"
+                        icon={<Icon name="Globe" style={{ color: "var(--color-green)" }} />}
+                      >
+                        Market
+                      </TabsTab>
+                      <TabsTab
+                        value="calculated"
+                        icon={<Icon name="Sparkles" style={{ color: "var(--color-violet)" }} />}
+                      >
+                        Calculated
+                      </TabsTab>
+                      <TabsTab
+                        value="simulation"
+                        icon={<Icon name="Box" style={{ color: "var(--color-amber)" }} />}
+                      >
+                        Simulation
+                      </TabsTab>
+                    </TabsList>
+                  </Tabs>
+                </CardHeader>
+              </div>
+              <CardContent className="p-2 md:!p-5">
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                   <TabsPanel value="comparison" className="mt-0">
                     <TablePage />
                   </TabsPanel>
                   <TabsPanel value="market" className="mt-0">
-                    <TileHeader>
-                      <TileTitle>Valuation summary</TileTitle>
-                    </TileHeader>
-                    <div
-                      className={cn("gap-[var(--spacing-xl)]")}
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(4, 1fr)",
-                        marginTop: "var(--spacing-md)",
-                      }}
-                    >
-                      <ValueCard
-                        label="Calculated value"
-                        labelTooltip="AI-estimated or calculated property value."
-                        value="5.080.421"
-                        metric="DKK"
-                        valueIcon={<Icon name="Sparkles" size="lg" />}
-                      />
-                      <ValueCard
-                        label="Yield"
-                        labelTooltip="Yield percentage."
-                        value="5"
-                        metric="%"
-                        valueIcon={null}
-                      />
-                      <ValueCard
-                        label="Value per M²"
-                        labelTooltip="Property value per square meter."
-                        value="336"
-                        metric="M²"
-                        valueIcon={null}
-                      />
-                      <ValueCard
-                        label="Price per M²"
-                        labelTooltip="Price per square meter."
-                        value="23.000"
-                        metric="DKK"
-                        valueIcon={null}
-                      />
+                    <div className={cn("flex flex-col gap-[var(--spacing-xl)] p-2 md:p-0")}>
+                      <TileHeader>
+                        <TileTitle>Valuation summary</TileTitle>
+                      </TileHeader>
+                      <div className="grid grid-cols-1 gap-[18px] md:grid-cols-4">
+                        <ValueCard
+                          label="Calculated value"
+                          labelTooltip="AI-estimated or calculated property value."
+                          value="5.080.421"
+                          metric="DKK"
+                          valueIcon={<Icon name="Sparkles" size="lg" />}
+                        />
+                        <ValueCard
+                          label="Yield"
+                          labelTooltip="Yield percentage."
+                          value="5"
+                          metric="%"
+                          valueIcon={null}
+                        />
+                        <ValueCard
+                          label="Value per M²"
+                          labelTooltip="Property value per square meter."
+                          value="336"
+                          metric="M²"
+                          valueIcon={null}
+                        />
+                        <ValueCard
+                          label="Price per M²"
+                          labelTooltip="Price per square meter."
+                          value="23.000"
+                          metric="DKK"
+                          valueIcon={null}
+                        />
+                      </div>
+                      <div className="w-full md:hidden">
+                        <Button variant="primary" size="md" className="w-full">
+                          View details
+                        </Button>
+                      </div>
                     </div>
                   </TabsPanel>
                   <TabsPanel value="calculated" className="mt-0">
-                    <TileHeader>
-                      <TileTitle>Valuation summary</TileTitle>
-                    </TileHeader>
-                    <div
-                      className={cn("gap-[var(--spacing-xl)]")}
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(4, 1fr)",
-                        marginTop: "var(--spacing-md)",
-                      }}
-                    >
-                      <ValueCard
-                        label="Calculated value"
-                        labelTooltip="AI-estimated or calculated property value."
-                        value="5.080.421"
-                        metric="DKK"
-                        valueIcon={<Icon name="Sparkles" size="lg" />}
-                      />
-                      <ValueCard
-                        label="Yield"
-                        labelTooltip="Yield percentage."
-                        value="5"
-                        metric="%"
-                        valueIcon={null}
-                      />
-                      <ValueCard
-                        label="Value per M²"
-                        labelTooltip="Property value per square meter."
-                        value="336"
-                        metric="M²"
-                        valueIcon={null}
-                      />
-                      <ValueCard
-                        label="Price per M²"
-                        labelTooltip="Price per square meter."
-                        value="23.000"
-                        metric="DKK"
-                        valueIcon={null}
-                      />
+                    <div className={cn("flex flex-col gap-[var(--spacing-xl)] p-2 md:p-0")}>
+                      <TileHeader>
+                        <TileTitle>Valuation summary</TileTitle>
+                      </TileHeader>
+                      <div className="grid grid-cols-1 gap-[18px] md:grid-cols-4">
+                        <ValueCard
+                          label="Calculated value"
+                          labelTooltip="AI-estimated or calculated property value."
+                          value="5.080.421"
+                          metric="DKK"
+                          valueIcon={<Icon name="Sparkles" size="lg" />}
+                        />
+                        <ValueCard
+                          label="Yield"
+                          labelTooltip="Yield percentage."
+                          value="5"
+                          metric="%"
+                          valueIcon={null}
+                        />
+                        <ValueCard
+                          label="Value per M²"
+                          labelTooltip="Property value per square meter."
+                          value="336"
+                          metric="M²"
+                          valueIcon={null}
+                        />
+                        <ValueCard
+                          label="Price per M²"
+                          labelTooltip="Price per square meter."
+                          value="23.000"
+                          metric="DKK"
+                          valueIcon={null}
+                        />
+                      </div>
+                      <div className="w-full md:hidden">
+                        <Button variant="primary" size="md" className="w-full">
+                          View details
+                        </Button>
+                      </div>
                     </div>
                   </TabsPanel>
                   <TabsPanel value="simulation" className="mt-0">
-                    <TileHeader>
-                      <TileTitle>Valuation summary</TileTitle>
-                    </TileHeader>
-                    <div
-                      className={cn("gap-[var(--spacing-xl)]")}
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(4, 1fr)",
-                        marginTop: "var(--spacing-md)",
-                      }}
-                    >
-                      <ValueCard
-                        label="Calculated value"
-                        labelTooltip="AI-estimated or calculated property value."
-                        value="5.080.421"
-                        metric="DKK"
-                        valueIcon={<Icon name="Sparkles" size="lg" />}
-                      />
-                      <ValueCard
-                        variant="editable"
-                        label="Yield"
-                        labelTooltip="Yield percentage. Edit to simulate."
-                        value={simulationYield}
-                        metric="%"
-                        valueIcon={null}
-                        onInputChange={(e) => setSimulationYield(e.target.value)}
-                        onInputConfirmKeyDown={() => {}}
-                        onInputClearKeyDown={() => setSimulationYield("")}
-                        inputTrailingSlot={
-                          <InputTrailingActions
-                            onClear={() => setSimulationYield("")}
-                            onConfirm={() => {}}
-                            confirmShortcut
-                            ariaLabelClear="Clear"
-                            ariaLabelConfirm="Confirm"
-                          />
-                        }
-                      />
-                      <ValueCard
-                        label="Value per M²"
-                        labelTooltip="Property value per square meter."
-                        value="336"
-                        metric="M²"
-                        valueIcon={null}
-                      />
-                      <ValueCard
-                        label="Price per M²"
-                        labelTooltip="Price per square meter."
-                        value="23.000"
-                        metric="DKK"
-                        valueIcon={null}
-                      />
+                    <div className={cn("flex flex-col gap-[var(--spacing-xl)] p-2 md:p-0")}>
+                      <TileHeader>
+                        <TileTitle>Valuation summary</TileTitle>
+                      </TileHeader>
+                      <div className="grid grid-cols-1 gap-[18px] md:grid-cols-4">
+                        <ValueCard
+                          label="Calculated value"
+                          labelTooltip="AI-estimated or calculated property value."
+                          value="5.080.421"
+                          metric="DKK"
+                          valueIcon={<Icon name="Sparkles" size="lg" />}
+                        />
+                        <ValueCard
+                          variant="editable"
+                          label="Yield"
+                          labelTooltip="Yield percentage. Edit to simulate."
+                          value={simulationYield}
+                          metric="%"
+                          valueIcon={null}
+                          onInputChange={(e) => setSimulationYield(e.target.value)}
+                          onInputConfirmKeyDown={() => {}}
+                          onInputClearKeyDown={() => setSimulationYield("")}
+                          onInputFocus={
+                            isMobile ? () => openMobileInputSheet("simulationYield") : undefined
+                          }
+                          inputTrailingSlot={
+                            <InputTrailingActions
+                              onClear={() => setSimulationYield("")}
+                              onConfirm={() => {}}
+                              confirmShortcut
+                              ariaLabelClear="Clear"
+                              ariaLabelConfirm="Confirm"
+                            />
+                          }
+                        />
+                        <ValueCard
+                          label="Value per M²"
+                          labelTooltip="Property value per square meter."
+                          value="336"
+                          metric="M²"
+                          valueIcon={null}
+                        />
+                        <ValueCard
+                          label="Price per M²"
+                          labelTooltip="Price per square meter."
+                          value="23.000"
+                          metric="DKK"
+                          valueIcon={null}
+                        />
+                      </div>
+                      <div className="w-full md:hidden">
+                        <Button variant="primary" size="md" className="w-full">
+                          View details
+                        </Button>
+                      </div>
                     </div>
                   </TabsPanel>
                 </Tabs>
@@ -540,13 +627,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                 <TileContent
                   className={cn("flex flex-col gap-[var(--spacing-xl)]")}
                 >
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(4, 1fr)",
-                      gap: "18px",
-                    }}
-                  >
+                  <div className="grid grid-cols-1 gap-[18px] md:grid-cols-4">
                     <ValueCard
                       label="Total annual income"
                       labelTooltip="Total rental income per year."
@@ -570,6 +651,12 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                     />
                   </div>
 
+                  <div className="w-full md:hidden">
+                    <Button variant="primary" size="md" className="w-full">
+                      View details
+                    </Button>
+                  </div>
+
                   {activeTab === "calculated" && (
                     <InlineMessage
                       variant="warning"
@@ -580,13 +667,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                   )}
                   {activeTab === "market" && (
                     <div
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        gap: "var(--spacing-sm)",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
+                      className="hidden w-full items-center justify-between gap-[var(--spacing-sm)] md:flex"
                     >
                       <div style={{ width: "340px" }} className="min-w-0 shrink-0">
                         <Input
@@ -604,6 +685,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                     </div>
                   )}
 
+                  <div className="hidden md:block">
                   <TooltipProvider>
                     <div className="overflow-x-auto rounded-lg bg-[var(--color-card)]">
                       <table className="data-table w-full min-w-[560px] border-collapse table-fixed">
@@ -698,6 +780,16 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "monthly", e.target.value)
                                         }
+                                        onFocus={
+                                          isMobile
+                                            ? () =>
+                                                openMobileInputSheet({
+                                                  type: "calculatedRental",
+                                                  unit: row.unit,
+                                                  field: "monthly",
+                                                })
+                                            : undefined
+                                        }
                                         onConfirmKeyDown={() => {}}
                                         onClearKeyDown={() =>
                                           clearCalculatedRentalField(row.unit, "monthly")
@@ -723,6 +815,16 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "annual", e.target.value)
                                         }
+                                        onFocus={
+                                          isMobile
+                                            ? () =>
+                                                openMobileInputSheet({
+                                                  type: "calculatedRental",
+                                                  unit: row.unit,
+                                                  field: "annual",
+                                                })
+                                            : undefined
+                                        }
                                         onConfirmKeyDown={() => {}}
                                         onClearKeyDown={() =>
                                           clearCalculatedRentalField(row.unit, "annual")
@@ -747,6 +849,16 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         value={values.perM2}
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "perM2", e.target.value)
+                                        }
+                                        onFocus={
+                                          isMobile
+                                            ? () =>
+                                                openMobileInputSheet({
+                                                  type: "calculatedRental",
+                                                  unit: row.unit,
+                                                  field: "perM2",
+                                                })
+                                            : undefined
                                         }
                                         onConfirmKeyDown={() => {}}
                                         onClearKeyDown={() =>
@@ -810,31 +922,28 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                       </table>
                     </div>
                   </TooltipProvider>
+                  </div>
                 </TileContent>
               </Tile>
 
               <Tile className="w-full">
                 <TileHeader>
                   <TileTitle>Operating expenses</TileTitle>
-                  <TileHeaderActions>
-                    <Button variant="inline" size="md" iconLeft={<Icon name="RotateCw" size="md" />}>
-                      RESET
-                    </Button>
-                    <Button variant="inline" size="md" iconLeft={<Icon name="Plus" size="md" />}>
-                      Add expenses
-                    </Button>
-                  </TileHeaderActions>
+                  <div className="hidden md:block">
+                    <TileHeaderActions>
+                      <Button variant="inline" size="md" iconLeft={<Icon name="RotateCw" size="md" />}>
+                        RESET
+                      </Button>
+                      <Button variant="inline" size="md" iconLeft={<Icon name="Plus" size="md" />}>
+                        Add expenses
+                      </Button>
+                    </TileHeaderActions>
+                  </div>
                 </TileHeader>
                 <TileContent
                   className={cn("flex flex-col gap-[var(--spacing-xl)]")}
                 >
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(4, 1fr)",
-                      gap: "18px",
-                    }}
-                  >
+                  <div className="grid grid-cols-1 gap-[18px] md:grid-cols-4">
                     <ValueCard
                       variant="editable"
                       label="Total annual expenses"
@@ -845,6 +954,9 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                       onInputChange={(e) => setOperatingExpensesTotal(e.target.value)}
                       onInputConfirmKeyDown={() => {}}
                       onInputClearKeyDown={() => setOperatingExpensesTotal("")}
+                      onInputFocus={
+                        isMobile ? () => openMobileInputSheet("operatingExpensesTotal") : undefined
+                      }
                       inputTrailingSlot={
                         <InputTrailingActions
                           onClear={() => setOperatingExpensesTotal("")}
@@ -864,14 +976,14 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                     />
                   </div>
 
+                  <div className="w-full md:hidden">
+                    <Button variant="primary" size="md" className="w-full">
+                      View details
+                    </Button>
+                  </div>
+
                   {activeTab !== "simulation" && (
-                    <div
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        alignItems: "center",
-                      }}
-                    >
+                    <div className="hidden w-full items-center md:flex">
                       <div style={{ width: "340px" }} className="min-w-0 shrink-0">
                         <Input
                           variant="default"
@@ -885,6 +997,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                     </div>
                   )}
 
+                  <div className="hidden md:block">
                   <TooltipProvider>
                     <div className="overflow-x-auto rounded-lg bg-[var(--color-card)]">
                       <table className="data-table w-full min-w-[560px] border-collapse table-fixed">
@@ -956,19 +1069,14 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                       </table>
                     </div>
                   </TooltipProvider>
+                  </div>
                 </TileContent>
               </Tile>
               </>
             )}
 
             {activeTab === "comparison" && (
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                gap: "var(--spacing-2xl)",
-              }}
-            >
+            <div className="flex w-full flex-col gap-[var(--spacing-2xl)] md:flex-row">
               <Tile className="w-full">
                 <TileHeader>
                   <TileTitle>Under offer</TileTitle>
@@ -1051,7 +1159,6 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
             )}
           </div>
         </section>
-      </div>
 
       <CommandDialog open={isSearchModalOpen} onOpenChange={setIsSearchModalOpen}>
         <CommandInput
@@ -1111,6 +1218,205 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
           )}
         </CommandList>
       </CommandDialog>
+
+      {isMobile && (
+        <BottomSheet
+          open={mobileInputSheetOpen}
+          onOpenChange={(open) => {
+            setMobileInputSheetOpen(open);
+            if (!open) setMobileInputSheetContext(null);
+          }}
+          header={
+            <div className="flex items-center justify-between">
+              <h2
+                className="text-lg font-semibold"
+                style={{ color: "var(--color-content-primary)" }}
+              >
+                {mobileInputSheetContext === "operatingExpensesTotal"
+                  ? "Total annual expenses"
+                  : mobileInputSheetContext === "simulationYield"
+                    ? "Yield"
+                    : mobileInputSheetContext &&
+                        typeof mobileInputSheetContext === "object" &&
+                        mobileInputSheetContext.type === "calculatedRental"
+                      ? `${mobileInputSheetContext.field === "monthly" ? "Monthly rent" : mobileInputSheetContext.field === "annual" ? "Annual rent" : "Rent per M²"} · ${mobileInputSheetContext.unit}`
+                      : "Edit value"}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setMobileInputSheetOpen(false)}
+                className="text-sm font-medium"
+                style={{ color: "var(--color-content-accent)" }}
+                aria-label="Done"
+              >
+                Done
+              </button>
+            </div>
+          }
+        >
+          {mobileInputSheetContext === "operatingExpensesTotal" && (
+            <div className="flex flex-col gap-4">
+              <p
+                className="text-sm"
+                style={{ color: "var(--color-content-secondary)" }}
+              >
+                Total operating expenses per year.
+              </p>
+              <label className="flex flex-col gap-2">
+                <span
+                  className="text-xs font-medium uppercase tracking-wide"
+                  style={{ color: "var(--color-content-secondary)" }}
+                >
+                  Amount (DKK)
+                </span>
+                <Input
+                  type="text"
+                  variant="default"
+                  size="default"
+                  fontVariant="mono"
+                  value={operatingExpensesTotal}
+                  onChange={(e) => setOperatingExpensesTotal(e.target.value)}
+                  metric="DKK"
+                  autoFocus
+                  trailingSlot={
+                    <InputTrailingActions
+                      onClear={() => setOperatingExpensesTotal("")}
+                      onConfirm={() => setMobileInputSheetOpen(false)}
+                      confirmShortcut
+                      ariaLabelClear="Clear"
+                      ariaLabelConfirm="Confirm"
+                    />
+                  }
+                  onConfirmKeyDown={() => setMobileInputSheetOpen(false)}
+                  onClearKeyDown={() => setOperatingExpensesTotal("")}
+                  className="w-full"
+                />
+              </label>
+            </div>
+          )}
+
+          {mobileInputSheetContext === "simulationYield" && (
+            <div className="flex flex-col gap-4">
+              <p
+                className="text-sm"
+                style={{ color: "var(--color-content-secondary)" }}
+              >
+                Yield percentage. Edit to simulate.
+              </p>
+              <label className="flex flex-col gap-2">
+                <span
+                  className="text-xs font-medium uppercase tracking-wide"
+                  style={{ color: "var(--color-content-secondary)" }}
+                >
+                  Yield (%)
+                </span>
+                <Input
+                  type="text"
+                  variant="default"
+                  size="default"
+                  fontVariant="mono"
+                  value={simulationYield}
+                  onChange={(e) => setSimulationYield(e.target.value)}
+                  metric="%"
+                  autoFocus
+                  trailingSlot={
+                    <InputTrailingActions
+                      onClear={() => setSimulationYield("")}
+                      onConfirm={() => setMobileInputSheetOpen(false)}
+                      confirmShortcut
+                      ariaLabelClear="Clear"
+                      ariaLabelConfirm="Confirm"
+                    />
+                  }
+                  onConfirmKeyDown={() => setMobileInputSheetOpen(false)}
+                  onClearKeyDown={() => setSimulationYield("")}
+                  className="w-full"
+                />
+              </label>
+            </div>
+          )}
+
+          {mobileInputSheetContext &&
+            typeof mobileInputSheetContext === "object" &&
+            mobileInputSheetContext.type === "calculatedRental" && (
+              <div className="flex flex-col gap-4">
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--color-content-secondary)" }}
+                >
+                  {mobileInputSheetContext.unit}
+                </p>
+                <label className="flex flex-col gap-2">
+                  <span
+                    className="text-xs font-medium uppercase tracking-wide"
+                    style={{ color: "var(--color-content-secondary)" }}
+                  >
+                    {mobileInputSheetContext.field === "monthly"
+                      ? "Monthly rent (DKK)"
+                      : mobileInputSheetContext.field === "annual"
+                        ? "Annual rent (DKK)"
+                        : "Rent per M² (DKK)"}
+                  </span>
+                  <Input
+                    type="text"
+                    variant="default"
+                    size="default"
+                    fontVariant="mono"
+                    align="right"
+                    value={
+                      (() => {
+                        const row = rentalTableRows.find(
+                          (r) => r.unit === mobileInputSheetContext.unit
+                        );
+                        const values =
+                          calculatedRentalValues[mobileInputSheetContext.unit] ??
+                          (row
+                            ? {
+                                monthly: row.monthly,
+                                annual: row.annual,
+                                perM2: row.perM2,
+                              }
+                            : { monthly: "", annual: "", perM2: "" });
+                        return values[mobileInputSheetContext.field];
+                      })()
+                    }
+                    onChange={(e) =>
+                      updateCalculatedRental(
+                        mobileInputSheetContext.unit,
+                        mobileInputSheetContext.field,
+                        e.target.value
+                      )
+                    }
+                    metric=" DKK"
+                    autoFocus
+                    trailingSlot={
+                      <InputTrailingActions
+                        onClear={() =>
+                          clearCalculatedRentalField(
+                            mobileInputSheetContext.unit,
+                            mobileInputSheetContext.field
+                          )
+                        }
+                        onConfirm={() => setMobileInputSheetOpen(false)}
+                        confirmShortcut
+                        ariaLabelClear="Clear"
+                        ariaLabelConfirm="Confirm"
+                      />
+                    }
+                    onConfirmKeyDown={() => setMobileInputSheetOpen(false)}
+                    onClearKeyDown={() =>
+                      clearCalculatedRentalField(
+                        mobileInputSheetContext.unit,
+                        mobileInputSheetContext.field
+                      )
+                    }
+                    className="w-full"
+                  />
+                </label>
+              </div>
+            )}
+        </BottomSheet>
+      )}
     </div>
   );
 };

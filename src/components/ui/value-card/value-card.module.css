@@ -18,6 +18,55 @@
   justify-content: space-between;
 }
 
+/* Mobile: minimal styling + horizontal layout (label - value) */
+@media (max-width: 767px) {
+  .root {
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    height: auto;
+    min-height: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .root .valueRowWrapper {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .root .mainValue,
+  .root .metric {
+    font-family: var(--font-mono);
+    font-weight: var(--font-normal);
+    font-size: var(--text-xs);
+    line-height: var(--leading-tight);
+  }
+
+  .root .valueIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .root .valueIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .root.illustrationVariant {
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    height: auto;
+  }
+}
+
 /* Illustration variant: fixed height, illustration 32×40, label+icon, value right-aligned (Figma 1201-4192) */
 .root.illustrationVariant {
   height: 156px;

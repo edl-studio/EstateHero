@@ -23,6 +23,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FlashingGridPage } from "@/pages/flashing-grid";
 import { HomePage } from "@/pages/home";
 import { PropertyDetailsPage } from "@/pages/property-details";
+import { PropertyHomePage } from "@/pages/property-home";
 import { FinancialComparisonPage } from "@/pages/financial-comparison";
 import { CriticalRentPage } from "@/pages/critical-rent";
 import { TinglysningPage } from "@/pages/tinglysning";
@@ -39,6 +40,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/flashing-grid" element={<FlashingGridPage />} />
+          <Route path="/property/:propertyId/home" element={<PropertyHomePage />} />
           <Route path="/property/:propertyId" element={<PropertyDetailsPage />} />
           <Route path="/property/:propertyId/financial-comparison" element={<FinancialComparisonPage />} />
           <Route path="/property/:propertyId/critical-rent" element={<CriticalRentPage />} />

@@ -455,3 +455,135 @@
   color: var(--color-content-white);
   flex-shrink: 0;
 }
+
+/* ============================================
+   MOBILE BREAKPOINT: compact input + accent text
+   ============================================ */
+@media (max-width: 767px) {
+  /* Container is the visual input box so metric sits inside it */
+  .inputContainer {
+    width: fit-content;
+    max-width: 100%;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-input);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--transition-default),
+      box-shadow var(--transition-default),
+      background-color var(--transition-default);
+  }
+
+  .inputContainer:has(.leadingIcon) {
+    padding-left: 2rem;
+  }
+
+  .inputContainer:focus-within {
+    border-color: var(--color-input-border-accent);
+    box-shadow: 0 0 0 2px var(--color-ring);
+  }
+
+  /* Metric in flow inside the container */
+  .metric {
+    position: static;
+    transform: none;
+    top: auto;
+    left: auto;
+    right: auto;
+    color: var(--color-content-accent);
+    font-family: var(--font-mono);
+    font-weight: var(--font-normal);
+    font-size: var(--text-xs);
+    line-height: var(--leading-tight);
+  }
+
+  /* Trailing actions hidden on mobile; different interaction later */
+  .trailingSlotClip,
+  .trailingIconButton,
+  .trailingIcon {
+    display: none !important;
+  }
+
+  .input {
+    display: flex;
+    height: 30px;
+    padding: 0;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-content-accent);
+    width: auto;
+    min-width: 2ch;
+    field-sizing: content;
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .input:focus-visible {
+    box-shadow: none;
+  }
+
+  .input.inputMonoVariant {
+    font-family: var(--font-mono);
+    font-weight: var(--font-normal);
+    font-size: var(--text-xs);
+    line-height: var(--leading-tight);
+  }
+
+  .inputContainer .input {
+    min-height: 30px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .leadingIcon,
+  .trailingIcon,
+  .trailingIconButton {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .leadingIcon {
+    left: 8px;
+  }
+
+  .trailingIcon,
+  .trailingIconButton {
+    right: 8px;
+  }
+
+  .leadingIconMobileOffset {
+    left: 8px;
+  }
+
+  .trailingIconMobileOffset,
+  .trailingIconButton.trailingIconMobileOffset {
+    right: 8px;
+  }
+
+  .hasLeadingIcon.sizeDefault,
+  .hasLeadingIcon.sizeLarge,
+  .hasLeadingIcon.sizeMobile {
+    padding-left: 2rem;
+  }
+
+  /* No reserved space for trailing or metric on mobile (trailing hidden; metric in flow; container has padding) */
+  .hasTrailingSlot.sizeDefault,
+  .hasTrailingSlot.sizeLarge,
+  .hasTrailingSlot.sizeMobile,
+  .hasTrailingIcon.sizeDefault,
+  .hasTrailingIcon.sizeLarge,
+  .hasTrailingIcon.sizeMobile,
+  .hasMetric.sizeDefault,
+  .hasMetric.sizeLarge,
+  .hasMetric.sizeMobile,
+  .hasMetricWithTrailing.sizeDefault,
+  .hasMetricWithTrailing.sizeLarge,
+  .hasMetricWithTrailing.sizeMobile {
+    padding-right: 0;
+  }
+}

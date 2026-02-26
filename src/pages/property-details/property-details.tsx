@@ -10,6 +10,7 @@ import { TabItem } from "@/components/ui/tab-item";
 import { Tile, TileHeader, TileTitle, TileContent } from "@/components/ui/tile";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import cardStyles from "@/components/ui/card/card.module.css";
 import { DataList, DataListItem } from "@/components/ui/data-list";
 import { IconContainer } from "@/components/ui/icon-container";
 import { Icon, type IconName } from "@/components/ui/icon";
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/command";
 
 import { cn } from "@/lib/utils";
+import { usePropertyNavigation } from "@/lib/use-property-navigation";
 
 import magnifyingGraphic from "@/assets/images/magnifying.png";
 import propertyMapImage from "@/assets/images/Image.png";
@@ -76,6 +78,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
 }) => {
   const { propertyId: routePropertyId } = useParams<{ propertyId: string }>();
   const navigate = useNavigate();
+  const { navigateBack } = usePropertyNavigation(overridePropertyId || routePropertyId || "");
 
   const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -146,25 +149,14 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
   }, [searchQuery]);
 
   return (
-    <div className={cn("min-h-screen bg-[var(--color-surface)]", className)}>
-      {/* Main Section */}
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        {/* Header Section */}
-        <section
-          style={{
-            display: "flex",
-            width: "100%",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+    <div
+      className={cn(
+        "flex min-h-screen min-w-0 max-w-full flex-col items-center overflow-x-hidden bg-[var(--color-surface)]",
+        className
+      )}
+    >
+      {/* Header Section - 16px horizontal padding on mobile; 20px gap below */}
+      <section className="flex min-w-0 w-full max-w-full flex-col items-center overflow-x-hidden mb-[var(--spacing-xl)]">
           {/* Global Header with search (logo | command trigger | avatar) */}
           <GlobalHeader
             variant="search"
@@ -173,14 +165,18 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
             avatarFallback="JD"
             searchPlaceholder="SEARCH PROPERTIES"
             onSearchClick={() => setIsSearchModalOpen(true)}
-            onLogoClick={() => navigate("/")}
+            onLogoClick={navigateBack}
+            onBackClick={navigateBack}
+            mobileCenterTitle="Property Details"
+            onDownloadClick={() => {}}
           />
 
-          {/* Property Header */}
-          <PropertyHeader
-            metaLabel={metaLabel}
-            heading={`${address}, ${city}`}
-            metadataItems={
+          {/* Property Header - hidden on mobile (PropertyHome shows it); centered on desktop */}
+          <div className="hidden min-w-0 w-full max-w-full px-4 pt-5 pb-4 md:flex md:flex-col md:items-center md:px-0 md:pt-5 md:pb-4">
+            <PropertyHeader
+              metaLabel={metaLabel}
+              heading={`${address}, ${city}`}
+              metadataItems={
               <>
                 <MetadataItem
                   variant="data-group"
@@ -208,7 +204,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                 <Button variant="outline" iconLeft={<Icon name="Bookmark" />}>
                   Save
                 </Button>
-                <Button variant="outline" iconLeft={<Icon name="Share2" />}>
+                <Button variant="outline" iconLeft={<Icon name="Share2" />} data-hide-on-mobile>
                   Share
                 </Button>
                 <Button variant="primary" iconLeft={<Icon name="Download" />}>
@@ -216,31 +212,15 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                 </Button>
               </>
             }
-          />
-        </section>
+            />
+          </div>
+      </section>
 
-        {/* Container Section */}
-        <section
-          style={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "center",
-            padding: "var(--spacing-6xl) 0",
-          }}
-        >
-          <div
-            className="px-4 md:px-0"
-            style={{
-              display: "flex",
-              width: "100%",
-              maxWidth: "1312px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "var(--spacing-2xl)",
-            }}
-          >
-            {/* Tab Items */}
-            <div style={{ display: "flex", gap: "var(--spacing-sm)", flexWrap: "wrap" }}>
+      {/* Container Section - 16px horizontal padding on mobile; inner content adapts to avoid side scroll */}
+      <section className="flex min-w-0 w-full max-w-full justify-center overflow-x-hidden pt-0 pb-[var(--spacing-6xl)]">
+        <div className="flex min-w-0 w-full max-w-full flex-col items-start gap-[var(--spacing-lg)] px-4 md:max-w-[1312px] md:px-0">
+          {/* Tab Items - hidden on mobile (PropertyHome shows list instead) */}
+          <div className="hidden flex-wrap gap-[var(--spacing-sm)] md:flex">
               <TabItem
                 isActive={activeTab === "property-details"}
                 onClick={() => setActiveTab("property-details")}
@@ -279,22 +259,12 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
               </TabItem>
             </div>
 
-            {/* Tab Content Container: vertical on mobile, horizontal on md+ */}
-            <div
-              className="flex w-full flex-col gap-[var(--spacing-6xl)] md:flex-row md:items-start"
-            >
-            {/* Left Column */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "var(--spacing-2xl)",
-                flex: "1 0 0",
-              }}
-            >
+            {/* Tab Content Container: vertical on mobile (map card first), horizontal on md+ */}
+            <div className="flex min-w-0 w-full max-w-full flex-col gap-[var(--spacing-lg)] md:flex-row md:items-start">
+            {/* Left Column - on mobile appears below the map card via order */}
+            <div className="flex min-w-0 flex-1 flex-col items-start gap-[var(--spacing-lg)] order-last md:order-none">
               {/* Tile Stack: vertical on mobile, horizontal on md+ */}
-              <div className="flex w-full flex-col gap-[var(--spacing-2xl)] md:flex-row">
+              <div className="flex min-w-0 w-full flex-col gap-[var(--spacing-lg)] md:flex-row">
                 <Tile className="w-full">
                   <TileHeader>
                     <TileTitle>Occupancy</TileTitle>
@@ -333,8 +303,8 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                 <TileHeader>
                   <TileTitle>Building Conditions</TileTitle>
                 </TileHeader>
-                <TileContent className="gap-[var(--spacing-2xl)]">
-                  <div className="grid w-full grid-cols-1 gap-[var(--spacing-2xl)] md:grid-cols-2">
+                <TileContent className="gap-[var(--spacing-lg)]">
+                  <div className="grid w-full grid-cols-1 gap-[var(--spacing-lg)] md:grid-cols-2">
                     {/* Roof Material */}
                     <Tile>
                       <TileHeader>
@@ -406,8 +376,8 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                 <TileHeader>
                   <TileTitle>Financial Overview</TileTitle>
                 </TileHeader>
-                <TileContent className="gap-[var(--spacing-2xl)]">
-                  <div className="flex w-full flex-col gap-[var(--spacing-2xl)] md:flex-row">
+                <TileContent className="gap-[var(--spacing-lg)]">
+                  <div className="flex w-full flex-col gap-[var(--spacing-lg)] md:flex-row">
                     {/* Last Transaction */}
                     <Tile className="flex-1">
                       <div className="flex flex-col gap-[var(--spacing-xl)]">
@@ -479,7 +449,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
 
               {/* Documentation and Compliance Card */}
               <Card className="w-full">
-                <CardHeader className="pt-[var(--spacing-lg)] pr-[var(--spacing-2xl)] pb-[var(--spacing-lg)] pl-[var(--spacing-xl)] gap-[var(--spacing-lg)]">
+                <CardHeader className={cardStyles.headerPaddingDocCards}>
                   <CardTitle>Documentation and Compliance</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -528,7 +498,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
 
               {/* Historical and Legal Status Card */}
               <Card className="w-full">
-                <CardHeader className="pt-[var(--spacing-lg)] pr-[var(--spacing-2xl)] pb-[var(--spacing-lg)] pl-[var(--spacing-xl)] gap-[var(--spacing-lg)]">
+                <CardHeader className={cardStyles.headerPaddingDocCards}>
                   <CardTitle>Historical and Legal Status</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -576,9 +546,9 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
               </Card>
             </div>
 
-            {/* Right Column - Property Info Card: full width on mobile, 360px on md+ */}
+            {/* Right Column - Property Info Card: full width on mobile (order-first so map at top), 360px on md+ */}
             <div
-              className="flex w-full flex-shrink-0 flex-col md:w-[360px]"
+              className="flex min-w-0 w-full max-w-full flex-shrink-0 flex-col order-first md:order-none md:w-[360px]"
               style={{
                 backgroundColor: "var(--color-card)",
                 border: "1px solid var(--color-border)",
@@ -599,7 +569,7 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
 
               {/* Content */}
               <div
-                className="flex flex-col w-full"
+                className="flex min-w-0 flex-col w-full"
                 style={{ paddingLeft: "var(--spacing-sm)", paddingRight: "var(--spacing-sm)" }}
               >
                 {/* Header */}
@@ -628,40 +598,40 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
                   </h3>
                 </div>
 
-                {/* Property Data */}
+                {/* Property Data - min-w-0 on rows so they shrink on narrow viewports */}
                 <div
-                  className="flex flex-col w-full"
+                  className="flex min-w-0 flex-col w-full"
                   style={{
                     gap: "var(--spacing-md)",
                     marginBottom: "var(--spacing-lg)",
                   }}
                 >
-                  <div className="flex items-center justify-between text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
-                    <span className="text-[var(--color-content-tertiary)] w-[154px]">Year of construction</span>
-                    <span className="text-[var(--color-content-primary)] text-right flex-1">1993</span>
+                  <div className="flex min-w-0 items-center justify-between gap-2 text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
+                    <span className="shrink-0 text-[var(--color-content-tertiary)] w-[154px] min-w-[100px]">Year of construction</span>
+                    <span className="min-w-0 shrink text-right text-[var(--color-content-primary)]">1993</span>
                   </div>
-                  <div className="flex items-center justify-between text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
-                    <span className="text-[var(--color-content-tertiary)] w-[154px]">Cadastre</span>
-                    <span className="text-[var(--color-content-primary)] text-right flex-1">4AU</span>
+                  <div className="flex min-w-0 items-center justify-between gap-2 text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
+                    <span className="shrink-0 text-[var(--color-content-tertiary)] w-[154px] min-w-[100px]">Cadastre</span>
+                    <span className="min-w-0 shrink text-right text-[var(--color-content-primary)]">4AU</span>
                   </div>
-                  <div className="flex items-center justify-between text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
-                    <span className="text-[var(--color-content-tertiary)] w-[154px]">BFE</span>
-                    <span className="text-[var(--color-content-primary)] text-right flex-1">5307642</span>
+                  <div className="flex min-w-0 items-center justify-between gap-2 text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
+                    <span className="shrink-0 text-[var(--color-content-tertiary)] w-[154px] min-w-[100px]">BFE</span>
+                    <span className="min-w-0 shrink text-right text-[var(--color-content-primary)]">5307642</span>
                   </div>
-                  <div className="flex items-center justify-between text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
-                    <span className="text-[var(--color-content-tertiary)] w-[154px]">Area</span>
-                    <span className="text-[var(--color-content-primary)] text-right flex-1">681 m²</span>
+                  <div className="flex min-w-0 items-center justify-between gap-2 text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
+                    <span className="shrink-0 text-[var(--color-content-tertiary)] w-[154px] min-w-[100px]">Area</span>
+                    <span className="min-w-0 shrink text-right text-[var(--color-content-primary)]">681 m²</span>
                   </div>
-                  <div className="flex items-center justify-between text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
-                    <span className="text-[var(--color-content-tertiary)] w-[154px]">Ownership</span>
-                    <span className="text-[var(--color-content-primary)] text-right flex-1">Vestermarken</span>
+                  <div className="flex min-w-0 items-center justify-between gap-2 text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
+                    <span className="shrink-0 text-[var(--color-content-tertiary)] w-[154px] min-w-[100px]">Ownership</span>
+                    <span className="min-w-0 shrink text-right text-[var(--color-content-primary)]">Vestermarken</span>
                   </div>
-                  <div className="flex items-center justify-between text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
-                    <span className="text-[var(--color-content-tertiary)] w-[154px]">Units</span>
-                    <span className="text-[var(--color-content-primary)] text-right flex-1">6 units</span>
+                  <div className="flex min-w-0 items-center justify-between gap-2 text-[length:var(--text-sm)] leading-[var(--leading-tight)]">
+                    <span className="shrink-0 text-[var(--color-content-tertiary)] w-[154px] min-w-[100px]">Units</span>
+                    <span className="min-w-0 shrink text-right text-[var(--color-content-primary)]">6 units</span>
                   </div>
-                  <div className="flex items-center justify-between" style={{ minHeight: "var(--icon-size-xl)" }}>
-                    <span className="text-[var(--color-content-tertiary)] text-[length:var(--text-sm)] w-[154px] leading-[var(--leading-tight)]">Energy label</span>
+                  <div className="flex min-w-0 items-center justify-between gap-2" style={{ minHeight: "var(--icon-size-xl)" }}>
+                    <span className="shrink-0 text-[var(--color-content-tertiary)] text-[length:var(--text-sm)] w-[154px] min-w-[100px] leading-[var(--leading-tight)]">Energy label</span>
                     <div
                       className="flex items-center py-0.5"
                       style={{
@@ -695,7 +665,6 @@ export const PropertyDetailsPage: React.FC<PropertyDetailsPageProps> = ({
             </div>
           </div>
         </section>
-      </div>
 
       {/* Command Dialog (same as home page) */}
       <CommandDialog open={isSearchModalOpen} onOpenChange={setIsSearchModalOpen}>

@@ -23,6 +23,26 @@
 }
 
 /* ============================================
+   CARD HEADER - DOCUMENTATION / LEGAL CARDS PADDING
+   Mobile: 16px all sides. Desktop: 16px 24px 16px 20px. Uses design tokens only.
+   ============================================ */
+.headerPaddingDocCards {
+  gap: var(--spacing-lg);
+}
+
+@media (max-width: 767px) {
+  .headerPaddingDocCards {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .headerPaddingDocCards {
+    padding: var(--spacing-lg) var(--spacing-2xl) var(--spacing-lg) var(--spacing-xl);
+  }
+}
+
+/* ============================================
    CARD HEADER - WITH TABS OVERRIDE
    ============================================ */
 .headerWithTabs {

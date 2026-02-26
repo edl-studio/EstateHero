@@ -49,6 +49,8 @@ export interface ValueCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onInputConfirmKeyDown?: () => void;
   /** When variant="editable" or variant="illustration": Escape key clear callback (blurs input). */
   onInputClearKeyDown?: () => void;
+  /** When variant="editable" or variant="illustration": called when the input receives focus (e.g. to open a mobile bottom sheet). */
+  onInputFocus?: () => void;
 }
 
 export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
@@ -68,6 +70,7 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
       inputTrailingSlot,
       onInputConfirmKeyDown,
       onInputClearKeyDown,
+      onInputFocus,
       className,
       ...props
     },
@@ -86,6 +89,7 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
         fontVariant="mono"
         value={value}
         onChange={onInputChange}
+        onFocus={onInputFocus}
         metric={metric != null && metric !== "" ? metric : undefined}
         trailingSlot={inputTrailingSlot}
         onConfirmKeyDown={onInputConfirmKeyDown}
@@ -100,6 +104,7 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
         align="right"
         value={value}
         onChange={onInputChange}
+        onFocus={onInputFocus}
         metric={metric != null && metric !== "" ? metric : undefined}
         trailingSlot={inputTrailingSlot}
         onConfirmKeyDown={onInputConfirmKeyDown}

@@ -1,9 +1,12 @@
-/* PropertyHeader - Property details page header */
+/* property-header.module.css */
+
+/* PropertyHeader - Property details page header. min-width: 0 so it can shrink on mobile. */
 .propertyHeader {
   position: relative;
   display: flex;
   width: 100%;
   max-width: 1312px;
+  min-width: 0;
   padding: 32px;
   align-items: flex-start;
   gap: 40px;
@@ -14,9 +17,39 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Flashing grid background - 6×3 blocks (540×270px), accent colour for squares.
-   z-index above content so in the grid area we hit this layer first; pointer-events: none
-   so hit testing descends to the grid (child with pointer-events: auto). */
+/* Mobile: smaller padding, clip horizontal overflow only so box-shadow is not cropped, 16px gaps, responsive typography */
+@media (max-width: 767px) {
+  .propertyHeader {
+    padding: 16px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    max-width: 100%;
+  }
+
+  /* 16px gap between heading and metadata */
+  .propertyHeader .content {
+    gap: var(--spacing-lg);
+  }
+
+  /* 16px gap between meta items and actions */
+  .propertyHeader .metadata {
+    gap: var(--spacing-lg);
+  }
+
+  /* ui/sans-serif/medium/32 → ui/sans-serif/medium/24 */
+  .propertyHeader .headingText {
+    font-size: var(--text-2xl);
+    line-height: var(--leading-normal);
+  }
+
+  /* ui/mono/24 → ui/mono/20 (metadata data value/unit inside header) */
+  .propertyHeader .metaStack :global(.ui-mono-24) {
+    font-size: var(--text-xl);
+    line-height: var(--leading-tight);
+  }
+}
+
+/* Flashing grid background - 6×3 blocks (540×270px), accent colour for squares. Hidden on mobile. */
 .gridWrapper {
   --color-flashing-grid-square: var(--color-accent);
   z-index: 2;
@@ -28,6 +61,12 @@
   height: 270px;
   overflow: hidden;
   border-radius: 0 0 var(--radius-base) 0;
+}
+
+@media (max-width: 767px) {
+  .propertyHeader .gridWrapper {
+    display: none;
+  }
 }
 
 /* Grid root must receive pointer events so hover/trail works when we descend from gridWrapper */
@@ -54,28 +93,28 @@
   inset: 0;
 }
 
-/* Content - Main content container (above grid). pointer-events: none so grid receives hover; interactive blocks get auto */
+/* Content - Main content container (above grid). min-width: 0 so it can shrink on mobile. */
 .content {
   position: relative;
   z-index: 1;
   pointer-events: none;
   display: flex;
   width: 100%;
+  min-width: 0;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  flex-shrink: 0;
 }
 
-/* Heading - Top section with meta label and heading */
+/* Heading - Top section with meta label and heading. min-width: 0 so long addresses can wrap on mobile. */
 .heading {
   pointer-events: auto;
   display: flex;
   width: 100%;
+  min-width: 0;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
-  flex-shrink: 0;
 }
 
 /* Meta Label - Small uppercase label */
@@ -85,14 +124,15 @@
   /* Typography: ui-mono-14 */
 }
 
-/* Heading Text - Main heading */
+/* Heading Text - Main heading. Allow wrap on narrow viewports. */
 .headingText {
   color: var(--color-content-primary);
   margin: 0;
+  overflow-wrap: break-word;
   /* Typography: body-sans-medium-32 */
 }
 
-/* Metadata - Container for metadata items and actions */
+/* Metadata - Container for metadata items and actions. min-width: 0 so it can shrink on mobile. */
 .metadata {
   pointer-events: auto;
   display: flex;
@@ -100,19 +140,61 @@
   align-items: flex-start;
   gap: 40px;
   align-self: stretch;
+  min-width: 0;
 }
 
-/* Meta Stack - Container for metadata items */
+/* Meta Stack - horizontal on desktop; stacked on mobile. min-width: 0 so it can shrink. */
 .metaStack {
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
   gap: 32px;
   align-self: stretch;
+  min-width: 0;
 }
 
-/* Actions - Container for action buttons */
+@media (max-width: 767px) {
+  .metaStack {
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+/* Actions - single container, 8px gap. Each action wrapped in .actionSlot. */
 .actions {
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-sm);
+  gap: 0.5rem; /* 8px */
+  min-width: 0;
+}
+
+.actionSlot {
+  display: flex;
+  min-width: 0;
+}
+
+.actionSlot > * {
+  min-width: 0;
+}
+
+/* Mobile: hide slots whose action has data-hide-on-mobile; 8px gap between remaining actions */
+@media (max-width: 767px) {
+  .propertyHeader .actions {
+    width: 100%;
+    gap: 0.5rem; /* 8px between the visible actions */
+  }
+
+  .propertyHeader .actionSlot {
+    flex: 1;
+  }
+
+  .propertyHeader .actionSlot > * {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Hide the whole slot so layout gap applies between remaining actions */
+  .propertyHeader .actionSlot:has([data-hide-on-mobile]) {
+    display: none !important;
+  }
 }

@@ -55,7 +55,7 @@ function PropertyDetailsPage() {
       }
       actions={
         <>
-          <Button variant="outline" iconLeft={<ShareIcon />}>
+          <Button variant="outline" iconLeft={<ShareIcon />} data-hide-on-mobile>
             Share
           </Button>
           <Button variant="outline" iconLeft={<DownloadIcon />}>
@@ -131,7 +131,7 @@ const sharedActions = (
     <Button variant="outline" iconLeft={<Icon name="Bookmark" />}>
       Save
     </Button>
-    <Button variant="outline" iconLeft={<Icon name="Share2" />}>
+    <Button variant="outline" iconLeft={<Icon name="Share2" />} data-hide-on-mobile>
       Share
     </Button>
     <Button variant="primary" iconLeft={<Icon name="Download" />}>
@@ -143,17 +143,18 @@ const sharedActions = (
 export const Default: Story = {
   parameters: {
     layout: "fullscreen",
-    viewport: { defaultViewport: "desktop" },
   },
   render: () => (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "flex-start",
-      padding: "32px",
-      minHeight: "100vh",
-      background: "var(--color-background)",
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        padding: "32px",
+        minHeight: "100vh",
+        background: "var(--color-background)",
+      }}
+    >
       <PropertyHeader
         metaLabel="Residential"
         heading="Holbækvej 37, 4000 Roskilde"
@@ -161,20 +162,5 @@ export const Default: Story = {
         actions={sharedActions}
       />
     </div>
-  ),
-};
-
-export const Mobile: Story = {
-  parameters: {
-    layout: "fullscreen",
-    viewport: { defaultViewport: "mobile" },
-  },
-  render: () => (
-    <PropertyHeader
-      metaLabel="Residential"
-      heading="Holbækvej 37, 4000 Roskilde"
-      metadataItems={sharedMetadataItems}
-      actions={sharedActions}
-    />
   ),
 };

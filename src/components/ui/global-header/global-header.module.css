@@ -1,33 +1,62 @@
 /* Global Header Component Styles */
 
-/* Base header styles */
+/* Base header styles. min-width: 0 so container can shrink on narrow viewports. */
 .header {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 64px;
+  min-width: 0;
+  min-height: 64px;
   padding-left: 16px;
   padding-right: 16px;
+  box-sizing: border-box;
   background-color: transparent;
+  overflow-x: hidden;
+}
+
+/* Mobile: equal height and padding for all 3 variants (16px top + 40px bar + 16px bottom = 72px) */
+@media (max-width: 767px) {
+  .header {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    min-height: unset;
+    height: 72px;
+  }
+}
+
+/* Mobile subpage variant only: bottom border (padding already equal above) */
+@media (max-width: 767px) {
+  .headerWithBottomBorder {
+    border-bottom: 1px solid var(--color-border);
+  }
 }
 
 /* Desktop sizing */
 @media (min-width: 768px) {
   .header {
-    height: 88px;
+    min-height: 88px;
     padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
   }
 }
 
-/* Inner container with max-width constraint */
+/* Inner container with max-width constraint. min-width: 0 so it adapts on mobile. */
 .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-width: 0;
   max-width: 1312px;
+}
+
+/* Mobile: fixed 40px height and consistent padding so the bar doesn't jump across variants */
+@media (max-width: 767px) {
+  .container {
+    height: 40px;
+    flex-shrink: 0;
+  }
 }
 
 /* Logo section */
@@ -35,6 +64,18 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+}
+
+/* Mobile: align logo and avatar sections to the 40px bar so they don't cause jump */
+@media (max-width: 767px) {
+  .logoSection,
+  .avatarSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-width: 40px;
+  }
 }
 
 .logoButton {
@@ -75,14 +116,36 @@
   fill: var(--color-content-primary);
 }
 
-/* Center section for search trigger */
+/* Center section for search trigger or mobile title. min-width: 0 so it can shrink on mobile. */
 .centerSection {
   display: flex;
   flex: 1;
+  min-width: 0;
   align-items: center;
   justify-content: center;
   padding-left: var(--spacing-lg);
   padding-right: var(--spacing-lg);
+}
+
+/* Mobile sub-page center title: truncate with ellipsis when long; uppercase */
+.mobileCenterTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Command box trigger: compact layout on mobile */
+@media (max-width: 767px) {
+  .commandTrigger {
+    display: flex;
+    height: 40px;
+    padding: 10px;
+    align-items: center;
+    gap: 8px;
+    flex: 1 0 0;
+  }
 }
 
 /* Avatar section */
@@ -90,10 +153,11 @@
   flex-shrink: 0;
 }
 
-/* Avatar: 40px on mobile, 48px on desktop */
+/* Avatar: 40px on mobile (match container bar), 48px on desktop */
 .avatar {
   width: 2.5rem !important;
   height: 2.5rem !important;
+  flex-shrink: 0;
 }
 
 @media (min-width: 768px) {

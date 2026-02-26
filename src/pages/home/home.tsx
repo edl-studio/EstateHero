@@ -1,6 +1,4 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { TabsRoot, TabsList, TabsTab, TabsPanel } from "@/components/ui/inline-tabs";
@@ -28,6 +26,7 @@ import bookmarkGraphic from "@/assets/images/bookmark.png";
 import magnifyingGraphic from "@/assets/images/magnifying.png";
 
 import { useIsMobile } from "@/lib/use-media-query";
+import { usePropertyNavigation } from "@/lib/use-property-navigation";
 import {
   recentProperties,
   savedProperties,
@@ -53,8 +52,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   showSearchModal = false,
   useEmptySearchResults = false,
 }) => {
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { navigateToProperty } = usePropertyNavigation();
   const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(showSearchModal);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState("saved");
@@ -139,9 +138,15 @@ export const HomePage: React.FC<HomePageProps> = ({
   }, [searchQuery, currentSearchResults]);
 
   return (
-    <div className="min-h-screen relative" style={{ backgroundColor: 'var(--color-surface)' }}>
-      {/* Absolute positioned container - Background element (hidden on mobile) */}
-      <div className="hidden md:block absolute top-[96px] left-1/2 -translate-x-1/2 w-[1312px] h-[584px] z-0 overflow-hidden" style={{ borderRadius: 'var(--radius-base)', backgroundColor: 'var(--color-surface-dark)' }}>
+    <div
+      className="flex min-h-screen min-w-0 w-full max-w-full flex-col overflow-x-hidden relative"
+      style={{ backgroundColor: "var(--color-surface)" }}
+    >
+      {/* Absolute positioned container - Background element (hidden on mobile). Width adapts to viewport, max 1312px. */}
+      <div
+        className="hidden md:block absolute top-[96px] left-1/2 z-0 h-[584px] w-full max-w-[1312px] -translate-x-1/2 overflow-hidden"
+        style={{ borderRadius: "var(--radius-base)", backgroundColor: "var(--color-surface-dark)" }}
+      >
         {/* Flashing grid - pinned bottom-left, 540×540, with radial gradient fade */}
         <div
           className="absolute left-0 bottom-0 w-[540px] h-[540px]"
@@ -177,7 +182,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       </div>
 
       {/* Global Header - pointer-events-auto so header stays interactive; grid receives hover elsewhere */}
-      <div className="relative z-10 pointer-events-none">
+      <div className="relative z-10 min-w-0 w-full max-w-full pointer-events-none">
         <div className="pointer-events-auto">
           <GlobalHeader
           avatarSrc="https://i.pravatar.cc/150?img=12"
@@ -191,9 +196,9 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </div>
 
-      {/* Hero Section - pointer-events-none so grid receives hover; interactive blocks get pointer-events-auto */}
-      <section className="px-4 md:px-8 pt-4 md:pt-16 relative z-10 pointer-events-none">
-        <div className="max-w-6xl mx-auto welcome">
+      {/* Hero Section - 16px/32px horizontal padding; inner content constrained to avoid side scroll */}
+      <section className="relative z-10 min-w-0 w-full max-w-full overflow-x-hidden px-4 pt-4 pointer-events-none md:px-8 md:pt-16">
+        <div className="welcome mx-auto min-w-0 w-full max-w-full md:max-w-6xl">
           {/* Hero Heading */}
           <div className="mb-2 md:mb-8 text-left md:text-center" id="welcome">
             <p className="text-left md:text-center mb-1" style={{ 
@@ -219,8 +224,8 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Coming Soon Banner - under welcome on mobile only */}
-          <div className="max-w-2xl mx-auto mb-4 md:hidden pointer-events-auto">
-            <div className="flex items-center gap-2 self-stretch min-w-0" style={{ paddingRight: 'var(--spacing-md)' }}>
+          <div className="mx-auto mb-4 min-w-0 w-full max-w-2xl pointer-events-auto md:hidden">
+            <div className="flex min-w-0 items-center gap-2 self-stretch" style={{ paddingRight: "var(--spacing-md)" }}>
               <BadgeHome>
                 COMING SOON
               </BadgeHome>
@@ -232,18 +237,18 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Search Container - pointer-events-auto so search and buttons are clickable */}
-          <div className="max-w-2xl mx-auto mb-4 pointer-events-auto">
+          <div className="mx-auto mb-4 min-w-0 w-full max-w-2xl pointer-events-auto">
             {/* Wrapper with card background, shadow and radius from globals */}
             <div
-              className="flex flex-col"
+              className="flex min-w-0 flex-col"
               style={{
-                backgroundColor: 'var(--color-card)',
-                boxShadow: 'var(--shadow-sm)',
-                borderRadius: 'var(--radius-base)',
+                backgroundColor: "var(--color-card)",
+                boxShadow: "var(--shadow-sm)",
+                borderRadius: "var(--radius-base)",
               }}
             >
               {/* Command Box Trigger */}
-              <div className="flex items-start self-stretch">
+              <div className="flex min-w-0 items-start self-stretch">
                 <CommandBoxTrigger
                     variant="home"
                     placeholder={isMobile ? "Search properties" : "Search properties by address or BFE number..."}
@@ -284,8 +289,8 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Coming Soon Banner - under search on desktop only */}
-          <div className="max-w-2xl mx-auto hidden md:block pointer-events-auto mb-[64px]">
-            <div className="flex items-center gap-2 self-stretch" style={{ paddingLeft: 'var(--spacing-md)', paddingRight: 'var(--spacing-md)' }}>
+          <div className="mx-auto hidden min-w-0 w-full max-w-2xl pointer-events-auto mb-[64px] md:block">
+            <div className="flex min-w-0 items-center gap-2 self-stretch" style={{ paddingLeft: "var(--spacing-md)", paddingRight: "var(--spacing-md)" }}>
               <BadgeHome>
                 COMING SOON
               </BadgeHome>
@@ -298,11 +303,11 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* Data Tables Section - pointer-events-none so grid receives hover; card container is auto */}
-      <section className="px-4 md:px-8 pb-12 relative z-10 pointer-events-none">
-        <div className="max-w-[800px] mx-auto flex flex-col pointer-events-auto" style={{ gap: 'var(--spacing-lg)' }}>
+      {/* Data Tables Section - 16px/32px horizontal padding; inner content constrained to avoid side scroll */}
+      <section className="relative z-10 min-w-0 w-full max-w-full overflow-x-hidden px-4 pb-12 pointer-events-none md:px-8">
+        <div className="mx-auto flex min-w-0 w-full max-w-full flex-col pointer-events-auto md:max-w-[800px]" style={{ gap: "var(--spacing-lg)" }}>
           {/* Last Visited Card */}
-          <Card className="relative z-10">
+          <Card className="relative z-10 min-w-0">
             <CardHeader style={{ 
               paddingTop: 'var(--spacing-lg)', 
               paddingRight: 'var(--spacing-6xl)', 
@@ -318,10 +323,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <DataListItem
                     key={property.id}
                     variant="zebra"
-                    onClick={() => navigate(`/property/${property.id}`)}
+                    onClick={() => navigateToProperty(property.id)}
                   >
                     {getIconComponent(property.icon, property.iconColor)}
-                    <span className="flex-1" style={{ 
+                    <span className="min-w-0 flex-1" style={{ 
                       fontSize: 'var(--text-sm)', 
                       fontWeight: 'var(--font-normal)', 
                       fontFamily: 'var(--font-sans)', 
@@ -339,7 +344,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </Card>
 
           {/* Saved Properties Card with Tabs */}
-          <Card className="relative z-10">
+          <Card className="relative z-10 min-w-0">
             <CardHeader style={{ padding: 'var(--spacing-xl)', paddingBottom: '0', gap: 'var(--spacing-xl)' }}>
               <CardTitle>Saved</CardTitle>
 
@@ -360,10 +365,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                         <DataListItem
                           key={property.id}
                           variant="zebra"
-                          onClick={() => navigate(`/property/${property.id}`)}
+                          onClick={() => navigateToProperty(property.id)}
                         >
                           {getIconComponent(property.icon, property.iconColor)}
-                          <span className="flex-1" style={{ 
+                          <span className="min-w-0 flex-1" style={{ 
                             fontSize: 'var(--text-sm)', 
                             fontWeight: 'var(--font-normal)', 
                             fontFamily: 'var(--font-sans)', 
@@ -440,7 +445,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   value={result.text}
                   onSelect={() => {
                     setIsSearchModalOpen(false);
-                    navigate(`/property/${result.id}`);
+                    navigateToProperty(result.id);
                   }}
                 >
                   {getColoredIcon(result.icon, result.iconColor)}
