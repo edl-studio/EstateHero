@@ -45,7 +45,6 @@
   bottom: 0;
   width: 100%;
   z-index: 50;
-  min-height: 50vh;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -55,6 +54,12 @@
   background-color: var(--color-card);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
   padding-bottom: env(safe-area-inset-bottom, 0);
+  /* Lifts the panel above the iOS keyboard using --kb set by useKeyboardInset.
+     CSS animations (slide-in/out) take priority over transitions, so the
+     open/close animation plays cleanly before the keyboard transition kicks in. */
+  transform: translateY(calc(-1 * var(--kb, 0px)));
+  will-change: transform;
+  transition: transform var(--transition-default);
 }
 
 .panel[data-state="open"] {

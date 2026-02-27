@@ -3,6 +3,35 @@ import { Dialog } from "@base-ui-components/react/dialog";
 import { cn } from "@/lib/utils";
 import styles from "./bottom-sheet.module.css";
 
+function useKeyboardInset(active: boolean) {
+  React.useEffect(() => {
+    if (!active || typeof window === "undefined") {
+      document.documentElement.style.removeProperty("--kb");
+      return;
+    }
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const set = () => {
+      const layoutH = document.documentElement.clientHeight;
+      const overlap = Math.max(0, layoutH - vv.height - (vv.offsetTop ?? 0));
+      document.documentElement.style.setProperty("--kb", `${overlap}px`);
+    };
+
+    set();
+    vv.addEventListener("resize", set);
+    vv.addEventListener("scroll", set);
+    window.addEventListener("orientationchange", set);
+
+    return () => {
+      vv.removeEventListener("resize", set);
+      vv.removeEventListener("scroll", set);
+      window.removeEventListener("orientationchange", set);
+      document.documentElement.style.removeProperty("--kb");
+    };
+  }, [active]);
+}
+
 export interface BottomSheetProps {
   /** Whether the bottom sheet is open */
   open?: boolean;
@@ -47,6 +76,8 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
     },
     ref
   ) => {
+    useKeyboardInset(open === true);
+
     const hasHeader =
       header != null ||
       heading != null ||
