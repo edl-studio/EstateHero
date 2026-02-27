@@ -45,6 +45,7 @@
   bottom: 0;
   width: 100%;
   z-index: 50;
+  min-height: 50vh;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -153,9 +154,7 @@
   align-items: stretch;
   gap: 0.625rem; /* 10px */
   align-self: stretch;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 
 .content > * {
