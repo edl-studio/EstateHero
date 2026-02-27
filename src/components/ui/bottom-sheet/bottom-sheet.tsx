@@ -111,12 +111,12 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
         <Dialog.Portal>
           <Dialog.Backdrop className={styles.backdrop} />
+          <div className={styles.keyboardFill} aria-hidden="true" />
           <Dialog.Popup
             ref={ref}
             className={cn(styles.panel, className)}
             aria-modal="true"
           >
-            <div className={styles.bottomFill} aria-hidden="true" />
             {showHandle && (
               <div className={styles.handleWrap} aria-hidden="true">
                 <span className={styles.handle} />
