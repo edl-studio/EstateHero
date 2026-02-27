@@ -154,7 +154,9 @@
   align-items: stretch;
   gap: 0.625rem; /* 10px */
   align-self: stretch;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .content > * {

@@ -47,17 +47,6 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
     },
     ref
   ) => {
-    const [keyboardOffset, setKeyboardOffset] = React.useState(0);
-    React.useEffect(() => {
-      if (!open || typeof window === "undefined") { setKeyboardOffset(0); return; }
-      const vv = window.visualViewport;
-      if (!vv) return;
-      const onResize = () => setKeyboardOffset(Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
-      vv.addEventListener("resize", onResize);
-      onResize();
-      return () => { vv.removeEventListener("resize", onResize); setKeyboardOffset(0); };
-    }, [open]);
-
     const hasHeader =
       header != null ||
       heading != null ||
@@ -94,7 +83,6 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
           <Dialog.Popup
             ref={ref}
             className={cn(styles.panel, className)}
-            style={keyboardOffset > 0 ? { bottom: keyboardOffset } : undefined}
             aria-modal="true"
           >
             <div className={styles.bottomFill} aria-hidden="true" />
