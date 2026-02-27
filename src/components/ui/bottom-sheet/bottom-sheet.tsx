@@ -47,6 +47,31 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
     },
     ref
   ) => {
+    const [keyboardVisible, setKeyboardVisible] = React.useState(false);
+
+    React.useEffect(() => {
+      if (!open || typeof window === "undefined") {
+        setKeyboardVisible(false);
+        return;
+      }
+      const viewport = window.visualViewport;
+      if (!viewport) return;
+
+      const onResize = () => {
+        const shrink =
+          window.innerHeight - viewport.height - viewport.offsetTop;
+        setKeyboardVisible(shrink > 80);
+      };
+
+      viewport.addEventListener("resize", onResize);
+      onResize();
+
+      return () => {
+        viewport.removeEventListener("resize", onResize);
+        setKeyboardVisible(false);
+      };
+    }, [open]);
+
     const hasHeader =
       header != null ||
       heading != null ||
@@ -80,12 +105,9 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
         <Dialog.Portal>
           <Dialog.Backdrop className={styles.backdrop} />
-          {/*
-           * White fill rendered between backdrop and panel (same z-index, later DOM = on top).
-           * Covers the bottom portion of the viewport so any gap between the panel and the
-           * iOS Safari keyboard toolbar is white instead of showing the blurred backdrop.
-           */}
-          <div className={styles.keyboardGapFill} aria-hidden="true" />
+          {keyboardVisible && (
+            <div className={styles.keyboardGapFill} aria-hidden="true" />
+          )}
           <Dialog.Popup
             ref={ref}
             className={cn(styles.panel, className)}
