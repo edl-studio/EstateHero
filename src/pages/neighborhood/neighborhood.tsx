@@ -487,7 +487,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                       status: "Adopted" as const,
                     },
                   ].map((row) => (
-                    <DataListItem key={row.year} variant="zebra" className="!p-0 !gap-0 overflow-hidden">
+                    <DataListItem key={row.year} variant="zebra" mobileFirstOnly className="!p-0 !gap-0 overflow-hidden">
                       {/* Cell 1: icon + year */}
                       <div className="flex h-[60px] shrink-0 items-center gap-3 py-3 pl-3 pr-6">
                         <IconContainer color="blue" icon={{ name: "MapPinned", size: "base" }} />
@@ -534,7 +534,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
               </CardHeader>
               <CardContent>
                 <DataList className="w-full">
-                  <DataListItem variant="zebra" className="!p-0 !gap-0 overflow-hidden">
+                  <DataListItem variant="zebra" mobileFirstOnly className="!p-0 !gap-0 overflow-hidden">
                     {/* Cell 1: icon + year */}
                     <div className="flex h-[60px] shrink-0 items-center gap-3 py-3 pl-3 pr-6">
                       <IconContainer color="blue" icon={{ name: "Map", size: "base" }} />

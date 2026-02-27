@@ -167,7 +167,6 @@
    Footer slot (sticky at bottom of panel)
    ============================================ */
 .footer {
-  position: relative;
   flex-shrink: 0;
   padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xl);
   padding-bottom: calc(var(--spacing-xl) + env(safe-area-inset-bottom, 0));
@@ -175,7 +174,8 @@
   background-color: var(--color-card);
 }
 
-.footer::after {
+/* Fills the gap between the panel bottom and the iOS keyboard on Safari */
+.panel::after {
   content: '';
   position: absolute;
   bottom: -400px;

@@ -29,7 +29,7 @@
   background-color: var(--color-control-hover);
 }
 
-/* Mobile: show icon + address (first two), hide units and area columns */
+/* Mobile: show icon + label (first two), hide remaining columns */
 @media (max-width: 767px) {
   .item {
     min-width: 0;
@@ -39,11 +39,16 @@
     display: none;
   }
 
-  /* Truncate the address/label text so it stays on one line */
+  /* Truncate the label text so it stays on one line */
   .item > *:nth-child(2) {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  /* Variant: show only the first cell */
+  .item-mobile-first-only > *:nth-child(n + 2) {
+    display: none;
   }
 }

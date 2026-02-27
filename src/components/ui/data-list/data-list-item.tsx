@@ -10,11 +10,13 @@ export interface DataListItemProps
   variant?: "default" | "zebra";
   /** Click handler for the item */
   onClick?: () => void;
+  /** On mobile, show only the first child and hide the rest */
+  mobileFirstOnly?: boolean;
 }
 
 export const DataListItem = React.forwardRef<HTMLLIElement, DataListItemProps>(
   (
-    { className, variant = "default", onClick, children, ...props },
+    { className, variant = "default", onClick, mobileFirstOnly, children, ...props },
     ref
   ) => {
     const variantClass = variant === "zebra" ? styles["item-zebra"] : styles["item-default"];
@@ -22,7 +24,7 @@ export const DataListItem = React.forwardRef<HTMLLIElement, DataListItemProps>(
     return (
       <li
         ref={ref}
-        className={cn(styles.item, variantClass, className)}
+        className={cn(styles.item, variantClass, mobileFirstOnly && styles["item-mobile-first-only"], className)}
         onClick={onClick}
         role={onClick ? "button" : undefined}
         tabIndex={onClick ? 0 : undefined}
