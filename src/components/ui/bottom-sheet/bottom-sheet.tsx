@@ -47,11 +47,15 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
     },
     ref
   ) => {
-    const [keyboardVisible, setKeyboardVisible] = React.useState(false);
+    // Tracks how much the visual viewport has shrunk due to the iOS keyboard.
+    // When > 0, the panel bottom is lifted by that amount so it sits flush
+    // against the keyboard top — same idea as keyboardBehavior="fillParent"
+    // in @gorhom/bottom-sheet.
+    const [keyboardOffset, setKeyboardOffset] = React.useState(0);
 
     React.useEffect(() => {
       if (!open || typeof window === "undefined") {
-        setKeyboardVisible(false);
+        setKeyboardOffset(0);
         return;
       }
       const viewport = window.visualViewport;
@@ -60,7 +64,7 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
       const onResize = () => {
         const shrink =
           window.innerHeight - viewport.height - viewport.offsetTop;
-        setKeyboardVisible(shrink > 80);
+        setKeyboardOffset(Math.max(0, shrink));
       };
 
       viewport.addEventListener("resize", onResize);
@@ -68,7 +72,7 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
 
       return () => {
         viewport.removeEventListener("resize", onResize);
-        setKeyboardVisible(false);
+        setKeyboardOffset(0);
       };
     }, [open]);
 
@@ -105,12 +109,10 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
         <Dialog.Portal>
           <Dialog.Backdrop className={styles.backdrop} />
-          {keyboardVisible && (
-            <div className={styles.keyboardGapFill} aria-hidden="true" />
-          )}
           <Dialog.Popup
             ref={ref}
             className={cn(styles.panel, className)}
+            style={keyboardOffset > 0 ? { bottom: keyboardOffset } : undefined}
             aria-modal="true"
           >
             {showHandle && (

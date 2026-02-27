@@ -36,23 +36,6 @@
 }
 
 /* ============================================
-   Keyboard gap fill
-   Rendered between backdrop and panel (same z-index, later in DOM = paints on top).
-   Covers the bottom 60vh with white so any gap between the panel bottom and the
-   iOS Safari floating keyboard toolbar shows white instead of the blurred backdrop.
-   ============================================ */
-.keyboardGapFill {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60vh;
-  background-color: var(--color-card);
-  z-index: 50;
-  pointer-events: none;
-}
-
-/* ============================================
    BOTTOM SHEET – Panel (anchored to bottom, full width)
    ============================================ */
 .panel {
