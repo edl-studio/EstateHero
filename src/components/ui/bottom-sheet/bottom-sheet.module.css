@@ -174,14 +174,3 @@
   background-color: var(--color-card);
 }
 
-/* Fills the gap between the panel bottom and the iOS keyboard on Safari */
-.panel::after {
-  content: '';
-  position: absolute;
-  bottom: -400px;
-  left: 0;
-  right: 0;
-  height: 400px;
-  background-color: var(--color-card);
-  pointer-events: none;
-}
