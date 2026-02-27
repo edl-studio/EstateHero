@@ -377,10 +377,10 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                 </BaseSelect.Icon>
               </BaseSelect.Trigger>
               <BaseSelect.Portal>
-                <BaseSelect.Positioner className="left-4 right-4 w-[calc(100vw-32px)]">
+                <BaseSelect.Positioner className="z-[200] left-4 right-4 w-[calc(100vw-32px)]">
                   <BaseSelect.Popup
                     className={cn(
-                      "z-50 w-full overflow-hidden rounded-[8px] border border-[#D5D7DA] bg-white py-1",
+                      "w-full overflow-hidden rounded-[8px] border border-[#D5D7DA] bg-white py-1",
                       "shadow-[0_1px_2px_0_rgba(10,13,18,0.05)]"
                     )}
                   >

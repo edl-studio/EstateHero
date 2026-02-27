@@ -190,6 +190,15 @@
     min-height: 100%;
   }
 
+  /* Propagate cell alignment into the flex contentFull wrapper on mobile. */
+  .cellAlignRight > .contentFull {
+    justify-content: flex-end;
+  }
+
+  .cellAlignCenter > .contentFull {
+    justify-content: center;
+  }
+
   :global(.mobile-table-label-cell).cell,
   :global(.mobile-table-data-cell).cell {
     height: 48px !important;

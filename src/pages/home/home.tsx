@@ -201,23 +201,25 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="welcome mx-auto min-w-0 w-full max-w-full md:max-w-6xl">
           {/* Hero Heading */}
           <div className="mb-2 md:mb-8 text-left md:text-center" id="welcome">
-            <p className="text-left md:text-center mb-1" style={{ 
-              fontSize: 'var(--text-lg)', 
-              color: 'var(--color-gray-500)', 
-              fontFamily: 'var(--font-sans)', 
-              fontWeight: 'var(--font-normal)', 
-              lineHeight: 'var(--leading-tight)' 
-            }}>
+            {/* Mobile: sans/regular/16. Desktop: existing (lg, etc.) */}
+            <p
+              className="text-left md:text-center mb-1 font-sans font-normal text-base md:text-lg"
+              style={{
+                color: "var(--color-gray-500)",
+                lineHeight: "var(--leading-tight)",
+              }}
+            >
               Welcome back, Filippa
             </p>
-            <h1 className="text-left md:text-center" style={{ 
-              fontFamily: 'var(--font-sans)', 
-              fontSize: 'var(--text-4xl)', 
-              fontWeight: 'var(--font-medium)', 
-              color: 'var(--color-content-primary)', 
-              lineHeight: 'var(--leading-tight)', 
-              letterSpacing: 'var(--tracking-tighter)' 
-            }}>
+            {/* Mobile: sans/medium/30. Desktop: existing (4xl, etc.) */}
+            <h1
+              className="text-left md:text-center font-sans font-medium text-[1.875rem] md:text-4xl"
+              style={{
+                color: "var(--color-content-primary)",
+                lineHeight: "var(--leading-tight)",
+                letterSpacing: "var(--tracking-tighter)",
+              }}
+            >
               Let's dive into the data
             </h1>
            

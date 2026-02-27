@@ -138,9 +138,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }, [isFocused, isMetricWithTrailingSlot, measureValue, updateMetricPosition]);
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      // readOnly inputs on iOS don't fire focus; handled via onClick instead.
       if (isMobileTrigger) {
-        onMobileOpenSheet?.();
-        queueMicrotask(() => inputRef.current?.blur());
+        inputRef.current?.blur();
         return;
       }
       setIsFocused(true);
@@ -150,6 +150,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(false);
       onBlur?.(e);
+    };
+    const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+      if (isMobileTrigger) {
+        e.preventDefault();
+        onMobileOpenSheet?.();
+      }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -201,8 +207,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     if (!leadingIcon && !hasTrailing && !hasMetric) {
       const simpleHandleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
         if (isMobileTrigger) {
-          onMobileOpenSheet?.();
-          queueMicrotask(() => inputRef.current?.blur());
+          inputRef.current?.blur();
           return;
         }
         onFocus?.(e);
@@ -214,6 +219,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           readOnly={isMobileTrigger}
           className={cn(styles.input, textClass, variantClass, sizeClass, alignClass, monoVariantClass, isMobileTrigger && styles.inputMobileTrigger, className)}
           onFocus={simpleHandleFocus}
+          onClick={handleClick}
           onKeyDown={handleKeyDown}
           {...props}
         />
@@ -264,6 +270,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           readOnly={isMobileTrigger}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onClick={handleClick}
           onKeyDown={handleKeyDown}
           className={cn(
             styles.input,

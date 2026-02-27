@@ -29,13 +29,21 @@
   background-color: var(--color-control-hover);
 }
 
-/* Mobile: show only the first cell (icon + first label), hide the rest */
+/* Mobile: show icon + address (first two), hide units and area columns */
 @media (max-width: 767px) {
   .item {
     min-width: 0;
   }
 
-  .item > *:not(:first-child) {
+  .item > *:nth-child(n + 3) {
     display: none;
+  }
+
+  /* Truncate the address/label text so it stays on one line */
+  .item > *:nth-child(2) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
