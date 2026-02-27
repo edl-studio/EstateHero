@@ -56,17 +56,6 @@
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-.panel::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: 400px;
-  background-color: var(--color-card);
-  pointer-events: none;
-}
-
 .panel[data-state="open"] {
   animation: bottomSheetPanelIn 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -172,6 +161,21 @@
 .content > * {
   width: 100%;
   min-width: 0;
+}
+
+/* ============================================
+   Bottom fill — absolutely positioned child of the panel so it inherits
+   the panel's slide-in animation. Extends 400px below the panel to cover
+   the gap between the sheet and the iOS keyboard toolbar.
+   ============================================ */
+.bottomFill {
+  position: absolute;
+  top: 100%;
+  left: -1px;
+  right: -1px;
+  height: 400px;
+  background-color: var(--color-card);
+  pointer-events: none;
 }
 
 /* ============================================

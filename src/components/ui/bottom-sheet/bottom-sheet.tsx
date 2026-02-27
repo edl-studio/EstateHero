@@ -85,6 +85,7 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
             className={cn(styles.panel, className)}
             aria-modal="true"
           >
+            <div className={styles.bottomFill} aria-hidden="true" />
             {showHandle && (
               <div className={styles.handleWrap} aria-hidden="true">
                 <span className={styles.handle} />
