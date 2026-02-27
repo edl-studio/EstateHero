@@ -140,8 +140,6 @@
   
   html {
     overflow-x: hidden;
-    /* iOS Safari uses the html background for the area behind the keyboard and overscroll regions */
-    background-color: var(--color-card);
   }
 
   body {

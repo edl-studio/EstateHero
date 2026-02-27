@@ -3,6 +3,49 @@ import { Dialog } from "@base-ui-components/react/dialog";
 import { cn } from "@/lib/utils";
 import styles from "./bottom-sheet.module.css";
 
+function useKeyboardGapFill(open: boolean | undefined) {
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !open) return;
+
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.backgroundColor;
+    const prevBody = body.style.backgroundColor;
+
+    html.style.backgroundColor = "#ffffff";
+    body.style.backgroundColor = "#ffffff";
+
+    return () => {
+      html.style.backgroundColor = prevHtml;
+      body.style.backgroundColor = prevBody;
+    };
+  }, [open]);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !open) return;
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const adjust = () => {
+      const gap = window.innerHeight - viewport.height - viewport.offsetTop;
+      document.documentElement.style.setProperty(
+        "--bottom-sheet-keyboard-gap",
+        `${Math.max(0, gap)}px`
+      );
+    };
+
+    viewport.addEventListener("resize", adjust);
+    viewport.addEventListener("scroll", adjust);
+    adjust();
+
+    return () => {
+      viewport.removeEventListener("resize", adjust);
+      viewport.removeEventListener("scroll", adjust);
+      document.documentElement.style.removeProperty("--bottom-sheet-keyboard-gap");
+    };
+  }, [open]);
+}
+
 export interface BottomSheetProps {
   /** Whether the bottom sheet is open */
   open?: boolean;
@@ -47,6 +90,8 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
     },
     ref
   ) => {
+    useKeyboardGapFill(open);
+
     const hasHeader =
       header != null ||
       heading != null ||
@@ -83,6 +128,7 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
           <Dialog.Popup
             ref={ref}
             className={cn(styles.panel, className)}
+            style={{ bottom: "var(--bottom-sheet-keyboard-gap, 0px)" }}
             aria-modal="true"
           >
             {showHandle && (
