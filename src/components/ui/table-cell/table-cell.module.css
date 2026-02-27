@@ -150,6 +150,10 @@
   display: block;
 }
 
+.cellContentFull {
+  /* Marker for cells with full-width content (e.g. input); mobile height set in @media below */
+}
+
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -158,11 +162,44 @@
 
 /* Mobile overrides (from globals or existing) */
 @media (max-width: 767px) {
-  :global(.mobile-table-label-cell).cell {
-    height: 40px !important;
+  .cell {
+    height: 48px !important;
+    min-height: 48px;
+    max-height: 48px;
+    padding-top: 11.5px;
+    padding-bottom: 11.5px;
   }
 
+  /* Keep table layout intact: do not set display:flex on .cell.
+   * Metric/text cells: inline-level so the cell’s vertical-align: middle centers them. */
+  .cell > .content {
+    width: 100%;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  /* Input cells: fill cell height and center the input vertically. */
+  .cell > .contentFull {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 100%;
+  }
+
+  :global(.mobile-table-label-cell).cell,
   :global(.mobile-table-data-cell).cell {
+    height: 48px !important;
+    min-height: 48px;
+    max-height: 48px;
+    padding-top: 11.5px;
+    padding-bottom: 11.5px;
+  }
+
+  .cellContentFull.cell {
     height: 48px !important;
     min-height: 48px;
     max-height: 48px;

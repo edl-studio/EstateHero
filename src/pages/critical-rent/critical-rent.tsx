@@ -21,13 +21,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ValueCard } from "@/components/ui/value-card";
 import { MortgageRateCard } from "@/components/ui/mortgage-rate-card";
 import { InfoCard } from "@/components/ui/info-card";
-import { InputTrailingActions } from "@/components/ui/input";
+import { Input, InputTrailingActions } from "@/components/ui/input";
 import { TableHeader } from "@/components/ui/table-header";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { TableRow } from "@/components/ui/table-row";
 import { TableCell } from "@/components/ui/table-cell";
 
 import { cn } from "@/lib/utils";
 import { usePropertyNavigation } from "@/lib/use-property-navigation";
+import { useIsMobile } from "@/lib/use-media-query";
 
 import valueRatioImage from "@/assets/images/value-ratio.png";
 import contributionRateImage from "@/assets/images/contribution-rate.png";
@@ -40,6 +42,8 @@ import {
   getPropertyById,
   type PropertyItem,
 } from "@/pages/home/mock-data";
+
+import styles from "./critical-rent.module.css";
 
 export interface CriticalRentPageProps {
   /** Override property ID (for Storybook) */
@@ -85,6 +89,30 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
   const [mortgageDuration, setMortgageDuration] = React.useState<
     "20y" | "30y"
   >("20y");
+
+  const isMobile = useIsMobile();
+  type MobileInputSheetField = "loanToValue" | "contributionRate" | null;
+  const [mobileInputSheetOpen, setMobileInputSheetOpen] = React.useState(false);
+  const [mobileInputSheetField, setMobileInputSheetField] =
+    React.useState<MobileInputSheetField>(null);
+  const isClosingSheetRef = React.useRef(false);
+
+  const openMobileInputSheet = React.useCallback(
+    (field: MobileInputSheetField) => {
+      if (isClosingSheetRef.current) {
+        isClosingSheetRef.current = false;
+        return;
+      }
+      setMobileInputSheetField(field);
+      setMobileInputSheetOpen(true);
+    },
+    []
+  );
+
+  const closeMobileInputSheet = React.useCallback(() => {
+    isClosingSheetRef.current = true;
+    setMobileInputSheetOpen(false);
+  }, []);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -245,15 +273,9 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                   </Button>
                 </TileHeaderActions>
               </TileHeader>
-              <TileContent
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "var(--spacing-xl)",
-                  flexWrap: "wrap",
-                }}
-              >
-                <ValueCard
+              <TileContent>
+                <div className="flex flex-col gap-[var(--spacing-xl)] md:flex-row md:flex-wrap">
+                  <ValueCard
                   variant="illustration"
                   label="Loan to value ratio"
                   labelTooltip="Ratio of loan amount to property value."
@@ -264,6 +286,9 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                   metric="DKK"
                   illustration={<img src={valueRatioImage} alt="" width={32} height={40} />}
                   valueIcon={null}
+                  onMobileOpenSheet={
+                    isMobile ? () => openMobileInputSheet("loanToValue") : undefined
+                  }
                   inputTrailingSlot={
                     <InputTrailingActions
                       onClear={() => setLoanToValueRatio("")}
@@ -272,7 +297,7 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                     />
                   }
                 />
-                <ValueCard
+                  <ValueCard
                   variant="illustration"
                   label="Contribution rate"
                   labelTooltip="Contribution rate for the loan."
@@ -283,6 +308,9 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                   metric="DKK"
                   illustration={<img src={contributionRateImage} alt="" width={32} height={40} />}
                   valueIcon={null}
+                  onMobileOpenSheet={
+                    isMobile ? () => openMobileInputSheet("contributionRate") : undefined
+                  }
                   inputTrailingSlot={
                     <InputTrailingActions
                       onClear={() => setContributionRate("")}
@@ -291,7 +319,7 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                     />
                   }
                 />
-                <MortgageRateCard
+                  <MortgageRateCard
                   illustration={<img src={mortgageInterestRateImage} alt="" width={32} height={40} />}
                   label="Mortgage interest rate"
                   labelTooltip="Interest rate for the mortgage."
@@ -300,19 +328,20 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
                   duration={mortgageDuration}
                   onDurationChange={setMortgageDuration}
                 />
-                <InfoCard
+                  <InfoCard
                   title="What is critical rent?"
                   description="Discover the rent threshold where your investment turns profitable."
                   buttonText="LEARN MORE"
                   onButtonClick={() => {}}
                   illustration={<img src={cashStackImage} alt="" height={32} />}
                 />
+                </div>
               </TileContent>
 
               <TileContent style={{ paddingTop: "var(--spacing-xl)" }}>
                 <TooltipProvider>
                   <div className="overflow-x-auto rounded-lg bg-[var(--color-card)]">
-                    <table className="data-table critical-rent-comparison-table w-full min-w-[640px] border-separate border-spacing-0" style={{ tableLayout: "fixed" }}>
+                    <table className={cn("data-table critical-rent-comparison-table w-full min-w-[640px] border-separate border-spacing-0", styles.criticalRentTable)} style={{ tableLayout: "fixed" }}>
                       <colgroup>
                         <col style={{ width: "224px" }} />
                         <col />
@@ -425,6 +454,93 @@ export const CriticalRentPage: React.FC<CriticalRentPageProps> = ({
             </Tile>
           </div>
         </section>
+
+      {isMobile && (
+        <BottomSheet
+          open={mobileInputSheetOpen}
+          onOpenChange={(open) => {
+            if (!open) isClosingSheetRef.current = true;
+            setMobileInputSheetOpen(open);
+            if (!open) {
+              setMobileInputSheetField(null);
+              setTimeout(() => (document.activeElement as HTMLElement)?.blur?.(), 0);
+            }
+          }}
+          heading={
+            mobileInputSheetField === "loanToValue"
+              ? "Loan to value ratio"
+              : mobileInputSheetField === "contributionRate"
+                ? "Contribution rate"
+                : "Edit value"
+          }
+          subheading={
+            mobileInputSheetField === "loanToValue"
+              ? "Ratio of loan amount to property value."
+              : mobileInputSheetField === "contributionRate"
+                ? "Contribution rate for the loan."
+                : undefined
+          }
+          headerActions={
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              iconLeft={<Icon name="X" />}
+              onClick={closeMobileInputSheet}
+              aria-label="Close"
+            />
+          }
+        >
+          {mobileInputSheetField === "loanToValue" && (
+            <div className="w-full">
+              <Input
+                variant="default"
+                size="default"
+                fontVariant="sans"
+                align="right"
+                value={loanToValueRatio}
+                onChange={(e) => setLoanToValueRatio(e.target.value)}
+                metric="DKK"
+                trailingSlot={
+                  <InputTrailingActions
+                    onClear={() => setLoanToValueRatio("")}
+                    onConfirm={closeMobileInputSheet}
+                    confirmShortcut
+                  />
+                }
+                onConfirmKeyDown={closeMobileInputSheet}
+                onClearKeyDown={() => setLoanToValueRatio("")}
+                className="w-full"
+                containerClassName="w-full"
+              />
+            </div>
+          )}
+          {mobileInputSheetField === "contributionRate" && (
+            <div className="w-full">
+              <Input
+                variant="default"
+                size="default"
+                fontVariant="sans"
+                align="right"
+                value={contributionRate}
+                onChange={(e) => setContributionRate(e.target.value)}
+                metric="DKK"
+                trailingSlot={
+                  <InputTrailingActions
+                    onClear={() => setContributionRate("")}
+                    onConfirm={closeMobileInputSheet}
+                    confirmShortcut
+                  />
+                }
+                onConfirmKeyDown={closeMobileInputSheet}
+                onClearKeyDown={() => setContributionRate("")}
+                className="w-full"
+                containerClassName="w-full"
+              />
+            </div>
+          )}
+        </BottomSheet>
+      )}
 
       <CommandDialog open={isSearchModalOpen} onOpenChange={setIsSearchModalOpen}>
         <CommandInput

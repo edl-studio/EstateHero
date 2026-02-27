@@ -98,15 +98,25 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
   const [mobileInputSheetOpen, setMobileInputSheetOpen] = React.useState(false);
   const [mobileInputSheetContext, setMobileInputSheetContext] =
     React.useState<MobileInputSheetContext>(null);
+  const isClosingSheetRef = React.useRef(false);
 
   const openMobileInputSheet = React.useCallback(
     (context: MobileInputSheetContext) => {
       if (!isMobile) return;
+      if (isClosingSheetRef.current) {
+        isClosingSheetRef.current = false;
+        return;
+      }
       setMobileInputSheetContext(context);
       setMobileInputSheetOpen(true);
     },
     [isMobile]
   );
+
+  const closeMobileInputSheet = React.useCallback(() => {
+    isClosingSheetRef.current = true;
+    setMobileInputSheetOpen(false);
+  }, []);
 
   type RentalSortColumn = "unit" | "m2" | "monthly" | "annual" | "perM2";
   type RentalSortDirection = "asc" | "desc";
@@ -780,7 +790,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "monthly", e.target.value)
                                         }
-                                        onFocus={
+                                        onMobileOpenSheet={
                                           isMobile
                                             ? () =>
                                                 openMobileInputSheet({
@@ -815,7 +825,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "annual", e.target.value)
                                         }
-                                        onFocus={
+                                        onMobileOpenSheet={
                                           isMobile
                                             ? () =>
                                                 openMobileInputSheet({
@@ -850,7 +860,7 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                                         onChange={(e) =>
                                           updateCalculatedRental(row.unit, "perM2", e.target.value)
                                         }
-                                        onFocus={
+                                        onMobileOpenSheet={
                                           isMobile
                                             ? () =>
                                                 openMobileInputSheet({
@@ -1223,173 +1233,139 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
         <BottomSheet
           open={mobileInputSheetOpen}
           onOpenChange={(open) => {
+            if (!open) isClosingSheetRef.current = true;
             setMobileInputSheetOpen(open);
-            if (!open) setMobileInputSheetContext(null);
+            if (!open) {
+              setMobileInputSheetContext(null);
+              setTimeout(() => (document.activeElement as HTMLElement)?.blur?.(), 0);
+            }
           }}
-          header={
-            <div className="flex items-center justify-between">
-              <h2
-                className="text-lg font-semibold"
-                style={{ color: "var(--color-content-primary)" }}
-              >
-                {mobileInputSheetContext === "operatingExpensesTotal"
-                  ? "Total annual expenses"
-                  : mobileInputSheetContext === "simulationYield"
-                    ? "Yield"
-                    : mobileInputSheetContext &&
-                        typeof mobileInputSheetContext === "object" &&
-                        mobileInputSheetContext.type === "calculatedRental"
-                      ? `${mobileInputSheetContext.field === "monthly" ? "Monthly rent" : mobileInputSheetContext.field === "annual" ? "Annual rent" : "Rent per M²"} · ${mobileInputSheetContext.unit}`
-                      : "Edit value"}
-              </h2>
-              <button
-                type="button"
-                onClick={() => setMobileInputSheetOpen(false)}
-                className="text-sm font-medium"
-                style={{ color: "var(--color-content-accent)" }}
-                aria-label="Done"
-              >
-                Done
-              </button>
-            </div>
+          heading={
+            mobileInputSheetContext === "operatingExpensesTotal"
+              ? "Total annual expenses"
+              : mobileInputSheetContext === "simulationYield"
+                ? "Yield"
+                : mobileInputSheetContext &&
+                    typeof mobileInputSheetContext === "object" &&
+                    mobileInputSheetContext.type === "calculatedRental"
+                  ? `${mobileInputSheetContext.field === "monthly" ? "Monthly rent" : mobileInputSheetContext.field === "annual" ? "Annual rent" : "Rent per M²"} · ${mobileInputSheetContext.unit}`
+                  : "Edit value"
+          }
+          subheading={
+            mobileInputSheetContext === "operatingExpensesTotal"
+              ? "Total operating expenses per year."
+              : mobileInputSheetContext === "simulationYield"
+                ? "Yield percentage. Edit to simulate."
+                : mobileInputSheetContext &&
+                    typeof mobileInputSheetContext === "object" &&
+                    mobileInputSheetContext.type === "calculatedRental"
+                  ? mobileInputSheetContext.unit
+                  : undefined
+          }
+          headerActions={
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              iconLeft={<Icon name="X" />}
+              onClick={closeMobileInputSheet}
+              aria-label="Close"
+            />
           }
         >
           {mobileInputSheetContext === "operatingExpensesTotal" && (
-            <div className="flex flex-col gap-4">
-              <p
-                className="text-sm"
-                style={{ color: "var(--color-content-secondary)" }}
-              >
-                Total operating expenses per year.
-              </p>
-              <label className="flex flex-col gap-2">
-                <span
-                  className="text-xs font-medium uppercase tracking-wide"
-                  style={{ color: "var(--color-content-secondary)" }}
-                >
-                  Amount (DKK)
-                </span>
-                <Input
-                  type="text"
-                  variant="default"
-                  size="default"
-                  fontVariant="mono"
-                  value={operatingExpensesTotal}
-                  onChange={(e) => setOperatingExpensesTotal(e.target.value)}
-                  metric="DKK"
-                  autoFocus
-                  trailingSlot={
-                    <InputTrailingActions
-                      onClear={() => setOperatingExpensesTotal("")}
-                      onConfirm={() => setMobileInputSheetOpen(false)}
-                      confirmShortcut
-                      ariaLabelClear="Clear"
-                      ariaLabelConfirm="Confirm"
-                    />
-                  }
-                  onConfirmKeyDown={() => setMobileInputSheetOpen(false)}
-                  onClearKeyDown={() => setOperatingExpensesTotal("")}
-                  className="w-full"
-                />
-              </label>
+            <div className="w-full">
+              <Input
+                type="text"
+                variant="default"
+                size="default"
+                fontVariant="mono"
+                value={operatingExpensesTotal}
+                onChange={(e) => setOperatingExpensesTotal(e.target.value)}
+                metric="DKK"
+                autoFocus
+                trailingSlot={
+                  <InputTrailingActions
+                    onClear={() => setOperatingExpensesTotal("")}
+                    onConfirm={closeMobileInputSheet}
+                    confirmShortcut
+                    ariaLabelClear="Clear"
+                    ariaLabelConfirm="Confirm"
+                  />
+                }
+                onConfirmKeyDown={closeMobileInputSheet}
+                onClearKeyDown={() => setOperatingExpensesTotal("")}
+                className="w-full"
+                containerClassName="w-full"
+              />
             </div>
           )}
 
           {mobileInputSheetContext === "simulationYield" && (
-            <div className="flex flex-col gap-4">
-              <p
-                className="text-sm"
-                style={{ color: "var(--color-content-secondary)" }}
-              >
-                Yield percentage. Edit to simulate.
-              </p>
-              <label className="flex flex-col gap-2">
-                <span
-                  className="text-xs font-medium uppercase tracking-wide"
-                  style={{ color: "var(--color-content-secondary)" }}
-                >
-                  Yield (%)
-                </span>
-                <Input
-                  type="text"
-                  variant="default"
-                  size="default"
-                  fontVariant="mono"
-                  value={simulationYield}
-                  onChange={(e) => setSimulationYield(e.target.value)}
-                  metric="%"
-                  autoFocus
-                  trailingSlot={
-                    <InputTrailingActions
-                      onClear={() => setSimulationYield("")}
-                      onConfirm={() => setMobileInputSheetOpen(false)}
-                      confirmShortcut
-                      ariaLabelClear="Clear"
-                      ariaLabelConfirm="Confirm"
-                    />
-                  }
-                  onConfirmKeyDown={() => setMobileInputSheetOpen(false)}
-                  onClearKeyDown={() => setSimulationYield("")}
-                  className="w-full"
-                />
-              </label>
+            <div className="w-full">
+              <Input
+                type="text"
+                variant="default"
+                size="default"
+                fontVariant="mono"
+                value={simulationYield}
+                onChange={(e) => setSimulationYield(e.target.value)}
+                metric="%"
+                autoFocus
+                trailingSlot={
+                  <InputTrailingActions
+                    onClear={() => setSimulationYield("")}
+                    onConfirm={closeMobileInputSheet}
+                    confirmShortcut
+                    ariaLabelClear="Clear"
+                    ariaLabelConfirm="Confirm"
+                  />
+                }
+                onConfirmKeyDown={closeMobileInputSheet}
+                onClearKeyDown={() => setSimulationYield("")}
+                className="w-full"
+                containerClassName="w-full"
+              />
             </div>
           )}
 
           {mobileInputSheetContext &&
             typeof mobileInputSheetContext === "object" &&
             mobileInputSheetContext.type === "calculatedRental" && (
-              <div className="flex flex-col gap-4">
-                <p
-                  className="text-sm"
-                  style={{ color: "var(--color-content-secondary)" }}
-                >
-                  {mobileInputSheetContext.unit}
-                </p>
-                <label className="flex flex-col gap-2">
-                  <span
-                    className="text-xs font-medium uppercase tracking-wide"
-                    style={{ color: "var(--color-content-secondary)" }}
-                  >
-                    {mobileInputSheetContext.field === "monthly"
-                      ? "Monthly rent (DKK)"
-                      : mobileInputSheetContext.field === "annual"
-                        ? "Annual rent (DKK)"
-                        : "Rent per M² (DKK)"}
-                  </span>
-                  <Input
-                    type="text"
-                    variant="default"
-                    size="default"
-                    fontVariant="mono"
-                    align="right"
-                    value={
-                      (() => {
-                        const row = rentalTableRows.find(
-                          (r) => r.unit === mobileInputSheetContext.unit
-                        );
-                        const values =
-                          calculatedRentalValues[mobileInputSheetContext.unit] ??
-                          (row
-                            ? {
-                                monthly: row.monthly,
-                                annual: row.annual,
-                                perM2: row.perM2,
-                              }
-                            : { monthly: "", annual: "", perM2: "" });
-                        return values[mobileInputSheetContext.field];
-                      })()
-                    }
-                    onChange={(e) =>
-                      updateCalculatedRental(
-                        mobileInputSheetContext.unit,
-                        mobileInputSheetContext.field,
-                        e.target.value
-                      )
-                    }
-                    metric=" DKK"
-                    autoFocus
-                    trailingSlot={
+              <div className="w-full">
+                <Input
+                  type="text"
+                  variant="default"
+                  size="default"
+                  fontVariant="mono"
+                  align="right"
+                  value={
+                    (() => {
+                      const row = rentalTableRows.find(
+                        (r) => r.unit === mobileInputSheetContext.unit
+                      );
+                      const values =
+                        calculatedRentalValues[mobileInputSheetContext.unit] ??
+                        (row
+                          ? {
+                              monthly: row.monthly,
+                              annual: row.annual,
+                              perM2: row.perM2,
+                            }
+                          : { monthly: "", annual: "", perM2: "" });
+                      return values[mobileInputSheetContext.field];
+                    })()
+                  }
+                  onChange={(e) =>
+                    updateCalculatedRental(
+                      mobileInputSheetContext.unit,
+                      mobileInputSheetContext.field,
+                      e.target.value
+                    )
+                  }
+                  metric=" DKK"
+                  autoFocus
+                  trailingSlot={
                       <InputTrailingActions
                         onClear={() =>
                           clearCalculatedRentalField(
@@ -1397,22 +1373,22 @@ export const FinancialComparisonPage: React.FC<FinancialComparisonPageProps> = (
                             mobileInputSheetContext.field
                           )
                         }
-                        onConfirm={() => setMobileInputSheetOpen(false)}
-                        confirmShortcut
-                        ariaLabelClear="Clear"
-                        ariaLabelConfirm="Confirm"
-                      />
-                    }
-                    onConfirmKeyDown={() => setMobileInputSheetOpen(false)}
-                    onClearKeyDown={() =>
-                      clearCalculatedRentalField(
-                        mobileInputSheetContext.unit,
-                        mobileInputSheetContext.field
-                      )
-                    }
-                    className="w-full"
-                  />
-                </label>
+                      onConfirm={closeMobileInputSheet}
+                      confirmShortcut
+                      ariaLabelClear="Clear"
+                      ariaLabelConfirm="Confirm"
+                    />
+                  }
+                  onConfirmKeyDown={closeMobileInputSheet}
+                  onClearKeyDown={() =>
+                    clearCalculatedRentalField(
+                      mobileInputSheetContext.unit,
+                      mobileInputSheetContext.field
+                    )
+                  }
+                  className="w-full"
+                  containerClassName="w-full"
+                />
               </div>
             )}
         </BottomSheet>

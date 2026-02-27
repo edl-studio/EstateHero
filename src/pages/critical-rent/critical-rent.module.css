@@ -1,0 +1,21 @@
+/* Critical rent comparison table: mobile-only column min-widths to avoid collapse */
+@media (max-width: 767px) {
+  .criticalRentTable {
+    min-width: 1268px; /* 224 (label) + 348*3 (MARKET + CALCULATED + SIMULATED) */
+  }
+
+  .criticalRentTable col:nth-child(2),
+  .criticalRentTable col:nth-child(3) {
+    min-width: 174px; /* MARKET group: 348px total */
+  }
+
+  .criticalRentTable col:nth-child(4),
+  .criticalRentTable col:nth-child(5) {
+    min-width: 174px; /* CALCULATED group: 348px total */
+  }
+
+  .criticalRentTable col:nth-child(6),
+  .criticalRentTable col:nth-child(7) {
+    min-width: 174px; /* SIMULATED group: 348px total */
+  }
+}

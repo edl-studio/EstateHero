@@ -17,6 +17,14 @@
   box-shadow: var(--shadow-2xs);
 }
 
+@media (max-width: 767px) {
+  .root {
+    width: 100%;
+    max-width: none;
+    flex: 0 0 auto;
+  }
+}
+
 /* ============================================
    TOP ROW: illustration (left) + segmented tabs (right)
    ============================================ */

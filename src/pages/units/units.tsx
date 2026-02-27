@@ -237,14 +237,40 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
               </TabItem>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: "16px",
-                width: "100%",
-              }}
-            >
+            {/* Mobile only: value cards stacked inside a Tile */}
+            <div className="w-full md:hidden">
+              <Tile className="w-full min-w-0">
+                <div className="grid grid-cols-1 gap-[18px]">
+                  <ValueCard
+                    label="Residential units"
+                    labelTooltip="Number of residential units in the property."
+                    value="6"
+                    valueIcon={<Icon name="Home" size="xl" className="text-[var(--color-content-accent)]" />}
+                  />
+                  <ValueCard
+                    label="Business units"
+                    labelTooltip="Number of commercial or business units in the property."
+                    value="6"
+                    valueIcon={<Icon name="Building" size="xl" className="text-[var(--color-green)]" />}
+                  />
+                  <ValueCard
+                    label="Living area"
+                    labelTooltip="Total living area across all residential units."
+                    value="336"
+                    valueIcon={null}
+                    metric="M²"
+                  />
+                  <ValueCard
+                    label="Commercial space"
+                    labelTooltip="Total commercial floor space in the property."
+                    value="0"
+                    valueIcon={null}
+                  />
+                </div>
+              </Tile>
+            </div>
+            {/* Desktop: value cards in grid, no Tile */}
+            <div className="hidden w-full md:grid md:grid-cols-4 md:gap-[18px]">
               <ValueCard
                 label="Residential units"
                 labelTooltip="Number of residential units in the property."

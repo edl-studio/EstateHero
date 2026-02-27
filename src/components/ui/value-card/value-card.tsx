@@ -51,6 +51,8 @@ export interface ValueCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onInputClearKeyDown?: () => void;
   /** When variant="editable" or variant="illustration": called when the input receives focus (e.g. to open a mobile bottom sheet). */
   onInputFocus?: () => void;
+  /** When provided on mobile, the input acts as a trigger and opens a bottom sheet; use for editable value inputs. */
+  onMobileOpenSheet?: () => void;
 }
 
 export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
@@ -71,6 +73,7 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
       onInputConfirmKeyDown,
       onInputClearKeyDown,
       onInputFocus,
+      onMobileOpenSheet,
       className,
       ...props
     },
@@ -90,10 +93,12 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
         value={value}
         onChange={onInputChange}
         onFocus={onInputFocus}
+        onMobileOpenSheet={onMobileOpenSheet ?? onInputFocus}
         metric={metric != null && metric !== "" ? metric : undefined}
         trailingSlot={inputTrailingSlot}
         onConfirmKeyDown={onInputConfirmKeyDown}
         onClearKeyDown={onInputClearKeyDown}
+        containerClassName={styles.valueInputContainer}
         className={styles.valueInput}
       />
     ) : isIllustration ? (
@@ -105,10 +110,12 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
         value={value}
         onChange={onInputChange}
         onFocus={onInputFocus}
+        onMobileOpenSheet={onMobileOpenSheet ?? onInputFocus}
         metric={metric != null && metric !== "" ? metric : undefined}
         trailingSlot={inputTrailingSlot}
         onConfirmKeyDown={onInputConfirmKeyDown}
         onClearKeyDown={onInputClearKeyDown}
+        containerClassName={styles.valueInputContainer}
         className={styles.valueInput}
       />
     ) : (
@@ -141,37 +148,75 @@ export const ValueCard = React.forwardRef<HTMLDivElement, ValueCardProps>(
           </div>
         )}
 
-        <div className={styles.labelRow}>
-          <span className={cn(styles.label, "ui-mono-13")}>{label}</span>
-          {labelTooltip != null && labelTooltip !== "" ? (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger render={<span className={styles.helpIcon} />}>
-                  <Icon name="HelpCircle" size="md" />
-                </TooltipTrigger>
-                <TooltipContent>{labelTooltip}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : infoIcon != null ? (
-            <span className={styles.infoIcon} aria-hidden>{infoIcon}</span>
-          ) : null}
-        </div>
+        {isIllustration ? (
+          <div className={styles.labelValueBlock}>
+            <div className={styles.labelRow}>
+              <span className={cn(styles.label, "ui-mono-13")}>{label}</span>
+              {labelTooltip != null && labelTooltip !== "" ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger render={<span className={styles.helpIcon} />}>
+                      <Icon name="HelpCircle" size="md" />
+                    </TooltipTrigger>
+                    <TooltipContent>{labelTooltip}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : infoIcon != null ? (
+                <span className={styles.infoIcon} aria-hidden>{infoIcon}</span>
+              ) : null}
+            </div>
 
-        <div
-          className={cn(
-            styles.valueRowWrapper,
-            isIllustration && styles.valueRowWrapperIllustration
-          )}
-        >
-          <div className={styles.valueRow}>
-            {valueIcon != null && (
-              <span className={styles.valueIcon} aria-hidden>
-                {valueIcon}
-              </span>
-            )}
-            {valueContent}
+            <div
+              className={cn(
+                styles.valueRowWrapper,
+                styles.valueRowWrapperIllustration
+              )}
+            >
+              <div className={styles.valueRow}>
+                {valueIcon != null && (
+                  <span className={styles.valueIcon} aria-hidden>
+                    {valueIcon}
+                  </span>
+                )}
+                {valueContent}
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className={styles.labelRow}>
+              <span className={cn(styles.label, "ui-mono-13")}>{label}</span>
+              {labelTooltip != null && labelTooltip !== "" ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger render={<span className={styles.helpIcon} />}>
+                      <Icon name="HelpCircle" size="md" />
+                    </TooltipTrigger>
+                    <TooltipContent>{labelTooltip}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : infoIcon != null ? (
+                <span className={styles.infoIcon} aria-hidden>{infoIcon}</span>
+              ) : null}
+            </div>
+
+            <div
+              className={cn(
+                styles.valueRowWrapper,
+                isIllustration && styles.valueRowWrapperIllustration
+              )}
+            >
+              <div className={styles.valueRow}>
+                {valueIcon != null && (
+                  <span className={styles.valueIcon} aria-hidden>
+                    {valueIcon}
+                  </span>
+                )}
+                {valueContent}
+              </div>
+            </div>
+          </>
+        )}
 
         {children}
       </div>

@@ -29,21 +29,13 @@
   background-color: var(--color-control-hover);
 }
 
-/* Mobile: show icon + name; hide only the last column (e.g. file size) so the name is visible */
+/* Mobile: show only the first cell (icon + first label), hide the rest */
 @media (max-width: 767px) {
   .item {
     min-width: 0;
   }
 
-  .item > *:last-child {
+  .item > *:not(:first-child) {
     display: none;
-  }
-
-  /* Name column (second child after icon) truncates when long */
-  .item > *:nth-child(2) {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }

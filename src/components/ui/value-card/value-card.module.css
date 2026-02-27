@@ -19,8 +19,9 @@
 }
 
 /* Mobile: minimal styling + horizontal layout (label - value) */
+/* Illustration variant on mobile: keep full card (stacked layout per design) */
 @media (max-width: 767px) {
-  .root {
+  .root:not(.illustrationVariant) {
     padding: 0;
     border-radius: 0;
     border: none;
@@ -34,36 +35,34 @@
     gap: var(--spacing-sm);
   }
 
-  .root .valueRowWrapper {
+  .root:not(.illustrationVariant) .valueRowWrapper {
     width: auto;
     flex-shrink: 0;
   }
 
-  .root .mainValue,
-  .root .metric {
+  .root:not(.illustrationVariant) .mainValue,
+  .root:not(.illustrationVariant) .metric {
     font-family: var(--font-mono);
     font-weight: var(--font-normal);
     font-size: var(--text-xs);
     line-height: var(--leading-tight);
   }
 
-  .root .valueIcon {
+  .root:not(.illustrationVariant) .valueIcon {
     width: 16px;
     height: 16px;
   }
 
-  .root .valueIcon svg {
+  .root:not(.illustrationVariant) .valueIcon svg {
     width: 16px;
     height: 16px;
   }
 
+  /* Illustration variant: full-width stacked card on mobile (no collapse) */
   .root.illustrationVariant {
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    background: transparent;
-    height: auto;
+    width: 100%;
+    max-width: none;
+    flex: 0 0 auto;
   }
 }
 
@@ -82,6 +81,16 @@
   box-shadow: var(--shadow-2xs);
 }
 
+@media (max-width: 767px) {
+  .root.illustrationVariant {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+  }
+}
+
 .illustrationSlot {
   width: 32px;
   height: 40px;
@@ -97,6 +106,15 @@
   height: 40px;
   object-fit: contain;
   object-position: left top;
+}
+
+/* Illustration variant: label + value/input grouped (avoids space-between spreading them) */
+.labelValueBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  width: 100%;
+  min-width: 0;
 }
 
 /* ============================================
@@ -182,10 +200,12 @@
 .valueInput {
   flex: 1;
   min-width: 0;
+  width: 100%;
 }
 
 .valueRow .valueInput {
   height: 2rem; /* 32px - overrides Input default size */
+  max-width: 100%;
 }
 
 /* Custom value slot (e.g. input with trailing actions) */
@@ -193,4 +213,17 @@
   flex: 1;
   min-width: 0;
   width: 100%;
+}
+
+/* Override Input's container so it fills the card (Input uses width: fit-content on mobile) */
+.valueRowWrapper .valueInputContainer,
+.valueInputContainer {
+  width: 100%;
+  min-width: 0;
+}
+
+.valueRowWrapper .valueInputContainer .valueInput,
+.valueInputContainer .valueInput {
+  width: 100%;
+  max-width: 100%;
 }

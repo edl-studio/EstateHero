@@ -32,6 +32,11 @@
   opacity: 0.5;
 }
 
+/* Mobile trigger: read-only tap opens sheet; pointer cursor */
+.inputMobileTrigger {
+  cursor: pointer;
+}
+
 .input::-webkit-file-upload-button {
   border: 0;
   background-color: transparent;
@@ -460,6 +465,11 @@
    MOBILE BREAKPOINT: compact input + accent text
    ============================================ */
 @media (max-width: 767px) {
+  /* Mobile trigger: whole container is tappable, cursor pointer */
+  .inputContainer[data-mobile-trigger] {
+    cursor: pointer;
+  }
+
   /* Container is the visual input box so metric sits inside it */
   .inputContainer {
     width: fit-content;
@@ -478,6 +488,70 @@
       background-color var(--transition-default);
   }
 
+  /* Override: full width when inside table cell or bottom sheet */
+  :global([data-content-full]) .inputContainer,
+  :global([data-bottom-sheet-content]) .inputContainer {
+    width: 100%;
+  }
+
+  :global([data-content-full]) .inputContainer .input,
+  :global([data-bottom-sheet-content]) .inputContainer .input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Bottom sheet: container is the visual input box so metric sits INSIDE it */
+  :global([data-bottom-sheet-content]) .inputContainer {
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-input);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--transition-default),
+      box-shadow var(--transition-default),
+      background-color var(--transition-default);
+  }
+
+  :global([data-bottom-sheet-content]) .inputContainer:focus-within {
+    border-color: var(--color-input-border-accent);
+    box-shadow: 0 0 0 2px var(--color-ring);
+  }
+
+  :global([data-bottom-sheet-content]) .inputContainer .input.variantDefault,
+  :global([data-bottom-sheet-content]) .inputContainer .input.variantDefault:focus-visible {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  :global([data-bottom-sheet-content]) .inputContainer .input.inputMonoVariant {
+    font-family: var(--font-mono);
+    font-weight: var(--font-normal);
+    font-size: var(--text-base);
+    line-height: var(--leading-tight);
+  }
+
+  :global([data-bottom-sheet-content]) .metric {
+    position: static;
+    transform: none;
+    top: auto;
+    left: auto;
+    right: auto;
+    color: var(--color-content-secondary);
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Bottom sheet: regular variant only – no trailing actions (stay hidden) */
   .inputContainer:has(.leadingIcon) {
     padding-left: 2rem;
   }
@@ -585,5 +659,38 @@
   .hasMetricWithTrailing.sizeLarge,
   .hasMetricWithTrailing.sizeMobile {
     padding-right: 0;
+  }
+
+  /* Re-apply desktop input styles inside bottom sheet – regular variant only (no trailing actions) */
+  /* Inner input is borderless; container has the border so metric stays inside the box */
+  :global([data-bottom-sheet-content]) .inputContainer .input {
+    height: 2.5rem;
+    padding: 0.5rem 0;
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+    background-color: transparent;
+    color: var(--color-content-primary);
+    field-sizing: auto;
+    min-width: 0;
+  }
+
+  /* Re-apply desktop input styles inside bottom sheet – regular variant only (no trailing actions) */
+  /* Inner input is borderless; container has the border so metric stays inside the box */
+  :global([data-bottom-sheet-content]) .inputContainer .input {
+    height: 2.5rem;
+    padding: 0.5rem 0;
+    padding-left: 0.5rem;
+    padding-right: 0;
+    border: none;
+    background-color: transparent;
+    color: var(--color-content-primary);
+    field-sizing: auto;
+    min-width: 0;
+  }
+
+  :global([data-bottom-sheet-content]) .inputContainer .input.hasLeadingIcon.sizeDefault,
+  :global([data-bottom-sheet-content]) .inputContainer .input.hasLeadingIcon.sizeLarge {
+    padding-left: 0.5rem;
   }
 }

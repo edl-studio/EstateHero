@@ -9,6 +9,8 @@ import {
 import { TableHeader } from "@/components/ui/table-header";
 import { TableCell } from "@/components/ui/table-cell";
 import { Input, InputTrailingActions } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { useIsMobile } from "@/lib/use-media-query";
@@ -162,7 +164,7 @@ const SimulatedCell: React.FC<{ row: TableRow }> = ({ row }) => {
         size={isMobile ? "mobile" : "default"}
         value={values[row.id] ?? ""}
         onChange={(e) => setValue(row.id, e.target.value)}
-        onFocus={
+        onMobileOpenSheet={
           isMobile
             ? () =>
                 openComparisonSheet({
@@ -474,78 +476,67 @@ export const TablePage: React.FC = () => {
               setComparisonSheetOpen(open);
               if (!open) setComparisonSheetContext(null);
             }}
-            header={
-              <div className="flex items-center justify-between">
-                <h2
-                  className="text-lg font-semibold"
-                  style={{ color: "var(--color-content-primary)" }}
-                >
-                  {comparisonSheetContext?.label ?? "Edit value"}
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => setComparisonSheetOpen(false)}
-                  className="text-sm font-medium"
-                  style={{ color: "var(--color-content-accent)" }}
-                  aria-label="Done"
-                >
-                  Done
-                </button>
-              </div>
+            heading={comparisonSheetContext?.label ?? "Edit value"}
+            subheading={
+              comparisonSheetContext
+                ? comparisonSheetContext.metric != null &&
+                  comparisonSheetContext.metric.trim() !== ""
+                  ? `Simulated value (${comparisonSheetContext.metric.trim()})`
+                  : "Simulated value"
+                : undefined
+            }
+            headerActions={
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                iconLeft={<Icon name="X" />}
+                onClick={() => setComparisonSheetOpen(false)}
+                aria-label="Close"
+              />
             }
           >
             {comparisonSheetContext && (
-              <div className="flex flex-col gap-4">
-                <label className="flex flex-col gap-2">
-                  <span
-                    className="text-xs font-medium uppercase tracking-wide"
-                    style={{ color: "var(--color-content-secondary)" }}
-                  >
-                    Simulated value
-                    {comparisonSheetContext.metric != null &&
-                      comparisonSheetContext.metric.trim() !== "" && (
-                        <span> ({comparisonSheetContext.metric.trim()})</span>
-                      )}
-                  </span>
-                  <Input
-                    type="text"
-                    variant="default"
-                    size="default"
-                    fontVariant="mono"
-                    align="right"
-                    value={simulatedInputs[comparisonSheetContext.rowId] ?? ""}
-                    onChange={(e) =>
-                      setSimulatedInputs((prev) => ({
-                        ...prev,
-                        [comparisonSheetContext.rowId]: e.target.value,
-                      }))
-                    }
-                    metric={comparisonSheetContext.metric}
-                    autoFocus
-                    trailingSlot={
-                      <InputTrailingActions
-                        onClear={() =>
-                          setSimulatedInputs((prev) => ({
-                            ...prev,
-                            [comparisonSheetContext.rowId]: "",
-                          }))
-                        }
-                        onConfirm={() => setComparisonSheetOpen(false)}
-                        confirmShortcut
-                        ariaLabelClear="Clear (Escape)"
-                        ariaLabelConfirm="Confirm (Enter)"
-                      />
-                    }
-                    onConfirmKeyDown={() => setComparisonSheetOpen(false)}
-                    onClearKeyDown={() =>
-                      setSimulatedInputs((prev) => ({
-                        ...prev,
-                        [comparisonSheetContext.rowId]: "",
-                      }))
-                    }
-                    className="w-full"
-                  />
-                </label>
+              <div className="w-full">
+                <Input
+                  type="text"
+                  variant="default"
+                  size="default"
+                  fontVariant="mono"
+                  align="right"
+                  value={simulatedInputs[comparisonSheetContext.rowId] ?? ""}
+                  onChange={(e) =>
+                    setSimulatedInputs((prev) => ({
+                      ...prev,
+                      [comparisonSheetContext.rowId]: e.target.value,
+                    }))
+                  }
+                  metric={comparisonSheetContext.metric}
+                  autoFocus
+                  trailingSlot={
+                    <InputTrailingActions
+                      onClear={() =>
+                        setSimulatedInputs((prev) => ({
+                          ...prev,
+                          [comparisonSheetContext.rowId]: "",
+                        }))
+                      }
+                      onConfirm={() => setComparisonSheetOpen(false)}
+                      confirmShortcut
+                      ariaLabelClear="Clear (Escape)"
+                      ariaLabelConfirm="Confirm (Enter)"
+                    />
+                  }
+                  onConfirmKeyDown={() => setComparisonSheetOpen(false)}
+                  onClearKeyDown={() =>
+                    setSimulatedInputs((prev) => ({
+                      ...prev,
+                      [comparisonSheetContext.rowId]: "",
+                    }))
+                  }
+                  className="w-full"
+                  containerClassName="w-full"
+                />
               </div>
             )}
           </BottomSheet>

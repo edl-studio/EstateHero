@@ -56,6 +56,15 @@ export interface InputProps
    * When provided, Escape key calls this callback and blurs the input (clear).
    */
   onClearKeyDown?: () => void;
+  /**
+   * When provided on mobile, the input acts as a trigger: read-only, tap opens a bottom sheet.
+   * Use this for all editable value inputs so editing happens in the sheet on mobile.
+   */
+  onMobileOpenSheet?: () => void;
+  /**
+   * Optional class name applied to the wrapper div when the input uses icons/slots/metric (not applied to the simple input branch).
+   */
+  containerClassName?: string;
 }
 
 const METRIC_GAP_PX = 4;
@@ -80,6 +89,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     onConfirmKeyDown,
     onClearKeyDown,
     onKeyDown: onKeyDownProp,
+    containerClassName,
+    onMobileOpenSheet,
     ...props 
   }, ref) => {
     const inputRef = React.useRef<HTMLInputElement | null>(null);
@@ -94,6 +105,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const isMetricWithTrailingSlot = !!(trailingSlot && metric);
     const isRightAlignWithMetricSlot = align === "right" && isMetricWithTrailingSlot;
+    const isMobileTrigger = isMobile && onMobileOpenSheet != null;
 
     const updateMetricPosition = React.useCallback(() => {
       if (!isMetricWithTrailingSlot || !inputRef.current || !measureRef.current || !metricRef.current) return;
@@ -126,6 +138,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }, [isFocused, isMetricWithTrailingSlot, measureValue, updateMetricPosition]);
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (isMobileTrigger) {
+        onMobileOpenSheet?.();
+        queueMicrotask(() => inputRef.current?.blur());
+        return;
+      }
       setIsFocused(true);
       if (!hasInteracted) setHasInteracted(true);
       onFocus?.(e);
@@ -182,11 +199,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     // If no icons, no slot, and no metric, render simple input
     if (!leadingIcon && !hasTrailing && !hasMetric) {
+      const simpleHandleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        if (isMobileTrigger) {
+          onMobileOpenSheet?.();
+          queueMicrotask(() => inputRef.current?.blur());
+          return;
+        }
+        onFocus?.(e);
+      };
       return (
         <BaseInput
-          ref={ref}
+          ref={setRefs}
           type={type}
-          className={cn(styles.input, textClass, variantClass, sizeClass, alignClass, monoVariantClass, className)}
+          readOnly={isMobileTrigger}
+          className={cn(styles.input, textClass, variantClass, sizeClass, alignClass, monoVariantClass, isMobileTrigger && styles.inputMobileTrigger, className)}
+          onFocus={simpleHandleFocus}
           onKeyDown={handleKeyDown}
           {...props}
         />
@@ -195,7 +222,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     // With icons, wrap in container
     return (
-      <div className={cn(styles.inputContainer, hasInteracted && styles.inputContainerAnimated)}>
+      <div
+        className={cn(
+          styles.inputContainer,
+          hasInteracted && !isMobile && styles.inputContainerAnimated,
+          containerClassName
+        )}
+        data-mobile-trigger={isMobileTrigger ? "" : undefined}
+      >
         {leadingIcon && (
           <span
             className={cn(
@@ -227,6 +261,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={setRefs}
           type={type}
           value={value}
+          readOnly={isMobileTrigger}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
@@ -241,6 +276,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             trailingSlot && styles.hasTrailingSlot,
             trailingIcon && !trailingSlot && styles.hasTrailingIcon,
             hasMetric && (hasTrailing ? styles.hasMetricWithTrailing : styles.hasMetric),
+            isMobileTrigger && styles.inputMobileTrigger,
             className
           )}
           style={

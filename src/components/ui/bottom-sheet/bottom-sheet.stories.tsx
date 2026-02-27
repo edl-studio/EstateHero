@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { BottomSheet } from "./bottom-sheet";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 
 const meta: Meta<typeof BottomSheet> = {
@@ -34,20 +35,16 @@ export const Default: Story = {
         <BottomSheet
           open={open}
           onOpenChange={setOpen}
-          header={
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-foreground">
-                Edit value
-              </h2>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="text-sm text-muted-foreground hover:text-foreground"
-                aria-label="Close"
-              >
-                Done
-              </button>
-            </div>
+          heading="Edit value"
+          headerActions={
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              iconLeft={<Icon name="X" />}
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+            />
           }
           footer={
             <div className="flex justify-end gap-2">

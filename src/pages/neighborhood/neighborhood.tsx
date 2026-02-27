@@ -190,7 +190,7 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
       </section>
 
       <section className="flex min-w-0 w-full max-w-full justify-center overflow-x-hidden pt-0 pb-[var(--spacing-6xl)]">
-        <div className="flex min-w-0 w-full max-w-full flex-col items-start gap-[var(--spacing-lg)] px-4 md:max-w-[1312px] md:px-0">
+        <div className="flex min-w-0 w-full max-w-full flex-col items-stretch gap-[var(--spacing-lg)] px-4 md:max-w-[1312px] md:px-0">
           <div className="hidden flex-wrap gap-[var(--spacing-sm)] md:flex">
               <TabItem
                 isActive={false}
@@ -225,13 +225,12 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
               <TabItem isActive>Neighborhood</TabItem>
             </div>
 
-            {/* Main content: map left, tile grid right */}
-            <div className="flex min-w-0 w-full max-w-full items-stretch gap-[var(--spacing-lg)]">
+            {/* Main content: map left, tile grid right – flex-none so this block never shrinks and gap below is preserved */}
+            <div className="flex min-w-0 w-full max-w-full flex-none flex-col items-stretch gap-[var(--spacing-lg)] md:flex-row">
 
-              {/* LEFT – Map tile */}
+              {/* LEFT – Map tile (equal width with tile grid on desktop, fills half the container) */}
               <Tile
-                className="relative hidden overflow-hidden !p-3 md:flex"
-                style={{ flex: "0 0 49%", minHeight: "396px" }}
+                className="relative hidden min-w-0 flex-1 overflow-hidden !p-3 md:flex md:min-h-[396px]"
               >
                 <div
                   className="relative h-full w-full overflow-hidden"
@@ -253,9 +252,9 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
                 </div>
               </Tile>
 
-              {/* RIGHT – 2×2 grid of tiles */}
+              {/* RIGHT – 2×2 grid of tiles (no min-h-0 on mobile so content doesn't shrink and overlap) */}
               <div
-                className="grid flex-1 grid-cols-1 gap-[var(--spacing-lg)] sm:grid-cols-2"
+                className="grid grid-cols-1 gap-[var(--spacing-lg)] md:min-h-0 md:flex-1 md:grid-cols-2"
               >
                 {/* NOISE – donut chart */}
                 <Tile>
@@ -361,12 +360,12 @@ export const NeighborhoodPage: React.FC<NeighborhoodPageProps> = ({
             </div>
 
             {/* IMMEDIATE AREA tile */}
-            <Tile className="w-full">
+            <Tile className="relative w-full shrink-0">
               <TileHeader>
                 <TileTitle tooltip="Points of interest and services within the immediate vicinity of the property.">Immediate area</TileTitle>
               </TileHeader>
               <TileContent>
-                <div className="grid w-full grid-cols-1 gap-[var(--spacing-lg)] sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid w-full grid-cols-1 gap-[var(--spacing-lg)] md:grid-cols-2 lg:grid-cols-3">
                   {[
                     {
                       icon: "Bus" as const,

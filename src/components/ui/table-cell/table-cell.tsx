@@ -146,13 +146,16 @@ export const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
           asHeader && styles.cellHeader,
           align === "center" && styles.cellAlignCenter,
           align === "right" && styles.cellAlignRight,
+          contentWidth === "full" && styles.cellContentFull,
           className
         )}
         {...restProps}
         style={style}
       >
         {contentWidth === "full" && !hasSlots ? (
-          <div className={styles.contentFull}>{children}</div>
+          <div className={styles.contentFull} data-content-full>
+            {children}
+          </div>
         ) : (
           contentNode
         )}
