@@ -47,35 +47,6 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
     },
     ref
   ) => {
-    // Tracks how much the visual viewport has shrunk due to the iOS keyboard.
-    // When > 0, the panel bottom is lifted by that amount so it sits flush
-    // against the keyboard top — same idea as keyboardBehavior="fillParent"
-    // in @gorhom/bottom-sheet.
-    const [keyboardOffset, setKeyboardOffset] = React.useState(0);
-
-    React.useEffect(() => {
-      if (!open || typeof window === "undefined") {
-        setKeyboardOffset(0);
-        return;
-      }
-      const viewport = window.visualViewport;
-      if (!viewport) return;
-
-      const onResize = () => {
-        const shrink =
-          window.innerHeight - viewport.height - viewport.offsetTop;
-        setKeyboardOffset(Math.max(0, shrink));
-      };
-
-      viewport.addEventListener("resize", onResize);
-      onResize();
-
-      return () => {
-        viewport.removeEventListener("resize", onResize);
-        setKeyboardOffset(0);
-      };
-    }, [open]);
-
     const hasHeader =
       header != null ||
       heading != null ||
@@ -112,7 +83,6 @@ export const BottomSheet = React.forwardRef<HTMLDivElement, BottomSheetProps>(
           <Dialog.Popup
             ref={ref}
             className={cn(styles.panel, className)}
-            style={keyboardOffset > 0 ? { bottom: keyboardOffset } : undefined}
             aria-modal="true"
           >
             {showHandle && (

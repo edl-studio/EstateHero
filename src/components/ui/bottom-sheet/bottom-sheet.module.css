@@ -56,6 +56,17 @@
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
+.panel::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background-color: var(--color-card);
+  pointer-events: none;
+}
+
 .panel[data-state="open"] {
   animation: bottomSheetPanelIn 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
