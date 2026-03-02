@@ -71,6 +71,7 @@
 
     /* Typography */
     --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'IBM Plex Serif', Georgia, serif;
     --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
 
     /* Font Sizes */

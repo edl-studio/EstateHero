@@ -60,7 +60,7 @@ export const OccupancyChart = React.forwardRef<HTMLDivElement, OccupancyChartPro
       if (centerUnit.includes("²")) {
         const parts = centerUnit.split("²");
         return (
-          <span className="font-[family-name:var(--font-font-sans)] font-normal leading-[0] text-[0px]">
+          <span className="font-[family-name:var(--font-sans)] font-normal leading-[0] text-[0px]">
             <span className="leading-[31px] text-[18px]">{parts[0]}</span>
             <span className="leading-[31px] text-[11.61px]">2</span>
           </span>
@@ -68,7 +68,7 @@ export const OccupancyChart = React.forwardRef<HTMLDivElement, OccupancyChartPro
       }
       
       return (
-        <span className="font-[family-name:var(--font-font-sans)] font-normal leading-[31px] text-[18px]">
+        <span className="font-[family-name:var(--font-sans)] font-normal leading-[31px] text-[18px]">
           {centerUnit}
         </span>
       );
@@ -113,13 +113,13 @@ export const OccupancyChart = React.forwardRef<HTMLDivElement, OccupancyChartPro
           {/* Center content - positioned at bottom center of container */}
           <div className="absolute bottom-0 left-[calc(50%+0.5px)] -translate-x-1/2 flex flex-col items-center">
             {centerLabel && (
-              <div className="flex flex-col font-[family-name:var(--font-font-sans)] justify-center leading-[0] min-w-full not-italic text-[color:var(--tailwind-colors-gray-500,#6b7280)] text-[length:var(--text-sm-font-size,14px)] text-center w-[min-content]">
+              <div className="flex flex-col font-[family-name:var(--font-sans)] justify-center leading-[0] min-w-full not-italic text-[color:var(--tailwind-colors-gray-500,#6b7280)] text-[length:var(--text-sm-font-size,14px)] text-center w-[min-content]">
                 <p className="leading-[1.2] whitespace-pre-wrap">{centerLabel}</p>
               </div>
             )}
             <div className="flex items-center">
               <div className="flex gap-[2px] items-end not-italic text-[color:var(--tailwind-colors-gray-950,#030712)]">
-                <p className="font-[family-name:var(--font-font-mono)] font-semibold leading-[44px] text-[length:var(--text-4xl-font-size,36px)]">
+                <p className="font-[family-name:var(--font-mono)] font-semibold leading-[44px] text-[length:var(--text-4xl-font-size,36px)]">
                   {centerValue}
                 </p>
                 {renderCenterUnit()}
@@ -137,7 +137,7 @@ export const OccupancyChart = React.forwardRef<HTMLDivElement, OccupancyChartPro
                 style={{ backgroundColor: COLORS.occupied }}
               />
             </div>
-            <p className="font-[family-name:var(--font-font-sans)] leading-[1.2] not-italic text-[color:var(--tailwind-colors-gray-950,#030712)] text-[length:var(--text-sm-font-size,14px)] text-right">
+            <p className="font-[family-name:var(--font-sans)] leading-[1.2] not-italic text-[color:var(--tailwind-colors-gray-950,#030712)] text-[length:var(--text-sm-font-size,14px)] text-right">
               {badgeText}
             </p>
           </div>
