@@ -298,31 +298,26 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
               />
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Input
-                variant="default"
-                size="default"
-                fontVariant="sans"
-                placeholder="Search..."
-                leadingIcon={<Icon name="Search" size="md" />}
-                value={unitsSearchQuery}
-                onChange={(e) => setUnitsSearchQuery(e.target.value)}
-                className="min-w-[200px] max-w-[340px] shrink-0"
-              />
+            <div className="flex w-full items-center gap-[var(--spacing-sm)]">
+              <div data-content-full className="flex-1 min-w-0">
+                <Input
+                  variant="default"
+                  size="default"
+                  fontVariant="sans"
+                  placeholder="Search..."
+                  leadingIcon={<Icon name="Search" size="md" />}
+                  value={unitsSearchQuery}
+                  onChange={(e) => setUnitsSearchQuery(e.target.value)}
+                  containerClassName="!h-9 !min-h-9"
+                  className="md:min-w-[200px] md:max-w-[340px] !h-9 !min-h-9"
+                />
+              </div>
               <Tooltip>
                 <TooltipTrigger
                   render={
                     <Button
                       variant="outline"
-                      size="md"
+                      size="sm"
                       iconLeft={
                         <Icon
                           name={allCollapsed ? "ChevronsUpDown" : "ChevronsDownUp"}
@@ -330,8 +325,10 @@ export const UnitsPage: React.FC<UnitsPageProps> = ({
                         />
                       }
                       onClick={toggleCollapseExpandAll}
-                      aria-label="Collapse/Expand all"
-                    />
+                      aria-label={allCollapsed ? "Expand all" : "Collapse all"}
+                    >
+                      {allCollapsed ? "Expand" : "Collapse"}
+                    </Button>
                   }
                 />
                 <TooltipContent>Collapse/Expand all</TooltipContent>

@@ -185,18 +185,18 @@
 }
 
 /* ============================================
-   PADDING ADJUSTMENTS WITH ICONS
+   PADDING ADJUSTMENTS WITH ICONS (8px gap after icon)
    ============================================ */
 .hasLeadingIcon.sizeDefault {
-  padding-left: 2.5rem; /* 40px */
+  padding-left: 2.25rem; /* 36px: 12px icon start + 16px icon + 8px gap */
 }
 
 .hasLeadingIcon.sizeLarge {
-  padding-left: 2.75rem; /* 44px */
+  padding-left: 2.5rem; /* 40px: 12px + 20px icon + 8px gap */
 }
 
 .hasLeadingIcon.sizeMobile {
-  padding-left: 1.75rem; /* 28px: 8px + 14px icon + 6px */
+  padding-left: 1.875rem; /* 30px: 8px + 14px icon + 8px gap */
 }
 
 .hasTrailingIcon.sizeDefault {
@@ -551,9 +551,17 @@
     white-space: nowrap;
   }
 
-  /* Bottom sheet: regular variant only – no trailing actions (stay hidden) */
-  .inputContainer:has(.leadingIcon) {
-    padding-left: 2rem;
+  /* Bottom sheet: regular variant only – 8px gap after leading icon */
+  .inputContainer:has(.input.hasLeadingIcon.sizeDefault) {
+    padding-left: 2rem; /* 32px: 8 + 16 + 8 */
+  }
+
+  .inputContainer:has(.input.hasLeadingIcon.sizeLarge) {
+    padding-left: 2.25rem; /* 36px: 8 + 20 + 8 */
+  }
+
+  .inputContainer:has(.input.hasLeadingIcon.sizeMobile) {
+    padding-left: 1.875rem; /* 30px: 8 + 14 + 8 */
   }
 
   .inputContainer:focus-within {
@@ -595,6 +603,19 @@
     border: 0;
     background-color: transparent;
     box-shadow: none;
+  }
+
+  /* ui/sans-serif/regular/14 – sans variant only on mobile */
+  .input:not(.inputMonoVariant) {
+    font-family: var(--font-sans);
+    font-weight: var(--font-normal);
+    font-size: var(--text-sm); /* 0.875rem / 14px */
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-normal);
+  }
+
+  .input::placeholder {
+    text-align: left;
   }
 
   .input:focus-visible {
@@ -639,10 +660,11 @@
     right: 8px;
   }
 
-  .hasLeadingIcon.sizeDefault,
-  .hasLeadingIcon.sizeLarge,
-  .hasLeadingIcon.sizeMobile {
-    padding-left: 2rem;
+  /* On mobile the container’s padding-left (see .inputContainer:has(.input.hasLeadingIcon.*)) reserves space for the icon + 8px gap. The input must keep padding-left: 0 so we don’t double the gap. */
+  .inputContainer .input.hasLeadingIcon.sizeDefault,
+  .inputContainer .input.hasLeadingIcon.sizeLarge,
+  .inputContainer .input.hasLeadingIcon.sizeMobile {
+    padding-left: 0;
   }
 
   /* No reserved space for trailing or metric on mobile (trailing hidden; metric in flow; container has padding) */

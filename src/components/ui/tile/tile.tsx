@@ -79,7 +79,7 @@ export const TileTitle = React.forwardRef<
       className={cn(styles.title, styles.titleWithIcon, "ui-mono-13", className)}
       {...props}
     >
-      {children}
+      <span className={styles.titleText}>{children}</span>
       {tooltip != null && (
         <TooltipProvider>
           <Tooltip>

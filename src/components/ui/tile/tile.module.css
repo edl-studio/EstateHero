@@ -48,12 +48,20 @@
   text-transform: uppercase;
   color: var(--color-content-secondary);
   /* Typography: ui-mono-13 */
+  min-width: 0; /* allow shrinking in flex header */
 }
 
 .titleWithIcon {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-xs);
+  overflow: hidden;
+}
+
+.titleText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .titleHelpIcon {
